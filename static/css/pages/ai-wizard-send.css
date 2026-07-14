@@ -1,0 +1,70 @@
+/* Test Send page — extends the shared ai-wizard.css conventions */
+
+.wizard-toolbar {
+  margin-bottom: 20px;
+}
+
+.test-send-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+#testSentPill.status-pill--success {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #15803d;
+  background: #dcfce7;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.wizard-layout--test-send {
+  align-items: start;
+}
+
+.test-send-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.test-email-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 10px;
+  background: #fff;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.test-email-list__item {
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text-primary, #111827);
+  border-bottom: 1px solid var(--border-color, #f0f0f0);
+}
+
+.test-email-list__item:last-child {
+  border-bottom: none;
+}
+
+.test-email-list__item--empty {
+  color: var(--text-muted, #9ca3af);
+  text-align: center;
+  padding: 20px 12px;
+}
+
+.wizard-step__actions--end {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}

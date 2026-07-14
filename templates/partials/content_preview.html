@@ -1,0 +1,40 @@
+{#
+  Shared "Content" preview panel used in:
+    - ai_wizard_template.html   (Setup Email Template)
+    - ai_wizard_test_send.html  (Test Send)
+    - ai_wizard_schedule.html   (Schedule Campaign)
+
+  Usage:
+    {% include 'partials/content_preview.html' %}
+
+  Expects (pass via render_template from each parent route):
+    email_content : rendered HTML string of the generated email body
+    logo_url      : url to the sender's logo image
+#}
+<div class="content-panel">
+  <div class="content-panel__header">
+    <h2 class="content-panel__title">Content</h2>
+    <div class="content-panel__actions">
+      <button type="button" class="content-panel__kebab" aria-label="More options" aria-haspopup="true" aria-expanded="false">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="8" cy="2.5" r="1.5" fill="currentColor"/>
+          <circle cx="8" cy="8" r="1.5" fill="currentColor"/>
+          <circle cx="8" cy="13.5" r="1.5" fill="currentColor"/>
+        </svg>
+      </button>
+      <button type="button" class="btn btn--ghost content-panel__edit" data-edit-toggle>Edit</button>
+    </div>
+  </div>
+
+  <div class="content-panel__body" id="contentPanelBody" data-editable="false">
+    {% if logo_url %}
+    <img src="{{ logo_url }}" alt="Sender logo" class="content-panel__logo">
+    {% endif %}
+
+    {% if email_content %}
+      {{ email_content | safe }}
+    {% else %}
+      <p class="content-panel__placeholder">No content generated yet.</p>
+    {% endif %}
+  </div>
+</div>

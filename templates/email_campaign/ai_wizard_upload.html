@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Email Workflow Setup Wizard — AI Email Agent{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-heading">AI Email Workflow Setup Wizard</h1>
+
+<form class="wizard-step" id="aiWizardUploadForm" data-next-url="{{ url_for('ai_wizard_template') }}" novalidate>
+  <div class="upload-grid">
+    <div class="upload-field">
+      <label class="upload-field__label" for="contentUpload">Upload your content (Word / PDF Supported)</label>
+      <div class="upload-dropzone" data-dropzone data-target="contentUpload">
+        <input type="file" id="contentUpload" name="content_file" accept=".doc,.docx,.pdf" hidden>
+        <svg class="upload-dropzone__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 13V3M10 3L6 7M10 3l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 13v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="upload-dropzone__text">
+          Drop here to attach or <button type="button" class="upload-dropzone__link" data-browse-trigger data-target="contentUpload">upload</button>
+        </p>
+        <span class="upload-dropzone__hint">Max size: 5MB</span>
+        <span class="upload-dropzone__filename" data-filename hidden></span>
+      </div>
+    </div>
+
+    <div class="upload-field">
+      <label class="upload-field__label" for="logoUpload">Upload your Logo</label>
+      <div class="upload-dropzone" data-dropzone data-target="logoUpload">
+        <input type="file" id="logoUpload" name="logo_file" accept="image/*" hidden>
+        <svg class="upload-dropzone__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 13V3M10 3L6 7M10 3l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 13v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="upload-dropzone__text">
+          Drop here to attach or <button type="button" class="upload-dropzone__link" data-browse-trigger data-target="logoUpload">upload</button>
+        </p>
+        <span class="upload-dropzone__hint">Max size: 5MB</span>
+        <span class="upload-dropzone__filename" data-filename hidden></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-field">
+    <label class="form-field__label" for="ctaLinks">Add CTA Links for the Email Content</label>
+    <textarea id="ctaLinks" name="cta_links" class="form-field__textarea" placeholder="www.example.com" rows="4"></textarea>
+  </div>
+
+  <div class="wizard-step__actions">
+    <button type="submit" class="btn btn--primary" id="nextStepBtn" href="ai_wizard_template.html">Next Step</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/pages/ai-wizard-upload.js') }}"></script>
+{% endblock %}

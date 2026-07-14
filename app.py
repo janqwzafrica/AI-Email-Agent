@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template, request
 
 from config import Config
 from logging_config import setup_logging
@@ -7,6 +7,29 @@ setup_logging()
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+
+def get_current_campaign_draft():
+    """Return the in-progress campaign draft (content + logo) from session/DB."""
+    return {
+        "email_content": None,
+        "logo_url": None,
+    }
+
+
+def get_test_email_lists():
+    """Return the user's saved test-email lists as [{'id': ..., 'name': ...}, ...]."""
+    return []
+
+
+def get_test_emails(list_id):
+    """Return the list of email addresses belonging to the given test list id."""
+    return []
+
+
+def send_test_emails(list_id):
+    """Send the current draft to every address in the given test list."""
+    return True
 
 
 @app.route("/")
@@ -37,6 +60,75 @@ def user_accounts():
 @app.route("/user-accounts/edit")
 def user_form():
     return render_template("user_form.html")
+
+
+@app.route("/campaigns/ai-wizard/upload")
+def ai_wizard_upload():
+    return render_template("email_campaign/ai_wizard_upload.html")
+
+
+@app.route("/campaigns/ai-wizard/template")
+def ai_wizard_template():
+    return render_template(
+        "email_campaign/ai_wizard_template.html",
+        is_generating=True,
+        sender_emails=["info@larhdellaw.com"],
+        sender_name="Larhdel Law",
+        email_subject="US Immigration Update for 2026 - Larhdel Law",
+        email_lists=[{"id": "1", "name": "Email List 1"}],
+        email_content="<p>Dear {{ contact.FIRSTNAME }},</p>",
+        logo_url=None,
+    )
+
+
+@app.route("/campaigns/ai-wizard/send")
+def ai_wizard_test_send():
+    # TODO: replace with the real campaign draft pulled from session/DB
+    # (the same draft the user set up in the previous "Setup Email Template" step)
+    campaign = get_current_campaign_draft()
+    # TODO: replace with the user's actual saved test-email lists
+    test_email_lists = get_test_email_lists()
+    selected_list_id = request.args.get("test_email_list") or (
+        test_email_lists[0]["id"] if test_email_lists else None
+    )
+    # TODO: replace with the emails belonging to the selected test list
+    test_emails = get_test_emails(selected_list_id)
+
+    return render_template(
+        "email_campaign/ai_wizard_send.html",
+        email_content=campaign.get("email_content"),
+        logo_url=campaign.get("logo_url"),
+        test_email_lists=test_email_lists,
+        selected_test_email_list_id=selected_list_id,
+        test_emails=test_emails,
+    )
+
+
+@app.route("/campaigns/ai-wizard/test-send/send", methods=["POST"])
+def ai_wizard_test_send_action():
+    payload = request.get_json(silent=True) or {}
+    list_id = payload.get("test_email_list")
+
+    # TODO: replace with real send logic (e.g. dispatch through your ESP/mailer)
+    sent = send_test_emails(list_id)
+
+    return jsonify({"success": sent})
+
+
+@app.route("/campaigns/ai-wizard/schedule")
+def ai_wizard_schedule():
+    # Pulling the current campaign draft just like in the test-send step
+    campaign = get_current_campaign_draft()
+    
+    return render_template(
+        "email_campaign/ai_wizard_schedule.html",
+        sender_emails=["info@larhdellaw.com"],
+        sender_name="Larhdel Law",
+        email_subject="US Immigration Update for 2026 - Larhdel Law",
+        email_lists=[{"id": "1", "name": "Email List 1"}],
+        email_content=campaign.get("email_content") or "<p>Dear {{ contact.FIRSTNAME }},</p>",
+        logo_url=campaign.get("logo_url")
+    )
 
 
 if __name__ == "__main__":

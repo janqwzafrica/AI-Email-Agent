@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Test Send — AI Email Agent{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard-test-send.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="wizard-header">
+  <h1 class="page-heading" style="margin-bottom:0;">Test Send</h1>
+</div>
+
+<div class="wizard-toolbar">
+  <a href="{{ url_for('ai_wizard_template') }}" class="wizard-layout__back">&larr; Go Back</a>
+
+  <div class="wizard-toolbar__actions">
+    <span class="status-pill status-pill--success" id="testSentPill" hidden>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M4.3 7.2l1.8 1.8 3.6-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Test Email Sent
+    </span>
+    <button type="button" class="btn btn--primary" id="sendTestEmailBtn">Send Test Email</button>
+  </div>
+</div>
+
+<div class="wizard-layout wizard-layout--test-send">
+  <div>
+    {% include 'partials/content_preview.html' %}
+  </div>
+
+  <div class="test-send-panel">
+    <div class="form-field">
+      <label class="form-field__label" for="testEmailList">Test Email List</label>
+      <select id="testEmailList" name="test_email_list" class="form-field__select">
+        {% for list in test_email_lists %}
+        <option value="{{ list.id }}" {% if list.id == selected_test_email_list_id %}selected{% endif %}>{{ list.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <ul class="test-email-list" id="testEmailListItems">
+      {% for email in test_emails %}
+      <li class="test-email-list__item">{{ email }}</li>
+      {% else %}
+      <li class="test-email-list__item test-email-list__item--empty">No test emails added yet.</li>
+      {% endfor %}
+    </ul>
+
+    <div class="wizard-step__actions wizard-step__actions--end">
+      <button type="button" class="btn btn--primary" id="completeSetupBtn" data-next-url="{{ url_for('ai_wizard_schedule') }}">Complete and Setup</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/pages/ai-wizard-test-send.js') }}"></script>
+{% endblock %}
