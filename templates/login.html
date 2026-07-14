@@ -1,0 +1,37 @@
+{% extends 'auth_base.html' %}
+
+{% block title %}Log In — AI Email Agent{% endblock %}
+
+{% block content %}
+<section class="auth-panel auth-panel--login" aria-labelledby="login-title">
+  <div class="auth-panel__heading">
+    <h1 id="login-title" class="auth-title">Log In</h1>
+    <p class="auth-subtitle">Log in your account</p>
+  </div>
+
+  <form class="auth-form" action="{{ url_for('login') }}" method="post">
+    <div class="auth-field">
+      <label class="sr-only" for="login-email">Email</label>
+      <input class="auth-input" type="email" id="login-email" name="email" placeholder="Email" autocomplete="email" required>
+    </div>
+
+    <div class="auth-field auth-field--password">
+      <label class="sr-only" for="login-password">Password</label>
+      <input class="auth-input" type="password" id="login-password" name="password" placeholder="Password" autocomplete="current-password" required>
+      <button class="auth-password-toggle" type="button" data-password-toggle aria-label="Show password" aria-controls="login-password">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
+    </div>
+
+    <button type="submit" class="btn auth-submit">Log In</button>
+  </form>
+
+  <div class="auth-links">
+    <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
+    <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+  </div>
+</section>
+{% endblock %}
