@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — AI Email Agent{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+  <h1 class="dashboard-heading">STATS AT A GLANCE</h1>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <span class="stat-card__label">Total Campaigns</span>
+      <span class="stat-card__value">10</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__label">Total Contacts</span>
+      <span class="stat-card__value">520</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__label">Total Unsubscribed Emails</span>
+      <span class="stat-card__value">50</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__label">Total Emails Sent</span>
+      <span class="stat-card__value">10</span>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard-section">
+  <h1 class="dashboard-heading">YOUR LAST CAMPAIGNS</h1>
+  <div class="campaign-list">
+    {% for campaign in [
+      {'name': 'Email Campaign 1', 'status': 'Sent', 'open_rate': '50%'},
+      {'name': 'Email Campaign 2', 'status': 'Sent', 'open_rate': '50%'},
+      {'name': 'Email Campaign 3', 'status': 'Sent', 'open_rate': '50%'},
+    ] %}
+    <article class="campaign-card">
+      <div class="campaign-card__row">
+        <h2 class="campaign-card__name">{{ campaign.name }}</h2>
+        <span class="campaign-card__rate">{{ campaign.open_rate }} open rate</span>
+      </div>
+      <span class="campaign-card__status">{{ campaign.status }}</span>
+      <p class="campaign-card__desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

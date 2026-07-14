@@ -1,0 +1,100 @@
+/* ---- Reset ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font: inherit;
+}
+
+/* ---- Design tokens ---- */
+:root {
+  /* Brand colors */
+  --color-brand: #00acf0;          /* top bar + primary buttons */
+  --color-sidebar-bg: #1b2128;     /* left navigation background */
+  --color-page-bg: #f5f6f7;        /* dashboard page background */
+  --color-dark: #14181d;
+  --color-surface: #ffffff;
+  --color-text: #1f2937;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-sidebar-text: #dde1e6;
+
+  /* Classification labels */
+  --label-interested-bg: #d1fadf;
+  --label-interested-text: #027a48;
+  --label-pending-bg: #fff6db;
+  --label-pending-text: #bb8900;
+  --label-noresponse-bg: #e3e3e3;
+  --label-noresponse-text: #525252;
+  --label-unsubscribed-bg: #fee4e2;
+  --label-unsubscribed-text: #b42318;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+    sans-serif;
+  --font-size-heading: 20px;  /* main dashboard headings */
+  --font-size-body: 14px;     /* field labels, buttons, nav, other texts */
+  --font-size-table: 12px;    /* table text content */
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+
+  /* Layout */
+  --topbar-height: 56px;
+  --sidebar-width: 232px;
+
+  /* Misc */
+  --radius: 6px;
+  --shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+}
+
+/* ---- App shell ---- */
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-page-bg);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app__body {
+  display: flex;
+  flex: 1;
+}
+
+.app__main {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-5) var(--space-5) var(--space-4);
+}

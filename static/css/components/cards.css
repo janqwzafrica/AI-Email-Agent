@@ -1,0 +1,36 @@
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-4);
+}
+
+/* ---- Classification labels ---- */
+.label {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: var(--font-size-table);
+  font-weight: 600;
+}
+
+.label--interested {
+  background: var(--label-interested-bg);
+  color: var(--label-interested-text);
+}
+
+.label--pending {
+  background: var(--label-pending-bg);
+  color: var(--label-pending-text);
+}
+
+.label--no-response {
+  background: var(--label-noresponse-bg);
+  color: var(--label-noresponse-text);
+}
+
+.label--unsubscribed {
+  background: var(--label-unsubscribed-bg);
+  color: var(--label-unsubscribed-text);
+}
