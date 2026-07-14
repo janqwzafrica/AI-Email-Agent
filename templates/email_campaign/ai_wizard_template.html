@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Setup Email Template — AI Email Agent{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}">
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('ai_wizard_upload') }}" class="wizard-layout__back">&larr; Go Back</a>
+
+<div class="wizard-header">
+  <h1 class="page-heading" style="margin-bottom:0;">Setup Email Template</h1>
+  <span class="status-pill" id="generatingPill" {% if not is_generating %}hidden{% endif %}>
+    AI is generating, please wait
+  </span>
+  <button type="button" class="btn btn--primary" id="editContentTopBtn" data-edit-toggle>Edit Content</button>
+</div>
+
+<div class="wizard-layout">
+  <div>
+    {% include 'partials/content_preview.html' %}
+  </div>
+
+  <form class="wizard-form" id="templateForm" data-next-url="{{ url_for('ai_wizard_test_send') }}">
+    <div class="form-field">
+      <label class="form-field__label" for="senderEmail">Sender Email</label>
+      <select id="senderEmail" name="sender_email" class="form-field__select">
+        {% for email in sender_emails %}
+        <option value="{{ email }}">{{ email }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label class="form-field__label" for="senderName">Sender Name</label>
+      <input type="text" id="senderName" name="sender_name" class="form-field__input" value="{{ sender_name }}">
+    </div>
+
+    <div class="form-field">
+      <label class="form-field__label" for="emailSubject">Email Subject</label>
+      <input type="text" id="emailSubject" name="email_subject" class="form-field__input" value="{{ email_subject }}">
+    </div>
+
+    <div class="form-field">
+      <label class="form-field__label" for="emailList">Email List</label>
+      <select id="emailList" name="email_list" class="form-field__select">
+        {% for list in email_lists %}
+        <option value="{{ list.id }}">{{ list.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="wizard-step__actions">
+      <button type="submit" class="btn btn--primary" id="nextStepBtn" href="ai_wizard_test_send.html">Next Step</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/pages/ai-wizard-template.js') }}"></script>
+{% endblock %}
