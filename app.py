@@ -24,6 +24,16 @@ def email_list_detail(list_id):
     return render_template("email_list_detail.html", list_id=list_id)
 
 
+@app.route("/campaign-manager")
+def campaign_manager():
+    return render_template("campaign_manager.html")
+
+
+@app.route("/campaign-manager/<campaign_id>")
+def campaign_preview(campaign_id):
+    return render_template("campaign_preview.html", campaign_id=campaign_id)
+
+
 @app.route("/reports")
 def reports():
     return render_template("reports.html")

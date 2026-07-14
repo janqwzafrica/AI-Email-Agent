@@ -1,0 +1,54 @@
+/* ---- Campaign status pills ---- */
+.status {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status--running {
+  background: var(--label-pending-bg);
+  color: var(--label-pending-text);
+  border: 1px solid #f0c94f;
+}
+
+.status--scheduled {
+  background: var(--color-brand);
+  color: #ffffff;
+}
+
+.status--completed {
+  background: var(--label-interested-bg);
+  color: var(--label-interested-text);
+  border: 1px solid #7fd8a4;
+}
+
+/* ---- Scheduled dates render in brand blue ---- */
+.table__date--scheduled {
+  color: var(--color-brand);
+  font-weight: 500;
+}
+
+/* ---- Quarterly Run cell: play icon + label ---- */
+.quarterly-run {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.quarterly-run svg {
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.quarterly-run:hover {
+  color: var(--color-brand);
+}
+
+.quarterly-run--running {
+  color: var(--color-brand);
+}

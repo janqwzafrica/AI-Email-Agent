@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% from 'partials/icons.html' import search_icon, filter_icon, sort_icon, play_icon %}
+
+{% block title %}Campaign Manager — AI Email Agent{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/campaigns.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-heading">Campaign Manager</h1>
+
+<div class="toolbar">
+  <label class="search">
+    {{ search_icon() }}
+    <input type="search" placeholder="Search Campaign">
+  </label>
+  <button class="filter-btn">Filter By Status {{ filter_icon() }}</button>
+  <button class="filter-btn">Filter By Date {{ filter_icon() }}</button>
+  <div class="toolbar__spacer"></div>
+  <div class="dropdown" data-dropdown>
+    <button class="btn btn--primary" data-dropdown-toggle aria-expanded="false">Create Campaign</button>
+    <div class="dropdown__menu" data-dropdown-menu>
+      <a href="#" class="dropdown__item">AI Email Wizard</a>
+      <a href="#" class="dropdown__item">Manual Email Wizard</a>
+    </div>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Campaign Name</th>
+        <th>Email List</th>
+        <th>Opens</th>
+        <th>Clicks</th>
+        <th>Unsubscribed</th>
+        <th><span class="table__sort">Date Sent {{ sort_icon() }}</span></th>
+        <th>Status</th>
+        <th>Quarterly Run</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in [
+        {'name': 'Email Campaign 1', 'list': 'Email List 1', 'opens': 'N/A', 'clicks': 'N/A', 'unsub': 2, 'date': '6/19/2026', 'scheduled': false, 'status': 'Running', 'quarterly': 'Activate'},
+        {'name': 'Email Campaign 2', 'list': 'Email List 2', 'opens': 10, 'clicks': 10, 'unsub': 3, 'date': '6/19/2026', 'scheduled': false, 'status': 'Running', 'quarterly': 'Running'},
+        {'name': 'Email Campaign 3', 'list': 'Email List 1', 'opens': 50, 'clicks': 5, 'unsub': 1, 'date': '6/30/2026', 'scheduled': true, 'status': 'Scheduled', 'quarterly': 'Running'},
+        {'name': 'Email Campaign 4', 'list': 'Email List 2', 'opens': 20, 'clicks': 2, 'unsub': 5, 'date': '6/30/2026', 'scheduled': true, 'status': 'Scheduled', 'quarterly': 'Activate'},
+        {'name': 'Email Campaign 5', 'list': 'Email List 1', 'opens': 120, 'clicks': 30, 'unsub': 4, 'date': '6/19/2026', 'scheduled': false, 'status': 'Completed', 'quarterly': 'Activate'},
+        {'name': 'Email Campaign 6', 'list': 'Email List 2', 'opens': 30, 'clicks': 8, 'unsub': 2, 'date': '6/19/2026', 'scheduled': false, 'status': 'Completed', 'quarterly': 'Activate'},
+      ] %}
+      <tr>
+        <td><a href="{{ url_for('campaign_preview', campaign_id=loop.index) }}" class="table__link">{{ row.name }}</a></td>
+        <td>{{ row.list }}</td>
+        <td>{{ row.opens }}</td>
+        <td>{{ row.clicks }}</td>
+        <td>{{ row.unsub }}</td>
+        <td class="{{ 'table__date--scheduled' if row.scheduled }}">{{ row.date }}</td>
+        <td><span class="status status--{{ row.status | lower }}">{{ row.status }}</span></td>
+        <td>
+          <a href="#" class="quarterly-run {{ 'quarterly-run--running' if row.quarterly == 'Running' }}">
+            {{ play_icon() }} {{ row.quarterly }}
+          </a>
+        </td>
+        <td><a href="#" class="table__delete">Delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
