@@ -33,6 +33,13 @@
   background: #000000;
 }
 
+/* Small pill button used inside tables/toolbars (e.g. Download, Export) */
+.btn--table {
+  padding: 4px 16px;
+  border-radius: 999px;
+  font-size: var(--font-size-table);
+}
+
 .btn--ghost {
   border-color: var(--color-border);
   background: var(--color-surface);

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% from 'partials/icons.html' import search_icon, filter_icon, sort_icon %}
+
+{% block title %}Email Lists — AI Email Agent{% endblock %}
+
+{% block content %}
+<h1 class="page-heading">Email Lists</h1>
+
+<div class="toolbar">
+  <label class="search">
+    {{ search_icon() }}
+    <input type="search" placeholder="Search List Name">
+  </label>
+  <button class="filter-btn">Filter By Date {{ filter_icon() }}</button>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>List ID</th>
+        <th>List Name</th>
+        <th>Contacts</th>
+        <th><span class="table__sort">Creation Date {{ sort_icon() }}</span></th>
+        <th>Action</th>
+        <th>Export</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in [
+        {'id': '001', 'name': 'Lawyer Email List 1', 'contacts': 250, 'date': '6/19/2026'},
+        {'id': '002', 'name': 'Lawyer Email List 2', 'contacts': 100, 'date': '6/19/2026'},
+        {'id': '003', 'name': 'Test Email List', 'contacts': 10, 'date': '6/19/2026'},
+      ] %}
+      <tr>
+        <td><a href="{{ url_for('email_list_detail', list_id=row.id) }}" class="table__link">{{ row.id }}</a></td>
+        <td><a href="{{ url_for('email_list_detail', list_id=row.id) }}" class="table__link">{{ row.name }}</a></td>
+        <td>{{ row.contacts }}</td>
+        <td>{{ row.date }}</td>
+        <td><a href="#" class="table__delete">Delete</a></td>
+        <td><a href="#" class="btn btn--primary btn--table">Download</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

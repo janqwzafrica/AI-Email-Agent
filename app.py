@@ -14,5 +14,30 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/email-lists")
+def email_lists():
+    return render_template("email_lists.html")
+
+
+@app.route("/email-lists/<list_id>")
+def email_list_detail(list_id):
+    return render_template("email_list_detail.html", list_id=list_id)
+
+
+@app.route("/reports")
+def reports():
+    return render_template("reports.html")
+
+
+@app.route("/user-accounts")
+def user_accounts():
+    return render_template("user_accounts.html")
+
+
+@app.route("/user-accounts/edit")
+def user_form():
+    return render_template("user_form.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)

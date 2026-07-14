@@ -98,3 +98,22 @@ body {
   min-width: 0;
   padding: var(--space-5) var(--space-5) var(--space-4);
 }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+}
+
+.back-link:hover {
+  color: var(--color-brand);
+}
+
+.page-heading {
+  font-size: var(--font-size-heading);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+}

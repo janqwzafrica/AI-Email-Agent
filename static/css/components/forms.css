@@ -1,0 +1,122 @@
+/* ---- Toolbar: search + filter row above tables ---- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+
+.toolbar__spacer {
+  flex: 1;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 8px 16px;
+  min-width: 220px;
+  color: var(--color-text-muted);
+}
+
+.search input {
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+  width: 100%;
+}
+
+.search input::placeholder {
+  color: #9ca3af;
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: var(--font-size-body);
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  border-color: var(--color-brand);
+}
+
+/* ---- Forms ---- */
+.form {
+  max-width: 720px;
+}
+
+.form__title {
+  font-size: var(--font-size-body);
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+}
+
+.form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4) var(--space-5);
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form__field--full {
+  grid-column: 1 / -1;
+}
+
+.form__label {
+  font-size: var(--font-size-body);
+  font-weight: 600;
+}
+
+.form__input,
+.form__select {
+  font: inherit;
+  font-size: var(--font-size-body);
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  width: 100%;
+}
+
+.form__input::placeholder {
+  color: #9ca3af;
+}
+
+.form__input:focus,
+.form__select:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: -1px;
+}
+
+.form__actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+@media (max-width: 720px) {
+  .form__grid {
+    grid-template-columns: 1fr;
+  }
+}
