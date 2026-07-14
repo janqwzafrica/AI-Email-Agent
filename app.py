@@ -10,6 +10,11 @@ app.config.from_object(Config)
 
 
 @app.route("/")
+def auth():
+    return redirect(url_for("login"))
+
+
+@app.route("/dashboard")
 def index():
     return render_template("index.html")
 
