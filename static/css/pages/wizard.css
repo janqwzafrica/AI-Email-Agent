@@ -1,0 +1,262 @@
+/* ---- Wizard step 1: setup form ---- */
+.wizard-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4) var(--space-5);
+  max-width: 900px;
+}
+
+.wizard-form__full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 720px) {
+  .wizard-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Upload dropzones ---- */
+.dropzone {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  min-height: 120px;
+  justify-content: center;
+}
+
+.dropzone:hover {
+  border-color: var(--color-brand);
+}
+
+.dropzone__link {
+  color: var(--color-brand);
+}
+
+.dropzone__hint {
+  font-size: 10px;
+  color: #9ca3af;
+}
+
+/* ---- Bottom action row ---- */
+.wizard-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  max-width: 900px;
+}
+
+.preview-layout .wizard-actions {
+  grid-column: 2;
+  max-width: none;
+}
+
+/* ---- Test send: right rail ---- */
+.test-rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.test-rail__send {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.badge-sent {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--label-interested-bg);
+  color: var(--label-interested-text);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: var(--font-size-table);
+  font-weight: 600;
+}
+
+.test-emails {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-table);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* ---- Schedule: calendar popover (opens on Schedule click) ---- */
+.calendar-popover {
+  display: none;
+  position: fixed;
+  top: 8px;
+  right: var(--space-3);
+  z-index: 50;
+}
+
+.calendar-popover.is-open {
+  display: block;
+}
+
+/* ---- Schedule: calendar widget ---- */
+.calendar {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+  padding: var(--space-3);
+  width: 300px;
+}
+
+.calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  color: var(--color-brand);
+  margin-bottom: var(--space-2);
+}
+
+.calendar__nav {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.calendar__nav button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--color-brand);
+  padding: 2px 6px;
+}
+
+.calendar__grid {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 11px;
+}
+
+.calendar__grid th {
+  color: var(--color-text-muted);
+  font-weight: 600;
+  padding: 4px 0;
+}
+
+.calendar__grid td {
+  padding: 2px 0;
+}
+
+.calendar__day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.calendar__day:hover {
+  background: var(--color-page-bg);
+}
+
+.calendar__day--muted {
+  color: #9ca3af;
+}
+
+.calendar__day--muted:hover,
+.calendar__day--disabled:hover {
+  background: none;
+}
+
+.calendar__day--disabled {
+  cursor: not-allowed;
+}
+
+.calendar__day--selected {
+  background: var(--color-brand);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.calendar__day--today {
+  background: var(--label-noresponse-bg);
+  font-weight: 600;
+}
+
+.calendar__time {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+  font-weight: 600;
+}
+
+.calendar__time-value {
+  margin-left: auto;
+  color: var(--color-brand);
+  letter-spacing: 0.06em;
+}
+
+.calendar__time-input {
+  margin-left: auto;
+  width: 56px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--color-brand);
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 2px 4px;
+}
+
+.calendar__time-input:hover {
+  border-color: var(--color-border);
+}
+
+.calendar__time-input:focus {
+  outline: none;
+  border-color: var(--color-brand);
+}
+
+.calendar__meridiem {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.calendar__meridiem--active {
+  background: var(--color-brand);
+  color: #ffffff;
+  border-color: var(--color-brand);
+}
+
+/* ---- Schedule layout: settings + calendar column ---- */
+.schedule-rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% set wizard_label = 'AI' if mode == 'ai' else 'Manual' %}
+
+{% block title %}{{ wizard_label }} Email Workflow Setup Wizard — AI Email Agent{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/wizard.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-heading">{{ wizard_label }} Email Workflow Setup Wizard</h1>
+
+<div class="wizard-form">
+  <div class="form__field">
+    <span class="form__label">Upload your content (Word / PDF Supported)</span>
+    <label class="dropzone">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 16V4M12 4 8 8M12 4l4 4"/>
+        <path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/>
+      </svg>
+      <span>Drop here to attach or <span class="dropzone__link">upload</span></span>
+      <span class="dropzone__hint">Max size: 5MB</span>
+      <input type="file" accept=".doc,.docx,.pdf" hidden>
+    </label>
+  </div>
+
+  <div class="form__field">
+    <span class="form__label">Upload your Logo</span>
+    <label class="dropzone">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 16V4M12 4 8 8M12 4l4 4"/>
+        <path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/>
+      </svg>
+      <span>Drop here to attach or <span class="dropzone__link">upload</span></span>
+      <span class="dropzone__hint">Max size: 5MB</span>
+      <input type="file" accept="image/*" hidden>
+    </label>
+  </div>
+
+  <div class="form__field">
+    <label class="form__label" for="wizard-subject">Email Subject</label>
+    <input class="form__input" id="wizard-subject" type="text" value="US Immigration Update for 2026 - Larhdel Law">
+  </div>
+
+  <div class="form__field">
+    <label class="form__label" for="wizard-list">Email List</label>
+    <select class="form__select" id="wizard-list">
+      <option>Email List 1</option>
+      <option>Email List 2</option>
+    </select>
+  </div>
+
+  <div class="form__field">
+    <label class="form__label" for="wizard-sender-name">Sender Name</label>
+    <input class="form__input" id="wizard-sender-name" type="text" value="Larhdel Law">
+  </div>
+
+  <div class="form__field">
+    <label class="form__label" for="wizard-sender-email">Sender Email</label>
+    <select class="form__select" id="wizard-sender-email">
+      <option>info@larhdellaw.com</option>
+    </select>
+  </div>
+
+  <div class="form__field wizard-form__full">
+    <label class="form__label" for="wizard-cta">Add CTA Links for the Email Content</label>
+    <textarea class="form__input" id="wizard-cta" rows="5" placeholder="www.example.com"></textarea>
+  </div>
+</div>
+
+<div class="wizard-actions">
+  <a href="{{ url_for('wizard_template', mode=mode) }}" class="btn btn--primary">Next Step</a>
+</div>
+{% endblock %}

@@ -21,8 +21,8 @@
   <div class="dropdown" data-dropdown>
     <button class="btn btn--primary" data-dropdown-toggle aria-expanded="false">Create Campaign</button>
     <div class="dropdown__menu" data-dropdown-menu>
-      <a href="#" class="dropdown__item">AI Email Wizard</a>
-      <a href="#" class="dropdown__item">Manual Email Wizard</a>
+      <a href="{{ url_for('campaign_wizard', mode='ai') }}" class="dropdown__item">AI Email Wizard</a>
+      <a href="{{ url_for('campaign_wizard', mode='manual') }}" class="dropdown__item">Manual Email Wizard</a>
     </div>
   </div>
 </div>

@@ -129,3 +129,26 @@
   flex-direction: column;
   gap: var(--space-4);
 }
+
+.save-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ---- Content edit mode ---- */
+.email-preview[contenteditable="true"] {
+  outline: 2px dashed var(--color-brand);
+  outline-offset: -2px;
+  cursor: text;
+}
+
+.preview-card__edit--saving {
+  background: var(--color-brand);
+  color: #ffffff;
+  border-color: var(--color-brand);
+}
+
+.preview-card__edit--saving:hover {
+  color: #ffffff;
+  opacity: 0.9;
+}

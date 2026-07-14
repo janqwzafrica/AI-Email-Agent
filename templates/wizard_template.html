@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Preview Campaign — AI Email Agent{% endblock %}
+{% block title %}Setup Email Template — AI Email Agent{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/campaign_preview.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/wizard.css') }}">
 {% endblock %}
 
 {% block content %}
-<h1 class="page-heading">Preview Campaign</h1>
+<h1 class="page-heading">Setup Email Template</h1>
 
-<a href="{{ url_for('campaign_manager') }}" class="back-link">
+<a href="{{ url_for('campaign_wizard', mode=mode) }}" class="back-link">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M19 12H5M12 19l-7-7 7-7"/>
   </svg>
@@ -22,8 +23,8 @@
   <div class="preview-settings">
     {% include 'partials/campaign_settings_fields.html' %}
 
-    <div class="save-row">
-      <button class="btn btn--primary" data-settings-save>Save</button>
+    <div class="wizard-actions">
+      <a href="{{ url_for('wizard_test_send', mode=mode) }}" class="btn btn--primary">Next Step</a>
     </div>
   </div>
 </div>

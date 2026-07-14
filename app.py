@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, abort, render_template
 
 from config import Config
 from logging_config import setup_logging
@@ -27,6 +27,34 @@ def email_list_detail(list_id):
 @app.route("/campaign-manager")
 def campaign_manager():
     return render_template("campaign_manager.html")
+
+
+@app.route("/campaign-manager/wizard/<mode>")
+def campaign_wizard(mode):
+    if mode not in ("ai", "manual"):
+        abort(404)
+    return render_template("wizard_setup.html", mode=mode)
+
+
+@app.route("/campaign-manager/wizard/<mode>/template")
+def wizard_template(mode):
+    if mode not in ("ai", "manual"):
+        abort(404)
+    return render_template("wizard_template.html", mode=mode)
+
+
+@app.route("/campaign-manager/wizard/<mode>/test-send")
+def wizard_test_send(mode):
+    if mode not in ("ai", "manual"):
+        abort(404)
+    return render_template("wizard_test_send.html", mode=mode)
+
+
+@app.route("/campaign-manager/wizard/<mode>/schedule")
+def wizard_schedule(mode):
+    if mode not in ("ai", "manual"):
+        abort(404)
+    return render_template("wizard_schedule.html", mode=mode)
 
 
 @app.route("/campaign-manager/<campaign_id>")
