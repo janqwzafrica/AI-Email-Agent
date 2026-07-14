@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, redirect, render_template, request, url_for
 
 from config import Config
 from logging_config import setup_logging
@@ -33,8 +33,39 @@ def send_test_emails(list_id):
 
 
 @app.route("/")
+def auth():
+    return redirect(url_for("login"))
+
+
+@app.route("/dashboard")
 def index():
     return render_template("index.html")
+
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        return redirect(url_for("login"))
+    return render_template("signup.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        return redirect(url_for("index"))
+    return render_template("login.html")
+
+
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if request.method == "POST":
+        return redirect(url_for("login"))
+    return render_template("forgot_password.html")
+
+
+@app.route("/logout")
+def logout():
+    return redirect(url_for("login"))
 
 
 @app.route("/email-lists")
