@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% from 'partials/icons.html' import search_icon, filter_icon, sort_icon %}
+
+{% block title %}Lawyer Email List 1 — AI Email Agent{% endblock %}
+
+{% block content %}
+<h1 class="page-heading">Lists / Lawyer Email List 1</h1>
+
+<a href="{{ url_for('email_lists') }}" class="back-link">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  Back to Lists
+</a>
+
+<div class="toolbar">
+  <label class="search">
+    {{ search_icon() }}
+    <input type="search" placeholder="Search Email or Name">
+  </label>
+  <button class="filter-btn">Filter By Blacklisted {{ filter_icon() }}</button>
+  <button class="filter-btn">Filter By Date {{ filter_icon() }}</button>
+  <button class="filter-btn">Filter By Classification {{ filter_icon() }}</button>
+  <span class="toolbar__spacer"></span>
+  <a href="#" class="btn btn--primary btn--table">Export Emails</a>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Contact Name</th>
+        <th>Email</th>
+        <th><span class="table__sort">Creation Date {{ sort_icon() }}</span></th>
+        <th><span class="table__sort">Last Changed {{ sort_icon() }}</span></th>
+        <th>Classification</th>
+        <th>Blacklisted</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in [
+        {'name': 'Rumesh Hopkins', 'email': 'rumeshhopkins@gmail.com', 'created': '6/19/2026', 'changed': '6/19/2026', 'label': 'Interested', 'label_class': 'interested', 'blacklisted': False},
+        {'name': 'John Doe', 'email': 'johndoe@gmail.com', 'created': '6/19/2026', 'changed': '6/19/2026', 'label': 'Pending', 'label_class': 'pending', 'blacklisted': False},
+        {'name': 'Sofia Andrew', 'email': 'sofiaandrew@gmail.com', 'created': '6/19/2026', 'changed': '6/19/2026', 'label': 'No Response', 'label_class': 'no-response', 'blacklisted': True},
+        {'name': 'Sofia Andrew', 'email': 'sofiaandrew@gmail.com', 'created': '6/19/2026', 'changed': '6/19/2026', 'label': 'Unsubscribed', 'label_class': 'unsubscribed', 'blacklisted': True},
+      ] %}
+      <tr>
+        <td><a href="#" class="table__link">{{ row.name }}</a></td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.created }}</td>
+        <td>{{ row.changed }}</td>
+        <td><span class="label label--{{ row.label_class }}">{{ row.label }}</span></td>
+        <td>{% if row.blacklisted %}<span class="table__blacklisted">Blacklisted</span>{% endif %}</td>
+        <td><a href="#" class="table__action">Delete Email</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

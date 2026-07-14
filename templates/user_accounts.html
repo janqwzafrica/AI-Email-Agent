@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% from 'partials/icons.html' import trash_icon %}
+
+{% block title %}User Accounts — AI Email Agent{% endblock %}
+
+{% block content %}
+<h1 class="page-heading">User Accounts</h1>
+
+<div class="toolbar">
+  <span class="toolbar__spacer"></span>
+  <a href="{{ url_for('user_form') }}" class="btn btn--primary">Add a User</a>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th><span class="table__sort">Users
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M8 9l4-4 4 4M8 15l4 4 4-4"/>
+          </svg></span>
+        </th>
+        <th>Access</th>
+        <th>E-mail</th>
+        <th>Edit Access</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in [
+        {'name': 'Jane Cooper', 'handle': '@jane', 'initials': 'JC', 'access': 'Admin', 'email': 'jessica.hanson@example.com'},
+        {'name': 'Wade Warren', 'handle': '@wade456', 'initials': 'WW', 'access': 'Staff', 'email': 'willie.jennings@example.com'},
+        {'name': 'Esther Howard', 'handle': '@esther', 'initials': 'EH', 'access': 'Staff', 'email': 'd.chambers@example.com'},
+        {'name': 'Jenny Wilson', 'handle': '@jenny', 'initials': 'JW', 'access': 'Staff', 'email': 'willie.jennings@example.com'},
+        {'name': 'Guy Hawkins', 'handle': '@guy', 'initials': 'GH', 'access': 'Staff', 'email': 'michael.mitc@example.com'},
+      ] %}
+      <tr>
+        <td>
+          <div class="user-cell">
+            <span class="user-cell__avatar">{{ row.initials }}</span>
+            <span>
+              <span class="user-cell__name">{{ row.name }}</span>
+              <span class="user-cell__handle">{{ row.handle }}</span>
+            </span>
+          </div>
+        </td>
+        <td><span class="access access--{{ row.access | lower }}">{{ row.access }}</span></td>
+        <td>{{ row.email }}</td>
+        <td><a href="{{ url_for('user_form') }}" class="table__link">Change Access</a></td>
+        <td><button class="table__icon-btn" aria-label="Delete user">{{ trash_icon() }}</button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<nav class="pagination" aria-label="Pagination">
+  <a href="#" class="pagination__page">01</a>
+  <a href="#" class="pagination__page pagination__page--current">02</a>
+  <a href="#" class="pagination__page">03</a>
+  <span>…</span>
+  <a href="#" class="pagination__page">04</a>
+  <a href="#" class="pagination__page">05</a>
+  <a href="#" class="pagination__page">06</a>
+</nav>
+{% endblock %}

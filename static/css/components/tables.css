@@ -1,0 +1,167 @@
+.table-wrap {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-table);
+}
+
+.table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text);
+  background: #f0f1f2;
+  padding: 10px 16px;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px 16px;
+  border-top: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.table__link {
+  text-decoration: underline;
+  color: var(--color-text);
+}
+
+.table__link:hover {
+  color: var(--color-brand);
+}
+
+.table__delete {
+  color: #e02424;
+  font-weight: 500;
+}
+
+.table__delete:hover {
+  text-decoration: underline;
+}
+
+.table__action {
+  color: var(--color-brand);
+  font-weight: 500;
+}
+
+.table__action:hover {
+  text-decoration: underline;
+}
+
+.table__blacklisted {
+  color: #e02424;
+  font-weight: 500;
+}
+
+.table__icon-btn {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px;
+}
+
+.table__icon-btn:hover {
+  color: #e02424;
+}
+
+/* ---- User cell (avatar + name + handle) ---- */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-cell__avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: var(--font-size-table);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-cell__name {
+  font-weight: 600;
+  display: block;
+}
+
+.user-cell__handle {
+  color: var(--color-text-muted);
+}
+
+/* ---- Access pills ---- */
+.access {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.access::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.access--admin {
+  background: var(--label-interested-bg);
+  color: var(--label-interested-text);
+}
+
+.access--staff {
+  background: #e0f4fd;
+  color: #0086bd;
+}
+
+/* ---- Pagination ---- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 0;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: var(--space-2);
+  font-size: var(--font-size-table);
+  color: var(--color-text-muted);
+}
+
+.pagination__page {
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.pagination__page:hover {
+  color: var(--color-text);
+}
+
+.pagination__page--current {
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-weight: 600;
+}

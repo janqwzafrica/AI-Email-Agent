@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% from 'partials/icons.html' import search_icon, filter_icon, sort_icon %}
+
+{% block title %}Email Reports — AI Email Agent{% endblock %}
+
+{% block content %}
+<h1 class="page-heading">Email Reports</h1>
+
+<div class="toolbar">
+  <label class="search">
+    {{ search_icon() }}
+    <input type="search" placeholder="Search report name">
+  </label>
+  <button class="filter-btn">Filter By Date {{ filter_icon() }}</button>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Campaign Name</th>
+        <th>Opens</th>
+        <th>Clicks</th>
+        <th>Unsubscribes</th>
+        <th><span class="table__sort">Creation Date {{ sort_icon() }}</span></th>
+        <th>Action</th>
+        <th>Export Report</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in [
+        {'name': 'Campaign 1 Biz and Project', 'opens': 250, 'clicks': 50, 'unsubs': 10, 'date': '6/19/2026'},
+        {'name': 'Campaign 2 Biz and Project', 'opens': 100, 'clicks': 40, 'unsubs': 5, 'date': '6/19/2026'},
+        {'name': 'Campaign 2 Biz and Project', 'opens': 10, 'clicks': 5, 'unsubs': 2, 'date': '6/19/2026'},
+      ] %}
+      <tr>
+        <td>{{ row.name }}</td>
+        <td>{{ row.opens }}</td>
+        <td>{{ row.clicks }}</td>
+        <td>{{ row.unsubs }}</td>
+        <td>{{ row.date }}</td>
+        <td><a href="#" class="table__delete">Delete</a></td>
+        <td><a href="#" class="btn btn--primary btn--table">Download</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
