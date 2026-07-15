@@ -20,6 +20,7 @@
   margin-top: 1.5rem;
 }
 
+
 /* --- Upload dropzones ------------------------------------------------- */
 
 .upload-grid {
@@ -234,6 +235,19 @@
   color: #92400e;
 }
 
+.status-pill--error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-pill--success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-pill[hidden] {
+  display: none;
+}
 /* --- Content preview panel ------------------------------------------------ */
 
 .content-panel {

@@ -22,19 +22,21 @@
           <circle cx="8" cy="13.5" r="1.5" fill="currentColor"/>
         </svg>
       </button>
-      <button type="button" class="btn btn--ghost content-panel__edit" data-edit-toggle>Edit</button>
+      <button type="button" class="btn btn--ghost content-panel__edit" data-panel-edit-toggle>Edit</button>
     </div>
   </div>
 
-  <div class="content-panel__body" id="contentPanelBody" data-editable="false">
-    {% if logo_url %}
-    <img src="{{ logo_url }}" alt="Sender logo" class="content-panel__logo">
-    {% endif %}
+  <div class="content-panel__body">
+  {% if logo_url %}
+  <img src="{{ logo_url }}" alt="Sender logo" class="content-panel__logo">
+  {% endif %}
 
+  <div id="contentPanelBody" data-editable="false">
     {% if email_content %}
       {{ email_content | safe }}
     {% else %}
-      <p class="content-panel__placeholder">No content generated yet.</p>
+      <p class="content-panel__placeholder">Please wait while content is being generated...</p>
     {% endif %}
+  </div>
   </div>
 </div>

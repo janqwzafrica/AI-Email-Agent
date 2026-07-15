@@ -4,7 +4,7 @@
 
 {% block styles %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard-test-send.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard-send.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -58,5 +58,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ url_for('static', filename='js/pages/ai-wizard-test-send.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/ai_wizard_send.js') }}"></script>
 {% endblock %}
