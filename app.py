@@ -8,8 +8,9 @@ from sqlalchemy.exc import IntegrityError
 from config import Config
 from extensions import db, login_manager, migrate
 from logging_config import setup_logging
-from models import PasswordResetCode, User, utc_now
+from models import PasswordResetCode, Role, User, utc_now
 from services.email_service import send_password_reset_email
+from utils.security import BCRYPT_MAX_BYTES
 
 setup_logging()
 
@@ -26,6 +27,10 @@ def is_safe_redirect_url(target):
 
     parsed_target = urlsplit(target)
     return parsed_target.scheme == "" and parsed_target.netloc == "" and target.startswith("/")
+
+
+def is_within_bcrypt_limit(value):
+    return len((value or "").encode("utf-8")) <= BCRYPT_MAX_BYTES
 
 
 def get_current_campaign_draft():
@@ -49,6 +54,10 @@ def get_test_emails(list_id):
 def send_test_emails(list_id):
     """Send the current draft to every address in the given test list."""
     return True
+
+
+def get_role_by_name(name):
+    return Role.query.filter_by(name=name).one_or_none()
 
 
 @app.route("/")
@@ -82,6 +91,10 @@ def signup():
             flash("Password must be at least 8 characters.", "error")
             return render_template("signup.html", email=email), 400
 
+        if not is_within_bcrypt_limit(password):
+            flash("Password must be 72 bytes or fewer.", "error")
+            return render_template("signup.html", email=email), 400
+
         if password != password_confirm:
             flash("Passwords do not match.", "error")
             return render_template("signup.html", email=email), 400
@@ -90,7 +103,12 @@ def signup():
             flash("An account with this email already exists.", "error")
             return render_template("signup.html", email=email), 409
 
-        user = User(email=email, access_level=User.ROLE_ADMIN)
+        admin_role = get_role_by_name(Role.NAME_ADMIN)
+        if not admin_role:
+            admin_role = Role(name=Role.NAME_ADMIN)
+            db.session.add(admin_role)
+
+        user = User(email=email, role=admin_role)
         user.set_password(password)
 
         db.session.add(user)
@@ -154,6 +172,10 @@ def forgot_password():
 
         if len(password) < 8:
             flash("Password must be at least 8 characters.", "error")
+            return render_template("forgot_password.html", email=email), 400
+
+        if not is_within_bcrypt_limit(password):
+            flash("Password must be 72 bytes or fewer.", "error")
             return render_template("forgot_password.html", email=email), 400
 
         if password != password_confirm:
@@ -308,7 +330,8 @@ def user_accounts():
 @app.route("/user-accounts/edit")
 @login_required
 def user_form():
-    return render_template("user_form.html")
+    roles = Role.query.order_by(Role.name).all()
+    return render_template("user_form.html", roles=roles)
 
 
 @app.route("/campaigns/ai-wizard/upload")

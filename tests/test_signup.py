@@ -1,4 +1,6 @@
-from models import User
+from uuid import UUID
+
+from models import Role, User
 
 
 def test_signup_screen_renders(client):
@@ -43,6 +45,22 @@ def test_signup_rejects_short_password(client):
     assert b"Password must be at least 8 characters." in response.data
 
 
+def test_signup_rejects_passwords_over_bcrypt_limit(client):
+    long_password = "a" * 73
+
+    response = client.post(
+        "/signup",
+        data={
+            "email": "user@example.com",
+            "password": long_password,
+            "password_confirm": long_password,
+        },
+    )
+
+    assert response.status_code == 400
+    assert b"Password must be 72 bytes or fewer." in response.data
+
+
 def test_signup_rejects_mismatched_passwords(client):
     response = client.post(
         "/signup",
@@ -70,8 +88,10 @@ def test_signup_creates_user_and_redirects_to_login(client, db):
     user = User.query.filter_by(email="newuser@example.com").one()
     assert response.status_code == 302
     assert response.location == "/login"
+    assert UUID(user.id)
     assert user.check_password("password123") is True
-    assert user.access_level == User.ROLE_ADMIN
+    assert user.password_hash.startswith("$2b$")
+    assert user.role.name == Role.NAME_ADMIN
 
 
 def test_signup_rejects_duplicate_email(client, user_factory):

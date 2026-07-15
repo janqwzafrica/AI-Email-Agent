@@ -13,6 +13,19 @@ pip install -r requirements.txt
 copy .env.example .env        # Windows (cp on macOS/Linux)
 ```
 
+Create MySQL databases for the app and tests, then update `.env`:
+
+```
+DATABASE_URL=mysql+pymysql://user:password@127.0.0.1:3306/ai_email_agent
+TEST_DATABASE_URL=mysql+pymysql://user:password@127.0.0.1:3306/ai_email_agent_test
+```
+
+Apply migrations:
+
+```
+flask db upgrade
+```
+
 ## Run
 
 ```

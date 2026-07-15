@@ -1,5 +1,7 @@
+bcrypt
 Flask
 Flask-Login
 Flask-Migrate
 Flask-SQLAlchemy
+PyMySQL
 python-dotenv
