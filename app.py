@@ -1,9 +1,19 @@
+from datetime import timedelta
+from urllib.parse import urlsplit
+
 import os
 import threading
-from flask import Flask, current_app, redirect, render_template, request, url_for, jsonify, session
+from flask import Flask, abort, flash, current_app, redirect, render_template, request, url_for, jsonify, session
 from werkzeug.utils import secure_filename
+from flask_login import current_user, login_required, login_user, logout_user
+from sqlalchemy.exc import IntegrityError
+
 from config import Config
+from extensions import db, login_manager, migrate
 from logging_config import setup_logging
+from models import PasswordResetCode, Role, User, utc_now
+from services.email_service import send_password_reset_email
+from utils.security import BCRYPT_MAX_BYTES
 from services.content_draft_store import create_draft, get_draft, update_draft
 from services.document_extractor import extract_text, ExtractionError
 from services.ai_email_content import generate_email_content, AIGenerationError
@@ -12,6 +22,21 @@ setup_logging()
 
 app = Flask(__name__)
 app.config.from_object(Config)
+db.init_app(app)
+migrate.init_app(app, db)
+login_manager.init_app(app)
+
+
+def is_safe_redirect_url(target):
+    if not target:
+        return False
+
+    parsed_target = urlsplit(target)
+    return parsed_target.scheme == "" and parsed_target.netloc == "" and target.startswith("/")
+
+
+def is_within_bcrypt_limit(value):
+    return len((value or "").encode("utf-8")) <= BCRYPT_MAX_BYTES
 
 ALLOWED_CONTENT_EXTENSIONS = {"doc", "docx", "pdf"}
 ALLOWED_LOGO_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
@@ -90,68 +115,286 @@ def send_test_emails(list_id):
     return True
 
 
+def get_role_by_name(name):
+    return Role.query.filter_by(name=name).one_or_none()
+
+
 @app.route("/")
 def auth():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
     return redirect(url_for("login"))
 
 
 @app.route("/dashboard")
+@login_required
 def index():
     return render_template("index.html")
 
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+
     if request.method == "POST":
+        email = User.normalize_email(request.form.get("email"))
+        password = request.form.get("password", "")
+        password_confirm = request.form.get("password_confirm", "")
+
+        if not email:
+            flash("Email is required.", "error")
+            return render_template("signup.html", email=email), 400
+
+        if len(password) < 8:
+            flash("Password must be at least 8 characters.", "error")
+            return render_template("signup.html", email=email), 400
+
+        if not is_within_bcrypt_limit(password):
+            flash("Password must be 72 bytes or fewer.", "error")
+            return render_template("signup.html", email=email), 400
+
+        if password != password_confirm:
+            flash("Passwords do not match.", "error")
+            return render_template("signup.html", email=email), 400
+
+        if User.query.filter_by(email=email).first():
+            flash("An account with this email already exists.", "error")
+            return render_template("signup.html", email=email), 409
+
+        admin_role = get_role_by_name(Role.NAME_ADMIN)
+        if not admin_role:
+            admin_role = Role(name=Role.NAME_ADMIN)
+            db.session.add(admin_role)
+
+        user = User(email=email, role=admin_role)
+        user.set_password(password)
+
+        db.session.add(user)
+
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            flash("An account with this email already exists.", "error")
+            return render_template("signup.html", email=email), 409
+
+        flash("Account created. Please log in.", "success")
         return redirect(url_for("login"))
     return render_template("signup.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+
     if request.method == "POST":
+        email = User.normalize_email(request.form.get("email"))
+        password = request.form.get("password", "")
+        next_url = request.form.get("next") or request.args.get("next")
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user or not user.check_password(password):
+            flash("Invalid email or password.", "error")
+            return render_template("login.html", email=email, next_url=next_url), 401
+
+        if not user.is_active:
+            flash("This account is inactive. Please contact an administrator.", "error")
+            return render_template("login.html", email=email, next_url=next_url), 403
+
+        login_user(user)
+        flash("Logged in successfully.", "success")
+
+        if is_safe_redirect_url(next_url):
+            return redirect(next_url)
+
         return redirect(url_for("index"))
     return render_template("login.html")
 
 
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+
     if request.method == "POST":
+        email = User.normalize_email(request.form.get("email"))
+        code = (request.form.get("auth_code") or "").strip()
+        password = request.form.get("password", "")
+        password_confirm = request.form.get("password_confirm", "")
+
+        if not email or not code:
+            flash("Email and reset code are required.", "error")
+            return render_template("forgot_password.html", email=email), 400
+
+        if len(password) < 8:
+            flash("Password must be at least 8 characters.", "error")
+            return render_template("forgot_password.html", email=email), 400
+
+        if not is_within_bcrypt_limit(password):
+            flash("Password must be 72 bytes or fewer.", "error")
+            return render_template("forgot_password.html", email=email), 400
+
+        if password != password_confirm:
+            flash("Passwords do not match.", "error")
+            return render_template("forgot_password.html", email=email), 400
+
+        user = User.query.filter_by(email=email).first()
+        reset_code = None
+
+        if user:
+            reset_code = (
+                PasswordResetCode.query.filter_by(user_id=user.id, used_at=None)
+                .order_by(PasswordResetCode.created_at.desc())
+                .first()
+            )
+
+        if not user or not reset_code or not reset_code.is_valid_for(code):
+            flash("Invalid or expired reset code.", "error")
+            return render_template("forgot_password.html", email=email), 400
+
+        user.set_password(password)
+        reset_code.mark_used()
+        db.session.commit()
+
+        flash("Password reset successfully. Please log in.", "success")
         return redirect(url_for("login"))
     return render_template("forgot_password.html")
 
 
+@app.post("/forgot-password/send-code")
+def forgot_password_send_code():
+    email = User.normalize_email(request.form.get("email"))
+
+    if not email:
+        return jsonify({"success": False, "message": "Email is required."}), 400
+
+    user = User.query.filter_by(email=email).first()
+    success_message = "If an account exists for that email, a reset code has been sent."
+
+    if not user:
+        return jsonify({"success": True, "message": success_message})
+
+    now = utc_now()
+    code = PasswordResetCode.generate_code()
+    expires_at = now + timedelta(minutes=app.config["PASSWORD_RESET_CODE_MINUTES"])
+
+    for active_code in PasswordResetCode.query.filter_by(user_id=user.id, used_at=None):
+        active_code.mark_used()
+
+    reset_code = PasswordResetCode(user=user, expires_at=expires_at)
+    reset_code.set_code(code)
+    db.session.add(reset_code)
+
+    try:
+        send_password_reset_email(user.email, code)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        app.logger.exception("Failed to send password reset code.")
+        return jsonify(
+            {
+                "success": False,
+                "message": "We could not send a reset code right now. Please try again.",
+            }
+        ), 500
+
+    return jsonify({"success": True, "message": success_message})
+
+
 @app.route("/logout")
+@login_required
 def logout():
+    logout_user()
+    flash("You have been logged out.", "success")
     return redirect(url_for("login"))
 
 
 @app.route("/email-lists")
+@login_required
 def email_lists():
     return render_template("email_lists.html")
 
 
 @app.route("/email-lists/<list_id>")
+@login_required
 def email_list_detail(list_id):
     return render_template("email_list_detail.html", list_id=list_id)
 
 
+@app.route("/campaign-manager")
+@login_required
+def campaign_manager():
+    return render_template("campaign_manager.html")
+
+
+@app.route("/campaign-manager/wizard/<mode>")
+@login_required
+def campaign_wizard(mode):
+    if mode not in ("ai", "manual"):
+        abort(404)
+    return render_template("wizard_setup.html", mode=mode)
+
+
+@app.route("/campaign-manager/wizard/<mode>/template")
+@login_required
+def wizard_template(mode):
+    if mode not in ("ai", "manual"):
+        abort(404)
+    return render_template("wizard_template.html", mode=mode)
+
+
+@app.route("/campaign-manager/wizard/<mode>/test-send")
+@login_required
+def wizard_test_send(mode):
+    if mode not in ("ai", "manual"):
+        abort(404)
+    return render_template("wizard_test_send.html", mode=mode)
+
+
+@app.route("/campaign-manager/wizard/<mode>/schedule")
+@login_required
+def wizard_schedule(mode):
+    if mode not in ("ai", "manual"):
+        abort(404)
+    return render_template("wizard_schedule.html", mode=mode)
+
+
+@app.route("/campaign-manager/<campaign_id>")
+@login_required
+def campaign_recipients(campaign_id):
+    return render_template("campaign_recipients.html", campaign_id=campaign_id)
+
+
+@app.route("/campaign-manager/<campaign_id>/preview")
+@login_required
+def campaign_preview(campaign_id):
+    return render_template("campaign_preview.html", campaign_id=campaign_id)
+
+
 @app.route("/reports")
+@login_required
 def reports():
     return render_template("reports.html")
 
 
 @app.route("/user-accounts")
+@login_required
 def user_accounts():
     return render_template("user_accounts.html")
 
 
 @app.route("/user-accounts/edit")
+@login_required
 def user_form():
-    return render_template("user_form.html")
+    roles = Role.query.order_by(Role.name).all()
+    return render_template("user_form.html", roles=roles)
 
 
 @app.route("/campaigns/ai-wizard/upload", methods=["GET", "POST"])
+@login_required
 def ai_wizard_upload():
     if request.method == "POST":
         content_file = request.files.get("content_file")
@@ -208,6 +451,7 @@ def ai_wizard_upload():
 
 
 @app.route("/campaigns/ai-wizard/template")
+@login_required
 def ai_wizard_template():
     draft_id = session.get("draft_id")
     draft = get_draft(draft_id)
@@ -227,6 +471,7 @@ def ai_wizard_template():
     )
 
 @app.route("/campaigns/ai-wizard/status")
+@login_required
 def ai_wizard_status():
     draft_id = session.get("draft_id")
     draft = get_draft(draft_id)
@@ -239,6 +484,7 @@ def ai_wizard_status():
     })
     
 @app.route("/campaigns/ai-wizard/save-content", methods=["POST"])
+@login_required
 def ai_wizard_save_content():
     draft_id = session.get("draft_id")
     draft = get_draft(draft_id)
@@ -251,6 +497,7 @@ def ai_wizard_save_content():
     return jsonify({"success": True})
 
 @app.route("/campaigns/ai-wizard/replace-content", methods=["POST"])
+@login_required
 def ai_wizard_replace_content():
     draft_id = session.get("draft_id")
     draft = get_draft(draft_id)
@@ -284,6 +531,7 @@ def ai_wizard_replace_content():
     return jsonify({"success": True})
 
 @app.route("/campaigns/ai-wizard/send")
+@login_required
 def ai_wizard_test_send():
     # TODO: replace with the real campaign draft pulled from session/DB
     # (the same draft the user set up in the previous "Setup Email Template" step)
@@ -307,6 +555,7 @@ def ai_wizard_test_send():
 
 
 @app.route("/campaigns/ai-wizard/test-send/send", methods=["POST"])
+@login_required
 def ai_wizard_test_send_action():
     payload = request.get_json(silent=True) or {}
     list_id = payload.get("test_email_list")
@@ -318,6 +567,7 @@ def ai_wizard_test_send_action():
 
 
 @app.route("/campaigns/ai-wizard/schedule")
+@login_required
 def ai_wizard_schedule():
     # Pulling the current campaign draft just like in the test-send step
     campaign = get_current_campaign_draft()

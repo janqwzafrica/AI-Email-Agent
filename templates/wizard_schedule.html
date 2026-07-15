@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Schedule Campaign — AI Email Agent{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/campaign_preview.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/wizard.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-heading">Schedule Campaign</h1>
+
+<a href="{{ url_for('wizard_test_send', mode=mode) }}" class="back-link">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  Go Back
+</a>
+
+<div class="preview-layout">
+  {% include 'partials/email_preview_card.html' %}
+
+  <div class="schedule-rail">
+    {% include 'partials/campaign_settings_fields.html' %}
+
+    <div class="wizard-actions" data-dropdown>
+      <button class="btn btn--primary" data-dropdown-toggle aria-expanded="false">Schedule</button>
+      <a href="#" class="btn btn--primary">Run Now</a>
+      <a href="{{ url_for('campaign_manager') }}" class="btn btn--dark">Finish</a>
+
+      <div class="calendar-popover" data-dropdown-menu>
+        <div class="calendar" data-calendar>
+          <div class="calendar__header">
+            <span data-calendar-label></span>
+            <div class="calendar__nav">
+              <button type="button" data-calendar-prev aria-label="Previous month">&lsaquo;</button>
+              <button type="button" data-calendar-next aria-label="Next month">&rsaquo;</button>
+            </div>
+          </div>
+          <table class="calendar__grid">
+            <thead>
+              <tr><th>SUN</th><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th></tr>
+            </thead>
+            <tbody data-calendar-grid></tbody>
+          </table>
+          <div class="calendar__time">
+            <span>Time</span>
+            <input class="calendar__time-input" type="text" value="09:32" aria-label="Time">
+            <button type="button" class="calendar__meridiem calendar__meridiem--active" data-meridiem>AM</button>
+            <button type="button" class="calendar__meridiem" data-meridiem>PM</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

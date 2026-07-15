@@ -28,10 +28,14 @@
       <input class="form__input" type="tel" id="contact-number" name="contact_number" placeholder="+1 000 000 000">
     </div>
     <div class="form__field">
-      <label class="form__label" for="access-level">Access Level</label>
-      <select class="form__select" id="access-level" name="access_level">
+      <label class="form__label" for="role-id">Role</label>
+      <select class="form__select" id="role-id" name="role_id">
+        {% for role in roles|default([], true) %}
+        <option value="{{ role.id }}">{{ role.name }}</option>
+        {% else %}
         <option>Admin</option>
         <option>Staff</option>
+        {% endfor %}
       </select>
     </div>
 

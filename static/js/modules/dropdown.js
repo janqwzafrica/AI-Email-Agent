@@ -12,6 +12,12 @@ export function initDropdowns() {
       const isOpen = menu.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", String(isOpen));
     });
+
+    // Interacting inside the menu (e.g. calendar day/month/AM-PM clicks)
+    // must not bubble to the document listener and close it.
+    menu.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
   });
 
   // Close any open dropdown when clicking elsewhere or pressing Escape
