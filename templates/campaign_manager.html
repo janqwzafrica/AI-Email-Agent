@@ -52,7 +52,7 @@
         {'name': 'Email Campaign 6', 'list': 'Email List 2', 'opens': 30, 'clicks': 8, 'unsub': 2, 'date': '6/19/2026', 'scheduled': false, 'status': 'Completed', 'quarterly': 'Activate'},
       ] %}
       <tr>
-        <td><a href="{{ url_for('campaign_preview', campaign_id=loop.index) }}" class="table__link">{{ row.name }}</a></td>
+        <td><a href="{{ url_for('campaign_recipients', campaign_id=loop.index) }}" class="table__link">{{ row.name }}</a></td>
         <td>{{ row.list }}</td>
         <td>{{ row.opens }}</td>
         <td>{{ row.clicks }}</td>

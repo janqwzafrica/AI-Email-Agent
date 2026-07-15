@@ -112,6 +112,11 @@ def wizard_schedule(mode):
 
 
 @app.route("/campaign-manager/<campaign_id>")
+def campaign_recipients(campaign_id):
+    return render_template("campaign_recipients.html", campaign_id=campaign_id)
+
+
+@app.route("/campaign-manager/<campaign_id>/preview")
 def campaign_preview(campaign_id):
     return render_template("campaign_preview.html", campaign_id=campaign_id)
 
