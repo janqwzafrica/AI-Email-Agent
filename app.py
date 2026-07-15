@@ -1,12 +1,18 @@
-from flask import Flask, abort, redirect, render_template, request, url_for
+from flask import Flask, abort, flash, jsonify, redirect, render_template, request, url_for
+from sqlalchemy.exc import IntegrityError
 
 from config import Config
+from extensions import db, login_manager, migrate
 from logging_config import setup_logging
+from models import User
 
 setup_logging()
 
 app = Flask(__name__)
 app.config.from_object(Config)
+db.init_app(app)
+migrate.init_app(app, db)
+login_manager.init_app(app)
 
 
 def get_current_campaign_draft():
@@ -45,6 +51,39 @@ def index():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
+        email = User.normalize_email(request.form.get("email"))
+        password = request.form.get("password", "")
+        password_confirm = request.form.get("password_confirm", "")
+
+        if not email:
+            flash("Email is required.", "error")
+            return render_template("signup.html", email=email), 400
+
+        if len(password) < 8:
+            flash("Password must be at least 8 characters.", "error")
+            return render_template("signup.html", email=email), 400
+
+        if password != password_confirm:
+            flash("Passwords do not match.", "error")
+            return render_template("signup.html", email=email), 400
+
+        if User.query.filter_by(email=email).first():
+            flash("An account with this email already exists.", "error")
+            return render_template("signup.html", email=email), 409
+
+        user = User(email=email, access_level=User.ROLE_ADMIN)
+        user.set_password(password)
+
+        db.session.add(user)
+
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            flash("An account with this email already exists.", "error")
+            return render_template("signup.html", email=email), 409
+
+        flash("Account created. Please log in.", "success")
         return redirect(url_for("login"))
     return render_template("signup.html")
 

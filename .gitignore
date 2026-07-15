@@ -7,6 +7,7 @@ venv/
 
 # Env
 .env
+app.db
 
 # Editors / OS
 .vscode/

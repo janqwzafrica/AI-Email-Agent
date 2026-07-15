@@ -24,6 +24,8 @@
 .auth-main {
   min-height: calc(100vh - 96px);
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   padding: 84px var(--space-4) var(--space-5);
 }
@@ -58,6 +60,37 @@
   font-size: 18px;
   line-height: 1.4;
   font-weight: 400;
+}
+
+.auth-flashes {
+  width: min(100%, 420px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.auth-flash {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius);
+  background: #ffffff;
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 10px 12px;
+}
+
+.auth-flash--error {
+  border-color: #fecaca;
+  background: #fff1f2;
+  color: #991b1b;
+}
+
+.auth-flash--success {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
 }
 
 .auth-form {
@@ -139,6 +172,7 @@
   width: 280px;
   height: 58px;
   justify-content: center;
+  gap: 10px;
   border-radius: 999px;
   background: var(--color-brand);
   color: #ffffff;
@@ -149,6 +183,29 @@
 
 .auth-submit:hover {
   opacity: 0.9;
+}
+
+.auth-submit:disabled,
+.auth-submit[aria-busy="true"] {
+  background: #9ca3af;
+  color: #ffffff;
+  cursor: wait;
+  opacity: 0.85;
+}
+
+.auth-submit__spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgb(255 255 255 / 0.55);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: auth-submit-spin 0.75s linear infinite;
+}
+
+@keyframes auth-submit-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .auth-switch,
