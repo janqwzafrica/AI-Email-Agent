@@ -1,4 +1,7 @@
+from urllib.parse import urlsplit
+
 from flask import Flask, abort, flash, jsonify, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy.exc import IntegrityError
 
 from config import Config
@@ -13,6 +16,14 @@ app.config.from_object(Config)
 db.init_app(app)
 migrate.init_app(app, db)
 login_manager.init_app(app)
+
+
+def is_safe_redirect_url(target):
+    if not target:
+        return False
+
+    parsed_target = urlsplit(target)
+    return parsed_target.scheme == "" and parsed_target.netloc == "" and target.startswith("/")
 
 
 def get_current_campaign_draft():
@@ -40,16 +51,22 @@ def send_test_emails(list_id):
 
 @app.route("/")
 def auth():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
     return redirect(url_for("login"))
 
 
 @app.route("/dashboard")
+@login_required
 def index():
     return render_template("index.html")
 
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+
     if request.method == "POST":
         email = User.normalize_email(request.form.get("email"))
         password = request.form.get("password", "")
@@ -90,7 +107,30 @@ def signup():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+
     if request.method == "POST":
+        email = User.normalize_email(request.form.get("email"))
+        password = request.form.get("password", "")
+        next_url = request.form.get("next") or request.args.get("next")
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user or not user.check_password(password):
+            flash("Invalid email or password.", "error")
+            return render_template("login.html", email=email, next_url=next_url), 401
+
+        if not user.is_active:
+            flash("This account is inactive. Please contact an administrator.", "error")
+            return render_template("login.html", email=email, next_url=next_url), 403
+
+        login_user(user)
+        flash("Logged in successfully.", "success")
+
+        if is_safe_redirect_url(next_url):
+            return redirect(next_url)
+
         return redirect(url_for("index"))
     return render_template("login.html")
 
@@ -103,26 +143,33 @@ def forgot_password():
 
 
 @app.route("/logout")
+@login_required
 def logout():
+    logout_user()
+    flash("You have been logged out.", "success")
     return redirect(url_for("login"))
 
 
 @app.route("/email-lists")
+@login_required
 def email_lists():
     return render_template("email_lists.html")
 
 
 @app.route("/email-lists/<list_id>")
+@login_required
 def email_list_detail(list_id):
     return render_template("email_list_detail.html", list_id=list_id)
 
 
 @app.route("/campaign-manager")
+@login_required
 def campaign_manager():
     return render_template("campaign_manager.html")
 
 
 @app.route("/campaign-manager/wizard/<mode>")
+@login_required
 def campaign_wizard(mode):
     if mode not in ("ai", "manual"):
         abort(404)
@@ -130,6 +177,7 @@ def campaign_wizard(mode):
 
 
 @app.route("/campaign-manager/wizard/<mode>/template")
+@login_required
 def wizard_template(mode):
     if mode not in ("ai", "manual"):
         abort(404)
@@ -137,6 +185,7 @@ def wizard_template(mode):
 
 
 @app.route("/campaign-manager/wizard/<mode>/test-send")
+@login_required
 def wizard_test_send(mode):
     if mode not in ("ai", "manual"):
         abort(404)
@@ -144,6 +193,7 @@ def wizard_test_send(mode):
 
 
 @app.route("/campaign-manager/wizard/<mode>/schedule")
+@login_required
 def wizard_schedule(mode):
     if mode not in ("ai", "manual"):
         abort(404)
@@ -151,31 +201,37 @@ def wizard_schedule(mode):
 
 
 @app.route("/campaign-manager/<campaign_id>")
+@login_required
 def campaign_preview(campaign_id):
     return render_template("campaign_preview.html", campaign_id=campaign_id)
 
 
 @app.route("/reports")
+@login_required
 def reports():
     return render_template("reports.html")
 
 
 @app.route("/user-accounts")
+@login_required
 def user_accounts():
     return render_template("user_accounts.html")
 
 
 @app.route("/user-accounts/edit")
+@login_required
 def user_form():
     return render_template("user_form.html")
 
 
 @app.route("/campaigns/ai-wizard/upload")
+@login_required
 def ai_wizard_upload():
     return render_template("email_campaign/ai_wizard_upload.html")
 
 
 @app.route("/campaigns/ai-wizard/template")
+@login_required
 def ai_wizard_template():
     return render_template(
         "email_campaign/ai_wizard_template.html",
@@ -190,6 +246,7 @@ def ai_wizard_template():
 
 
 @app.route("/campaigns/ai-wizard/send")
+@login_required
 def ai_wizard_test_send():
     # TODO: replace with the real campaign draft pulled from session/DB
     # (the same draft the user set up in the previous "Setup Email Template" step)
@@ -213,6 +270,7 @@ def ai_wizard_test_send():
 
 
 @app.route("/campaigns/ai-wizard/test-send/send", methods=["POST"])
+@login_required
 def ai_wizard_test_send_action():
     payload = request.get_json(silent=True) or {}
     list_id = payload.get("test_email_list")
@@ -224,6 +282,7 @@ def ai_wizard_test_send_action():
 
 
 @app.route("/campaigns/ai-wizard/schedule")
+@login_required
 def ai_wizard_schedule():
     # Pulling the current campaign draft just like in the test-send step
     campaign = get_current_campaign_draft()
