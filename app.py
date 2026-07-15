@@ -1,3 +1,4 @@
+from datetime import timedelta
 from urllib.parse import urlsplit
 
 from flask import Flask, abort, flash, jsonify, redirect, render_template, request, url_for
@@ -7,7 +8,8 @@ from sqlalchemy.exc import IntegrityError
 from config import Config
 from extensions import db, login_manager, migrate
 from logging_config import setup_logging
-from models import User
+from models import PasswordResetCode, User, utc_now
+from services.email_service import send_password_reset_email
 
 setup_logging()
 
@@ -137,9 +139,88 @@ def login():
 
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+
     if request.method == "POST":
+        email = User.normalize_email(request.form.get("email"))
+        code = (request.form.get("auth_code") or "").strip()
+        password = request.form.get("password", "")
+        password_confirm = request.form.get("password_confirm", "")
+
+        if not email or not code:
+            flash("Email and reset code are required.", "error")
+            return render_template("forgot_password.html", email=email), 400
+
+        if len(password) < 8:
+            flash("Password must be at least 8 characters.", "error")
+            return render_template("forgot_password.html", email=email), 400
+
+        if password != password_confirm:
+            flash("Passwords do not match.", "error")
+            return render_template("forgot_password.html", email=email), 400
+
+        user = User.query.filter_by(email=email).first()
+        reset_code = None
+
+        if user:
+            reset_code = (
+                PasswordResetCode.query.filter_by(user_id=user.id, used_at=None)
+                .order_by(PasswordResetCode.created_at.desc())
+                .first()
+            )
+
+        if not user or not reset_code or not reset_code.is_valid_for(code):
+            flash("Invalid or expired reset code.", "error")
+            return render_template("forgot_password.html", email=email), 400
+
+        user.set_password(password)
+        reset_code.mark_used()
+        db.session.commit()
+
+        flash("Password reset successfully. Please log in.", "success")
         return redirect(url_for("login"))
     return render_template("forgot_password.html")
+
+
+@app.post("/forgot-password/send-code")
+def forgot_password_send_code():
+    email = User.normalize_email(request.form.get("email"))
+
+    if not email:
+        return jsonify({"success": False, "message": "Email is required."}), 400
+
+    user = User.query.filter_by(email=email).first()
+    success_message = "If an account exists for that email, a reset code has been sent."
+
+    if not user:
+        return jsonify({"success": True, "message": success_message})
+
+    now = utc_now()
+    code = PasswordResetCode.generate_code()
+    expires_at = now + timedelta(minutes=app.config["PASSWORD_RESET_CODE_MINUTES"])
+
+    for active_code in PasswordResetCode.query.filter_by(user_id=user.id, used_at=None):
+        active_code.mark_used()
+
+    reset_code = PasswordResetCode(user=user, expires_at=expires_at)
+    reset_code.set_code(code)
+    db.session.add(reset_code)
+
+    try:
+        send_password_reset_email(user.email, code)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        app.logger.exception("Failed to send password reset code.")
+        return jsonify(
+            {
+                "success": False,
+                "message": "We could not send a reset code right now. Please try again.",
+            }
+        ), 500
+
+    return jsonify({"success": True, "message": success_message})
 
 
 @app.route("/logout")
