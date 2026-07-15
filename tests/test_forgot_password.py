@@ -45,6 +45,23 @@ def test_forgot_password_reset_rejects_short_password(client):
     assert b"Password must be at least 8 characters." in response.data
 
 
+def test_forgot_password_reset_rejects_passwords_over_bcrypt_limit(client):
+    long_password = "a" * 73
+
+    response = client.post(
+        "/forgot-password",
+        data={
+            "email": "user@example.com",
+            "auth_code": "123456",
+            "password": long_password,
+            "password_confirm": long_password,
+        },
+    )
+
+    assert response.status_code == 400
+    assert b"Password must be 72 bytes or fewer." in response.data
+
+
 def test_forgot_password_reset_rejects_mismatched_passwords(client):
     response = client.post(
         "/forgot-password",
@@ -108,6 +125,7 @@ def test_send_code_for_known_account_creates_reset_code(client, user_factory, mo
     assert response.status_code == 200
     assert response.json["success"] is True
     assert reset_code.user_id == user.id
+    assert reset_code.code_hash.startswith("$2b$")
     send_email.assert_called_once()
 
 

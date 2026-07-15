@@ -1,71 +1,78 @@
 from datetime import datetime, timezone
 from secrets import randbelow
+from uuid import uuid4
 
 from flask_login import UserMixin
-from sqlalchemy import CheckConstraint
-from werkzeug.security import check_password_hash, generate_password_hash
 
 from extensions import db, login_manager
+from utils.security import check_secret_hash, hash_secret
 
 
 def utc_now():
     return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
-class User(UserMixin, db.Model):
+def generate_uuid():
+    return str(uuid4())
+
+
+class BaseEntity(db.Model):
+    __abstract__ = True
+
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
+    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=utc_now)
+    updated_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=utc_now,
+        onupdate=utc_now,
+    )
+
+
+class Role(BaseEntity):
+    __tablename__ = "roles"
+
+    NAME_ADMIN = "Admin"
+    NAME_STAFF = "Staff"
+    DEFAULT_NAMES = (NAME_ADMIN, NAME_STAFF)
+
+    name = db.Column(db.String(50), nullable=False, unique=True, index=True)
+
+
+class User(UserMixin, BaseEntity):
     __tablename__ = "users"
 
-    ROLE_ADMIN = "Admin"
-    ROLE_STAFF = "Staff"
-    VALID_ROLES = (ROLE_ADMIN, ROLE_STAFF)
-
-    id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), nullable=False, unique=True, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
     first_name = db.Column(db.String(80))
     last_name = db.Column(db.String(80))
     contact_number = db.Column(db.String(40))
-    access_level = db.Column(db.String(20), nullable=False, default=ROLE_ADMIN)
+    role_id = db.Column(db.String(36), db.ForeignKey("roles.id"), nullable=False, index=True)
+    role = db.relationship("Role", backref=db.backref("users", lazy=True))
     is_active = db.Column(db.Boolean, nullable=False, default=True)
-    created_at = db.Column(
-        db.DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.now(timezone.utc),
-    )
-    updated_at = db.Column(
-        db.DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
-    )
-
-    __table_args__ = (
-        CheckConstraint(
-            "access_level IN ('Admin', 'Staff')",
-            name="ck_users_access_level",
-        ),
-    )
 
     @staticmethod
     def normalize_email(email):
         return (email or "").strip().lower()
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = hash_secret(password)
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return check_secret_hash(self.password_hash, password)
+
+    @property
+    def access_level(self):
+        return self.role.name if self.role else None
 
 
-class PasswordResetCode(db.Model):
+class PasswordResetCode(BaseEntity):
     __tablename__ = "password_reset_codes"
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    user_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False, index=True)
     code_hash = db.Column(db.String(255), nullable=False)
     expires_at = db.Column(db.DateTime, nullable=False, index=True)
     used_at = db.Column(db.DateTime)
-    created_at = db.Column(db.DateTime, nullable=False, default=utc_now)
 
     user = db.relationship(
         "User",
@@ -77,10 +84,10 @@ class PasswordResetCode(db.Model):
         return f"{randbelow(1_000_000):06d}"
 
     def set_code(self, code):
-        self.code_hash = generate_password_hash(code)
+        self.code_hash = hash_secret(code)
 
     def check_code(self, code):
-        return check_password_hash(self.code_hash, (code or "").strip())
+        return check_secret_hash(self.code_hash, (code or "").strip())
 
     @property
     def is_expired(self):
@@ -100,6 +107,6 @@ class PasswordResetCode(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     try:
-        return db.session.get(User, int(user_id))
+        return db.session.get(User, user_id)
     except (TypeError, ValueError):
         return None

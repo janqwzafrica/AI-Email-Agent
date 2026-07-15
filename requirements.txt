@@ -1,3 +1,4 @@
+bcrypt
 Flask
 Flask-Login
 Flask-Migrate
