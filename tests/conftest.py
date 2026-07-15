@@ -72,10 +72,14 @@ def app():
 @pytest.fixture
 def db(app):
     from extensions import db as database
+    from models import Role
 
     with app.app_context():
         database.drop_all()
         database.create_all()
+        for role_name in Role.DEFAULT_NAMES:
+            database.session.add(Role(name=role_name))
+        database.session.commit()
         yield database
         database.session.remove()
         database.drop_all()
@@ -88,17 +92,18 @@ def client(app, db):
 
 @pytest.fixture
 def user_factory(db):
-    from models import User
+    from models import Role, User
 
     def create_user(
         email="user@example.com",
         password="password123",
-        access_level=User.ROLE_ADMIN,
+        role_name=Role.NAME_ADMIN,
         is_active=True,
     ):
+        role = Role.query.filter_by(name=role_name).one()
         user = User(
             email=User.normalize_email(email),
-            access_level=access_level,
+            role=role,
             is_active=is_active,
         )
         user.set_password(password)

@@ -47,7 +47,12 @@ class User(UserMixin, BaseEntity):
     first_name = db.Column(db.String(80))
     last_name = db.Column(db.String(80))
     contact_number = db.Column(db.String(40))
-    role_id = db.Column(db.String(36), db.ForeignKey("roles.id"), nullable=False, index=True)
+    role_id = db.Column(
+        db.String(36),
+        db.ForeignKey("roles.id"),
+        nullable=False,
+        index=True,
+    )
     role = db.relationship("Role", backref=db.backref("users", lazy=True))
     is_active = db.Column(db.Boolean, nullable=False, default=True)
 
@@ -69,7 +74,12 @@ class User(UserMixin, BaseEntity):
 class PasswordResetCode(BaseEntity):
     __tablename__ = "password_reset_codes"
 
-    user_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False, index=True)
+    user_id = db.Column(
+        db.String(36),
+        db.ForeignKey("users.id"),
+        nullable=False,
+        index=True,
+    )
     code_hash = db.Column(db.String(255), nullable=False)
     expires_at = db.Column(db.DateTime, nullable=False, index=True)
     used_at = db.Column(db.DateTime)
