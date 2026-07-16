@@ -4,6 +4,23 @@
   margin-bottom: 20px;
 }
 
+.wizard-toolbar__actions {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+#testSentPill {
+  grid-column: 2;
+  justify-self: center;
+}
+
+#sendTestEmailBtn {
+  grid-column: 3;
+  justify-self: end;
+}
+
 .test-send-panel__header {
   display: flex;
   align-items: center;
