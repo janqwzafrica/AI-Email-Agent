@@ -38,4 +38,5 @@ class Config:
     SMTP_USE_TLS = os.getenv("SMTP_USE_TLS", "true").lower() in ("1", "true", "yes")
     SMTP_DEFAULT_SENDER = os.getenv("SMTP_DEFAULT_SENDER") or SMTP_USERNAME
     PASSWORD_RESET_CODE_MINUTES = int(os.getenv("PASSWORD_RESET_CODE_MINUTES", "10"))
+    PASSWORD_SETUP_LINK_HOURS = int(os.getenv("PASSWORD_SETUP_LINK_HOURS", "48"))
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

@@ -1,7 +1,9 @@
 from datetime import timedelta
+from functools import wraps
 from urllib.parse import urlsplit
 
 import os
+import secrets
 import threading
 from flask import Flask, abort, flash, current_app, redirect, render_template, request, url_for, jsonify, session
 from werkzeug.utils import secure_filename
@@ -12,7 +14,10 @@ from config import Config
 from extensions import db, login_manager, migrate
 from logging_config import setup_logging
 from models import PasswordResetCode, Role, User, utc_now
-from services.email_service import send_password_reset_email
+from services.email_service import (
+    send_password_reset_email,
+    send_password_setup_email,
+)
 from utils.security import BCRYPT_MAX_BYTES
 from services.content_draft_store import create_draft, get_draft, update_draft
 from services.document_extractor import extract_text, ExtractionError
@@ -117,6 +122,38 @@ def send_test_emails(list_id):
 
 def get_role_by_name(name):
     return Role.query.filter_by(name=name).one_or_none()
+
+
+def get_or_create_role(name):
+    role = get_role_by_name(name)
+    if not role:
+        role = Role(name=name)
+        db.session.add(role)
+    return role
+
+
+def admin_required(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if current_user.access_level != Role.NAME_ADMIN:
+            abort(403)
+        return view(*args, **kwargs)
+
+    return wrapped
+
+
+def create_password_setup_code(user):
+    """Create a one-time password-setup token for the user. Returns the raw token."""
+    token = secrets.token_urlsafe(32)
+    expires_at = utc_now() + timedelta(hours=app.config["PASSWORD_SETUP_LINK_HOURS"])
+
+    for active_code in PasswordResetCode.query.filter_by(user_id=user.id, used_at=None):
+        active_code.mark_used()
+
+    setup_code = PasswordResetCode(user=user, expires_at=expires_at)
+    setup_code.set_code(token)
+    db.session.add(setup_code)
+    return token
 
 
 @app.route("/")
@@ -382,15 +419,160 @@ def reports():
 
 @app.route("/user-accounts")
 @login_required
+@admin_required
 def user_accounts():
-    return render_template("user_accounts.html")
+    users = User.query.order_by(User.created_at.asc()).all()
+    return render_template("user_accounts.html", users=users)
 
 
-@app.route("/user-accounts/edit")
+@app.route("/user-accounts/edit", methods=["GET", "POST"])
 @login_required
+@admin_required
 def user_form():
     roles = Role.query.order_by(Role.name).all()
-    return render_template("user_form.html", roles=roles)
+    user = None
+    user_id = request.values.get("user_id")
+    if user_id:
+        user = db.session.get(User, user_id)
+        if not user:
+            abort(404)
+
+    if request.method == "POST":
+        email = User.normalize_email(request.form.get("email"))
+        first_name = (request.form.get("first_name") or "").strip()
+        last_name = (request.form.get("last_name") or "").strip()
+        contact_number = (request.form.get("contact_number") or "").strip()
+        role_id = request.form.get("role_id")
+
+        if not email:
+            flash("Email is required.", "error")
+            return render_template("user_form.html", roles=roles, user=user), 400
+
+        existing = User.query.filter_by(email=email).first()
+        if existing and (not user or existing.id != user.id):
+            flash("An account with this email already exists.", "error")
+            return render_template("user_form.html", roles=roles, user=user), 409
+
+        role = db.session.get(Role, role_id) if role_id else None
+        if not role:
+            role = get_or_create_role(Role.NAME_STAFF)
+
+        if user:
+            user.email = email
+            user.first_name = first_name
+            user.last_name = last_name
+            user.contact_number = contact_number
+            user.role = role
+            db.session.commit()
+            flash("User updated.", "success")
+            return redirect(url_for("user_accounts"))
+
+        new_user = User(
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            contact_number=contact_number,
+            role=role,
+        )
+        # Placeholder credential — the real password is chosen by the user
+        # through the emailed setup link, so this value must be unguessable.
+        new_user.set_password(secrets.token_urlsafe(32))
+        db.session.add(new_user)
+        db.session.flush()
+
+        token = create_password_setup_code(new_user)
+        setup_link = url_for(
+            "setup_password", user_id=new_user.id, token=token, _external=True
+        )
+
+        try:
+            send_password_setup_email(email, setup_link)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            flash("An account with this email already exists.", "error")
+            return render_template("user_form.html", roles=roles, user=user), 409
+        except Exception:
+            db.session.rollback()
+            app.logger.exception("Failed to send password setup email.")
+            flash(
+                "We could not send the setup email, so the account was not created. Please try again.",
+                "error",
+            )
+            return render_template("user_form.html", roles=roles, user=user), 500
+
+        flash(f"Account created. A password setup link was emailed to {email}.", "success")
+        return redirect(url_for("user_accounts"))
+
+    return render_template("user_form.html", roles=roles, user=user)
+
+
+@app.post("/user-accounts/<user_id>/delete")
+@login_required
+@admin_required
+def user_delete(user_id):
+    user = db.session.get(User, user_id)
+    if not user:
+        abort(404)
+
+    if user.id == current_user.id:
+        flash("You cannot delete your own account.", "error")
+        return redirect(url_for("user_accounts"))
+
+    PasswordResetCode.query.filter_by(user_id=user.id).delete()
+    db.session.delete(user)
+    db.session.commit()
+    flash("User deleted.", "success")
+    return redirect(url_for("user_accounts"))
+
+
+@app.route("/setup-password/<user_id>", methods=["GET", "POST"])
+def setup_password(user_id):
+    # The link may be opened while someone else (e.g. the admin who created
+    # the account) is logged in on this browser — end that session so the
+    # invited user always lands on the password form.
+    if current_user.is_authenticated:
+        logout_user()
+
+    token = (request.values.get("token") or "").strip()
+    user = db.session.get(User, user_id)
+
+    setup_code = None
+    if user and token:
+        setup_code = (
+            PasswordResetCode.query.filter_by(user_id=user.id, used_at=None)
+            .order_by(PasswordResetCode.created_at.desc())
+            .first()
+        )
+
+    if not user or not setup_code or not setup_code.is_valid_for(token):
+        flash("This password setup link is invalid or has expired. Please contact an administrator.", "error")
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        password = request.form.get("password", "")
+        password_confirm = request.form.get("password_confirm", "")
+
+        if len(password) < 8:
+            flash("Password must be at least 8 characters.", "error")
+            return render_template("setup_password.html", user=user, token=token), 400
+
+        if not is_within_bcrypt_limit(password):
+            flash("Password must be 72 bytes or fewer.", "error")
+            return render_template("setup_password.html", user=user, token=token), 400
+
+        if password != password_confirm:
+            flash("Passwords do not match.", "error")
+            return render_template("setup_password.html", user=user, token=token), 400
+
+        user.set_password(password)
+        setup_code.mark_used()
+        db.session.commit()
+
+        flash("Password set successfully. You can now log in.", "success")
+        return redirect(url_for("login"))
+
+    return render_template("setup_password.html", user=user, token=token)
 
 
 @app.route("/campaigns/ai-wizard/upload", methods=["GET", "POST"])
