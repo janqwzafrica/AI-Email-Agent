@@ -201,6 +201,39 @@ class BrevoClient:
             body["scheduledAt"] = scheduled_at
 
         return self._request("POST", "/emailCampaigns", json=body)
+    
+    def update_email_campaign(
+        self,
+        campaign_id: int,
+        name: Optional[str] = None,
+        subject: Optional[str] = None,
+        sender_name: Optional[str] = None,
+        sender_email: Optional[str] = None,
+        html_content: Optional[str] = None,
+        list_ids: Optional[List[int]] = None,
+        scheduled_at: Optional[str] = None,
+    ) -> None:
+        """PUT /v3/emailCampaigns/{campaignId} - Update an existing campaign's
+        subject/sender/content/recipients/scheduledAt."""
+        body: Dict[str, Any] = {}
+        if name is not None:
+            body["name"] = name
+        if subject is not None:
+            body["subject"] = subject
+        if sender_name is not None or sender_email is not None:
+            body["sender"] = {}
+            if sender_name is not None:
+                body["sender"]["name"] = sender_name
+            if sender_email is not None:
+                body["sender"]["email"] = sender_email
+        if html_content is not None:
+            body["htmlContent"] = html_content
+        if list_ids is not None:
+            body["recipients"] = {"listIds": list_ids}
+        if scheduled_at is not None:
+            body["scheduledAt"] = scheduled_at
+
+        return self._request("PUT", f"/emailCampaigns/{campaign_id}", json=body)
 
     def get_email_campaigns(
         self,
