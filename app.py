@@ -1,4 +1,4 @@
-from datetime import timedelta
+﻿from datetime import timedelta
 from functools import wraps
 from urllib.parse import urlsplit
 
@@ -20,6 +20,7 @@ from services.email_service import (
 )
 from utils.security import BCRYPT_MAX_BYTES
 from services.content_draft_store import create_draft, get_draft, update_draft
+from tools.brevo import BrevoAPIError, BrevoClient
 from services.document_extractor import extract_text, ExtractionError
 from services.ai_email_content import generate_email_content, AIGenerationError
 
@@ -118,6 +119,38 @@ def get_test_emails(list_id):
 def send_test_emails(list_id):
     """Send the current draft to every address in the given test list."""
     return True
+
+
+_brevo_client = None
+
+
+def get_brevo_client():
+    global _brevo_client
+    if _brevo_client is None:
+        _brevo_client = BrevoClient()
+    return _brevo_client
+
+
+def _format_brevo_date(value):
+    if not value:
+        return "—"
+    try:
+        from datetime import datetime
+
+        dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        return f"{dt.month}/{dt.day}/{dt.year}"
+    except ValueError:
+        return value
+
+
+def _contact_display_name(contact):
+    attributes = contact.get("attributes") or {}
+    name = " ".join(
+        part
+        for part in (attributes.get("FIRSTNAME"), attributes.get("LASTNAME"))
+        if part
+    ).strip()
+    return name or contact.get("email", "")
 
 
 def get_role_by_name(name):
@@ -352,13 +385,121 @@ def logout():
 @app.route("/email-lists")
 @login_required
 def email_lists():
-    return render_template("email_lists.html")
+    lists = []
+    error = None
+    try:
+        data = get_brevo_client().get_contact_lists(limit=50)
+        for item in data.get("lists", []):
+            lists.append(
+                {
+                    "id": item.get("id"),
+                    "name": item.get("name"),
+                    "contacts": item.get("totalSubscribers", 0),
+                    "date": _format_brevo_date(item.get("createdAt")),
+                }
+            )
+    except Exception:
+        app.logger.exception("Failed to fetch Brevo contact lists.")
+        error = "Could not load email lists from Brevo. Check the BREVO_API_KEY and try again."
+    return render_template("email_lists.html", lists=lists, error=error)
 
 
-@app.route("/email-lists/<list_id>")
+@app.route("/email-lists/<int:list_id>")
 @login_required
 def email_list_detail(list_id):
-    return render_template("email_list_detail.html", list_id=list_id)
+    list_name = f"List {list_id}"
+    contacts = []
+    error = None
+    try:
+        client = get_brevo_client()
+        info = client.get_contact_list(list_id)
+        list_name = info.get("name", list_name)
+        data = client.get_contacts_from_list(list_id, limit=500)
+        for contact in data.get("contacts", []):
+            contacts.append(
+                {
+                    "name": _contact_display_name(contact),
+                    "email": contact.get("email", ""),
+                    "created": _format_brevo_date(contact.get("createdAt")),
+                    "changed": _format_brevo_date(contact.get("modifiedAt")),
+                    "blacklisted": bool(contact.get("emailBlacklisted")),
+                }
+            )
+    except Exception:
+        app.logger.exception("Failed to fetch Brevo list contacts.")
+        error = "Could not load this list from Brevo. Check the BREVO_API_KEY and try again."
+    return render_template(
+        "email_list_detail.html",
+        list_id=list_id,
+        list_name=list_name,
+        contacts=contacts,
+        error=error,
+    )
+
+
+@app.post("/email-lists/<int:list_id>/delete")
+@login_required
+def email_list_delete(list_id):
+    try:
+        get_brevo_client().delete_contact_list(list_id)
+        flash("Email list deleted.", "success")
+    except Exception:
+        app.logger.exception("Failed to delete Brevo list.")
+        flash("Could not delete this list on Brevo.", "error")
+    return redirect(url_for("email_lists"))
+
+
+@app.post("/email-lists/<int:list_id>/contacts/remove")
+@login_required
+def email_list_remove_contact(list_id):
+    email = (request.form.get("email") or "").strip()
+    if not email:
+        flash("No email provided.", "error")
+        return redirect(url_for("email_list_detail", list_id=list_id))
+    try:
+        get_brevo_client().remove_contacts_from_list(list_id, [email])
+        flash(f"{email} removed from the list.", "success")
+    except Exception:
+        app.logger.exception("Failed to remove contact from Brevo list.")
+        flash("Could not remove this contact on Brevo.", "error")
+    return redirect(url_for("email_list_detail", list_id=list_id))
+
+
+@app.route("/email-lists/<int:list_id>/export")
+@login_required
+def email_list_export(list_id):
+    import csv
+    import io
+
+    try:
+        client = get_brevo_client()
+        info = client.get_contact_list(list_id)
+        data = client.get_contacts_from_list(list_id, limit=500)
+    except Exception:
+        app.logger.exception("Failed to export Brevo list.")
+        flash("Could not export this list from Brevo.", "error")
+        return redirect(url_for("email_lists"))
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["Contact Name", "Email", "Creation Date", "Last Changed", "Blacklisted"])
+    for contact in data.get("contacts", []):
+        writer.writerow(
+            [
+                _contact_display_name(contact),
+                contact.get("email", ""),
+                _format_brevo_date(contact.get("createdAt")),
+                _format_brevo_date(contact.get("modifiedAt")),
+                "Yes" if contact.get("emailBlacklisted") else "No",
+            ]
+        )
+
+    filename = secure_filename(info.get("name", f"list-{list_id}")) or f"list-{list_id}"
+    return app.response_class(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={filename}.csv"},
+    )
 
 
 @app.route("/campaign-manager")
@@ -411,10 +552,69 @@ def campaign_preview(campaign_id):
     return render_template("campaign_preview.html", campaign_id=campaign_id)
 
 
+def _campaign_stats(campaign):
+    stats = (campaign.get("statistics") or {}).get("globalStats") or {}
+    return {
+        "id": campaign.get("id"),
+        "name": campaign.get("name"),
+        "opens": stats.get("uniqueViews", 0),
+        "clicks": stats.get("uniqueClicks", 0),
+        "unsubs": stats.get("unsubscriptions", 0),
+        "date": _format_brevo_date(campaign.get("createdAt")),
+    }
+
+
 @app.route("/reports")
 @login_required
 def reports():
-    return render_template("reports.html")
+    campaigns = []
+    error = None
+    try:
+        data = get_brevo_client().get_email_campaigns(limit=50)
+        campaigns = [_campaign_stats(c) for c in data.get("campaigns", [])]
+    except Exception:
+        app.logger.exception("Failed to fetch Brevo campaigns.")
+        error = "Could not load reports from Brevo. Check the BREVO_API_KEY and try again."
+    return render_template("reports.html", campaigns=campaigns, error=error)
+
+
+@app.post("/reports/<int:campaign_id>/delete")
+@login_required
+def report_delete(campaign_id):
+    try:
+        get_brevo_client().delete_email_campaign(campaign_id)
+        flash("Campaign deleted.", "success")
+    except Exception:
+        app.logger.exception("Failed to delete Brevo campaign.")
+        flash("Could not delete this campaign on Brevo.", "error")
+    return redirect(url_for("reports"))
+
+
+@app.route("/reports/<int:campaign_id>/export")
+@login_required
+def report_export(campaign_id):
+    import csv
+    import io
+
+    try:
+        campaign = get_brevo_client().get_campaign_report(campaign_id)
+    except Exception:
+        app.logger.exception("Failed to export Brevo campaign report.")
+        flash("Could not export this report from Brevo.", "error")
+        return redirect(url_for("reports"))
+
+    row = _campaign_stats(campaign)
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["Campaign Name", "Opens", "Clicks", "Unsubscribes", "Creation Date"])
+    writer.writerow([row["name"], row["opens"], row["clicks"], row["unsubs"], row["date"]])
+
+    filename = secure_filename(row["name"] or f"campaign-{campaign_id}") or f"campaign-{campaign_id}"
+    return app.response_class(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={filename}-report.csv"},
+    )
 
 
 @app.route("/user-accounts")

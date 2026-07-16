@@ -6,16 +6,20 @@
 {% block content %}
 <h1 class="page-heading">Email Lists</h1>
 
+{% if error %}
+<div class="flashes"><p class="flash flash--error">{{ error }}</p></div>
+{% endif %}
+
 <div class="toolbar">
   <label class="search">
     {{ search_icon() }}
-    <input type="search" placeholder="Search List Name">
+    <input type="search" placeholder="Search List Name" data-table-search="#lists-table" data-search-cols="0,1">
   </label>
-  <button class="filter-btn">Filter By Date {{ filter_icon() }}</button>
+  <button class="filter-btn" data-sort-date="#lists-table" data-col="3"><span data-label>Filter By Date</span> {{ filter_icon() }}</button>
 </div>
 
 <div class="table-wrap">
-  <table class="table">
+  <table class="table" id="lists-table">
     <thead>
       <tr>
         <th>List ID</th>
@@ -27,18 +31,23 @@
       </tr>
     </thead>
     <tbody>
-      {% for row in [
-        {'id': '001', 'name': 'Lawyer Email List 1', 'contacts': 250, 'date': '6/19/2026'},
-        {'id': '002', 'name': 'Lawyer Email List 2', 'contacts': 100, 'date': '6/19/2026'},
-        {'id': '003', 'name': 'Test Email List', 'contacts': 10, 'date': '6/19/2026'},
-      ] %}
+      {% for row in lists %}
       <tr>
-        <td><a href="{{ url_for('email_list_detail', list_id=row.id) }}" class="table__link">{{ row.id }}</a></td>
+        <td><a href="{{ url_for('email_list_detail', list_id=row.id) }}" class="table__link">{{ '%03d' | format(row.id) }}</a></td>
         <td><a href="{{ url_for('email_list_detail', list_id=row.id) }}" class="table__link">{{ row.name }}</a></td>
         <td>{{ row.contacts }}</td>
         <td>{{ row.date }}</td>
-        <td><a href="#" class="table__delete">Delete</a></td>
-        <td><a href="#" class="btn btn--primary btn--table">Download</a></td>
+        <td>
+          <form action="{{ url_for('email_list_delete', list_id=row.id) }}" method="post" style="display:inline"
+                onsubmit="return confirm('Delete list “{{ row.name }}” on Brevo? This cannot be undone.');">
+            <button type="submit" class="table__delete table__delete--btn">Delete</button>
+          </form>
+        </td>
+        <td><a href="{{ url_for('email_list_export', list_id=row.id) }}" class="btn btn--primary btn--table">Download</a></td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6">{{ 'No email lists found on Brevo yet.' if not error else 'Nothing to show.' }}</td>
       </tr>
       {% endfor %}
     </tbody>
