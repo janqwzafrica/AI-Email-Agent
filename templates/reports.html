@@ -6,16 +6,20 @@
 {% block content %}
 <h1 class="page-heading">Email Reports</h1>
 
+{% if error %}
+<div class="flashes"><p class="flash flash--error">{{ error }}</p></div>
+{% endif %}
+
 <div class="toolbar">
   <label class="search">
     {{ search_icon() }}
-    <input type="search" placeholder="Search report name">
+    <input type="search" placeholder="Search report name" data-table-search="#reports-table" data-search-cols="0">
   </label>
-  <button class="filter-btn">Filter By Date {{ filter_icon() }}</button>
+  <button class="filter-btn" data-sort-date="#reports-table" data-col="4"><span data-label>Filter By Date</span> {{ filter_icon() }}</button>
 </div>
 
 <div class="table-wrap">
-  <table class="table">
+  <table class="table" id="reports-table">
     <thead>
       <tr>
         <th>Campaign Name</th>
@@ -28,19 +32,24 @@
       </tr>
     </thead>
     <tbody>
-      {% for row in [
-        {'name': 'Campaign 1 Biz and Project', 'opens': 250, 'clicks': 50, 'unsubs': 10, 'date': '6/19/2026'},
-        {'name': 'Campaign 2 Biz and Project', 'opens': 100, 'clicks': 40, 'unsubs': 5, 'date': '6/19/2026'},
-        {'name': 'Campaign 2 Biz and Project', 'opens': 10, 'clicks': 5, 'unsubs': 2, 'date': '6/19/2026'},
-      ] %}
+      {% for row in campaigns %}
       <tr>
         <td>{{ row.name }}</td>
         <td>{{ row.opens }}</td>
         <td>{{ row.clicks }}</td>
         <td>{{ row.unsubs }}</td>
         <td>{{ row.date }}</td>
-        <td><a href="#" class="table__delete">Delete</a></td>
-        <td><a href="#" class="btn btn--primary btn--table">Download</a></td>
+        <td>
+          <form action="{{ url_for('report_delete', campaign_id=row.id) }}" method="post" style="display:inline"
+                onsubmit="return confirm('Delete campaign “{{ row.name }}” on Brevo? This cannot be undone.');">
+            <button type="submit" class="table__delete table__delete--btn">Delete</button>
+          </form>
+        </td>
+        <td><a href="{{ url_for('report_export', campaign_id=row.id) }}" class="btn btn--primary btn--table">Download</a></td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7">{{ 'No campaigns found on Brevo yet.' if not error else 'Nothing to show.' }}</td>
       </tr>
       {% endfor %}
     </tbody>

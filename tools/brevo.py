@@ -63,7 +63,7 @@ class BrevoClient:
     """Minimal client for the Brevo transactional email / campaigns API."""
 
     def __init__(self, api_key: Optional[str] = None, base_url: str = BREVO_BASE_URL, timeout: int = 30):
-        self.api_key = api_key or os.environ.get("BREVO_API")
+        self.api_key = api_key or os.environ.get("BREVO_API_KEY") or os.environ.get("BREVO_API")
         if not self.api_key:
             raise ValueError(
                 "Brevo API key not found. Set the BREVO_API_KEY environment variable "
@@ -202,6 +202,22 @@ class BrevoClient:
 
         return self._request("POST", "/emailCampaigns", json=body)
 
+    def get_email_campaigns(
+        self,
+        limit: int = 50,
+        offset: int = 0,
+        status: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """GET /v3/emailCampaigns - Retrieve all email campaigns (with statistics)."""
+        params: Dict[str, Any] = {"limit": limit, "offset": offset, "statistics": "globalStats"}
+        if status is not None:
+            params["status"] = status
+        return self._request("GET", "/emailCampaigns", params=params)
+
+    def delete_email_campaign(self, campaign_id: int) -> None:
+        """DELETE /v3/emailCampaigns/{campaignId} - Delete an email campaign."""
+        return self._request("DELETE", f"/emailCampaigns/{campaign_id}")
+
     def send_campaign_now(self, campaign_id: int) -> None:
         """POST /v3/emailCampaigns/{campaignId}/sendNow - Send campaign immediately."""
         return self._request("POST", f"/emailCampaigns/{campaign_id}/sendNow")
@@ -274,6 +290,36 @@ class BrevoClient:
     def get_contact_lists(self, limit: int = 50, offset: int = 0) -> Dict[str, Any]:
         """GET /v3/contacts/lists - Retrieve all contact lists."""
         return self._request("GET", "/contacts/lists", params={"limit": limit, "offset": offset})
+
+    def get_contact_list(self, list_id: int) -> Dict[str, Any]:
+        """GET /v3/contacts/lists/{listId} - Retrieve details of a single list."""
+        return self._request("GET", f"/contacts/lists/{list_id}")
+
+    def delete_contact_list(self, list_id: int) -> None:
+        """DELETE /v3/contacts/lists/{listId} - Delete a contact list."""
+        return self._request("DELETE", f"/contacts/lists/{list_id}")
+
+    def get_contacts_from_list(
+        self,
+        list_id: int,
+        limit: int = 500,
+        offset: int = 0,
+        sort: str = "desc",
+    ) -> Dict[str, Any]:
+        """GET /v3/contacts/lists/{listId}/contacts - Contacts belonging to a list."""
+        return self._request(
+            "GET",
+            f"/contacts/lists/{list_id}/contacts",
+            params={"limit": limit, "offset": offset, "sort": sort},
+        )
+
+    def remove_contacts_from_list(self, list_id: int, emails: List[str]) -> Dict[str, Any]:
+        """POST /v3/contacts/lists/{listId}/contacts/remove - Remove contacts from a list."""
+        return self._request(
+            "POST",
+            f"/contacts/lists/{list_id}/contacts/remove",
+            json={"emails": emails},
+        )
 
     def import_contacts(
         self,
