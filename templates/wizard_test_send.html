@@ -3,6 +3,7 @@
 {% block title %}Test Send — AI Email Agent{% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/campaign_preview.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/wizard.css') }}">
 {% endblock %}
@@ -18,12 +19,14 @@
 </a>
 
 <div class="preview-layout">
-  {% include 'partials/email_preview_card.html' %}
+  <div>
+    {% include 'partials/content_preview.html' %}
+  </div>
 
-  <div class="test-rail">
+  <div class="test-rail" id="testRail" data-send-url="{{ url_for('wizard_test_send_action', mode=mode) }}">
     <div class="test-rail__send">
-      <button class="btn btn--primary">Send Test Email</button>
-      <span class="badge-sent">
+      <button type="button" class="btn btn--primary" id="sendTestEmailBtn">Send Test Email</button>
+      <span class="badge-sent" id="testSentBadge" hidden>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="m4 12 5 5L20 6"/>
         </svg>
@@ -32,23 +35,30 @@
     </div>
 
     <div class="form__field">
-      <label class="form__label" for="test-email-list">Test Email List</label>
-      <select class="form__select" id="test-email-list">
-        <option>Test Emails</option>
-      </select>
+      <span class="form__label">Test Emails</span>
+      <a href="{{ url_for('test_emails_page') }}">Manage test emails</a>
     </div>
 
-    <div class="test-emails">
-      <span>rumeshhopkins@gmail.com</span>
-      <span>rumesh@bizandproject.com</span>
-      <span>johndoe@gmail.com</span>
-      <span>trainer@gmail.com</span>
-      <span>test@gmail.com</span>
-    </div>
+    <ul class="test-email-list" id="testEmailListItems">
+      {% for test_email in test_emails %}
+      <li class="test-email-list__item">
+        <label>
+          <input type="checkbox" class="test-email-checkbox" value="{{ test_email.email }}" checked>
+          {{ test_email.email }}{% if test_email.name %} <span class="test-email-list__label">({{ test_email.name }})</span>{% endif %}
+        </label>
+      </li>
+      {% else %}
+      <li class="test-email-list__item test-email-list__item--empty">No test emails saved yet — <a href="{{ url_for('test_emails_page') }}">add some</a>.</li>
+      {% endfor %}
+    </ul>
 
-    <div class="wizard-actions">
+    <div class="wizard-step__actions wizard-step__actions--end">
       <a href="{{ url_for('wizard_schedule', mode=mode) }}" class="btn btn--primary">Complete and Setup</a>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/wizard_test_send.js') }}"></script>
 {% endblock %}

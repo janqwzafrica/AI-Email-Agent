@@ -13,8 +13,8 @@
         </svg>
       </button>
       <ul class="dropdown__menu" data-dropdown-menu>
-        <li><a href="{{ url_for('ai_wizard_upload') }}" class="dropdown__item">AI Email Wizard</a></li>
-        <li><a href="#" class="dropdown__item">Manual Email Wizard</a></li>
+        <li><a href="{{ url_for('campaign_wizard', mode='ai') }}" class="dropdown__item">AI Email Wizard</a></li>
+        <li><a href="{{ url_for('campaign_wizard', mode='manual') }}" class="dropdown__item">Manual Email Wizard</a></li>
       </ul>
     </div>
 

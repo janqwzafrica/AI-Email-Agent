@@ -139,6 +139,12 @@
   padding-top: 16px;
 }
 
+.calendar-confirm-row {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .time-label {
   font-size: 0.875rem;
   font-weight: 600;

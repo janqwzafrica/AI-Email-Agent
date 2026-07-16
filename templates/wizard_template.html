@@ -3,29 +3,63 @@
 {% block title %}Setup Email Template — AI Email Agent{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/campaign_preview.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/wizard.css') }}">
 {% endblock %}
 
 {% block content %}
-<h1 class="page-heading">Setup Email Template</h1>
+<a href="{{ url_for('campaign_wizard', mode=mode) }}" class="wizard-layout__back">&larr; Go Back</a>
 
-<a href="{{ url_for('campaign_wizard', mode=mode) }}" class="back-link">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M19 12H5M12 19l-7-7 7-7"/>
-  </svg>
-  Go Back
-</a>
-
-<div class="preview-layout">
-  {% include 'partials/email_preview_card.html' %}
-
-  <div class="preview-settings">
-    {% include 'partials/campaign_settings_fields.html' %}
-
-    <div class="wizard-actions">
-      <a href="{{ url_for('wizard_test_send', mode=mode) }}" class="btn btn--primary">Next Step</a>
-    </div>
-  </div>
+<div class="wizard-header">
+  <h1 class="page-heading" style="margin-bottom:0;">Setup Email Template</h1>
+  {% if mode == 'ai' %}
+  <span class="status-pill" id="generatingPill" {% if not is_generating %}hidden{% endif %}>
+    AI is generating, please wait
+  </span>
+  {% endif %}
 </div>
+
+<div class="wizard-layout">
+  <div>
+    {% include 'partials/content_preview.html' %}
+  </div>
+
+  <form class="wizard-form" id="templateForm" data-status-url="{{ url_for('wizard_template_status', mode=mode) }}" data-save-url="{{ url_for('wizard_template_save', mode=mode) }}">
+    <div class="form-field">
+      <label class="form-field__label" for="senderEmail">Sender Email</label>
+      <select id="senderEmail" name="sender_email" class="form-field__select">
+        {% for email in sender_emails %}
+        <option value="{{ email }}" {% if email == campaign.sender_email %}selected{% endif %}>{{ email }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label class="form-field__label" for="senderName">Sender Name</label>
+      <input type="text" id="senderName" name="sender_name" class="form-field__input" value="{{ sender_name }}">
+    </div>
+
+    <div class="form-field">
+      <label class="form-field__label" for="emailSubject">Email Subject</label>
+      <input type="text" id="emailSubject" name="email_subject" class="form-field__input" value="{{ email_subject }}">
+    </div>
+
+    <div class="form-field">
+      <label class="form-field__label" for="emailList">Email List</label>
+      <select id="emailList" name="email_list" class="form-field__select">
+        {% for list in email_lists %}
+        <option value="{{ list.id }}" {% if list.id == selected_email_list_id %}selected{% endif %}>{{ list.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="wizard-step__actions">
+      <button type="submit" class="btn btn--primary" id="nextStepBtn">Next Step</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/wizard_template.js') }}"></script>
 {% endblock %}

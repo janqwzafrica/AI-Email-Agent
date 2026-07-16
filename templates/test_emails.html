@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Test Emails — AI Email Agent{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-heading">Test Emails</h1>
+
+{% if error %}
+<div class="flashes"><p class="flash flash--error">{{ error }}</p></div>
+{% endif %}
+
+<form method="post" action="{{ url_for('test_emails_page_save') }}" id="testEmailsSaveForm">
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for contact in brevo_contacts %}
+        <tr>
+          <td>
+            <input type="checkbox" name="emails" value="{{ contact.email }}|{{ contact.name }}"
+                   {% if contact.already_added %}checked disabled{% endif %}>
+          </td>
+          <td>{{ contact.name }}</td>
+          <td>{{ contact.email }}</td>
+          <td>
+            {% if contact.already_added %}
+            <span class="test-status test-status--active">Active</span>
+            {% else %}
+            <span class="test-status test-status--inactive">Not Active</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4">No contacts found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="wizard-step__actions">
+    <button type="submit" class="btn btn--primary" id="saveTestEmailsBtn">Save Test Emails</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/test_emails.js') }}"></script>
+{% endblock %}

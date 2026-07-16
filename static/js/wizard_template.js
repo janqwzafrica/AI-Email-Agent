@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
   var contentBody = document.getElementById("contentPanelBody");
-  var topEditBtn = document.getElementById("editContentTopBtn");
   var panelEditBtn = document.querySelector("[data-panel-edit-toggle]");
   var pill = document.getElementById("generatingPill");
+  var form = document.getElementById("templateForm");
+  var saveUrl = form ? form.dataset.saveUrl : null;
+  var statusUrl = form ? form.dataset.statusUrl : null;
 
   var isEditable = false;
   var pollTimer = null;
-
-  // --- Inline content editing (panel "Edit" button) ---
 
   function applyEditState() {
     if (!contentBody) return;
@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function saveEditedContent() {
-    if (!contentBody) return;
-    fetch("/campaigns/ai-wizard/save-content", {
+    if (!contentBody || !saveUrl) return;
+    fetch(saveUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email_content: contentBody.innerHTML }),
@@ -37,18 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (panelEditBtn) panelEditBtn.addEventListener("click", togglePanelEdit);
 
-  // --- Top "Edit Content" button → back to upload page ---
-
-  if (topEditBtn) {
-    topEditBtn.addEventListener("click", function () {
-      window.location.href = "/campaigns/ai-wizard/upload";
-    });
-  }
-
-  // --- Generation status polling (with 60s timeout) ---
-
   function startPolling() {
-    if (pollTimer) return;
+    if (pollTimer || !statusUrl) return;
     var elapsed = 0;
     var intervalMs = 2000;
     var timeoutMs = 60000;
@@ -66,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      fetch("/campaigns/ai-wizard/status")
+      fetch(statusUrl)
         .then(function (res) {
           return res.json();
         })
@@ -94,37 +84,46 @@ document.addEventListener("DOMContentLoaded", function () {
     }, intervalMs);
   }
 
-  // Kick off polling immediately if the page loaded mid-generation
   if (pill && !pill.hidden) {
     startPolling();
   }
 
-  // --- Next Step form submit ---
-
-  var form = document.getElementById("templateForm");
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      var nextStepBtn = document.getElementById("nextStepBtn");
+      var formData = new FormData(form);
+      var payload = {};
+      formData.forEach(function (value, key) {
+        payload[key] = value;
+      });
 
-      var payload = {
-        sender_email: document.getElementById("senderEmail").value,
-        sender_name: document.getElementById("senderName").value,
-        email_subject: document.getElementById("emailSubject").value,
-        email_list: document.getElementById("emailList").value,
-      };
+      if (nextStepBtn) {
+        nextStepBtn.disabled = true;
+        nextStepBtn.textContent = "Saving...";
+      }
 
-      fetch("/campaigns/ai-wizard/save-template-fields", {
+      fetch(saveUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
-        .then(function () {
-          window.location.href = form.dataset.nextUrl || "#";
+        .then(function (res) {
+          if (!res.ok)
+            return res.json().then(function (data) {
+              throw new Error(data.error || "Could not save this step.");
+            });
+          return res.json();
         })
-        .catch(function () {
-          // Even if saving fails, don't block navigation — the draft keeps
-          // whatever was last successfully saved.
-          window.location.href = form.dataset.nextUrl || "#";
+        .then(function (data) {
+          window.location.href = data.next_url || "#";
+        })
+        .catch(function (err) {
+          alert(err.message);
+          if (nextStepBtn) {
+            nextStepBtn.disabled = false;
+            nextStepBtn.textContent = "Next Step";
+          }
         });
     });
   }

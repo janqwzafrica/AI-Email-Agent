@@ -43,16 +43,9 @@
       </tr>
     </thead>
     <tbody>
-      {% for row in [
-        {'name': 'Email Campaign 1', 'list': 'Email List 1', 'opens': 'N/A', 'clicks': 'N/A', 'unsub': 2, 'date': '6/19/2026', 'scheduled': false, 'status': 'Running', 'quarterly': 'Activate'},
-        {'name': 'Email Campaign 2', 'list': 'Email List 2', 'opens': 10, 'clicks': 10, 'unsub': 3, 'date': '6/19/2026', 'scheduled': false, 'status': 'Running', 'quarterly': 'Running'},
-        {'name': 'Email Campaign 3', 'list': 'Email List 1', 'opens': 50, 'clicks': 5, 'unsub': 1, 'date': '6/30/2026', 'scheduled': true, 'status': 'Scheduled', 'quarterly': 'Running'},
-        {'name': 'Email Campaign 4', 'list': 'Email List 2', 'opens': 20, 'clicks': 2, 'unsub': 5, 'date': '6/30/2026', 'scheduled': true, 'status': 'Scheduled', 'quarterly': 'Activate'},
-        {'name': 'Email Campaign 5', 'list': 'Email List 1', 'opens': 120, 'clicks': 30, 'unsub': 4, 'date': '6/19/2026', 'scheduled': false, 'status': 'Completed', 'quarterly': 'Activate'},
-        {'name': 'Email Campaign 6', 'list': 'Email List 2', 'opens': 30, 'clicks': 8, 'unsub': 2, 'date': '6/19/2026', 'scheduled': false, 'status': 'Completed', 'quarterly': 'Activate'},
-      ] %}
+      {% for row in campaigns %}
       <tr>
-        <td><a href="{{ url_for('campaign_recipients', campaign_id=loop.index) }}" class="table__link">{{ row.name }}</a></td>
+        <td><a href="{{ url_for('campaign_recipients', campaign_id=row.id) }}" class="table__link">{{ row.name }}</a></td>
         <td>{{ row.list }}</td>
         <td>{{ row.opens }}</td>
         <td>{{ row.clicks }}</td>
@@ -60,11 +53,21 @@
         <td class="{{ 'table__date--scheduled' if row.scheduled }}">{{ row.date }}</td>
         <td><span class="status status--{{ row.status | lower }}">{{ row.status }}</span></td>
         <td>
-          <a href="#" class="quarterly-run {{ 'quarterly-run--running' if row.quarterly == 'Running' }}">
-            {{ play_icon() }} {{ row.quarterly }}
-          </a>
+          <form method="post" action="{{ url_for('campaign_manager_quarterly_toggle', campaign_id=row.id) }}">
+            <button type="submit" class="quarterly-run {{ 'quarterly-run--running' if row.quarterly == 'Running' }}">
+              {{ play_icon() }} {{ row.quarterly }}
+            </button>
+          </form>
         </td>
-        <td><a href="#" class="table__delete">Delete</a></td>
+        <td>
+          <form method="post" action="{{ url_for('campaign_manager_delete', campaign_id=row.id) }}" onsubmit="return confirm('Delete this campaign?');">
+            <button type="submit" class="table__delete table__delete--btn">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="9">No campaigns yet. Use "Create Campaign" to start one.</td>
       </tr>
       {% endfor %}
     </tbody>

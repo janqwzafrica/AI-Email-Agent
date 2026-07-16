@@ -40,3 +40,5 @@ class Config:
     PASSWORD_RESET_CODE_MINUTES = int(os.getenv("PASSWORD_RESET_CODE_MINUTES", "10"))
     PASSWORD_SETUP_LINK_HOURS = int(os.getenv("PASSWORD_SETUP_LINK_HOURS", "48"))
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    BREVO_WEBHOOK_SECRET = os.getenv("BREVO_WEBHOOK_SECRET")
+    PUBLIC_BASE_URL = (os.getenv("PUBLIC_BASE_URL") or "").rstrip("/")
