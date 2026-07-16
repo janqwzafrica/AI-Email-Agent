@@ -99,6 +99,30 @@ body {
   padding: var(--space-5) var(--space-5) var(--space-4);
 }
 
+.flashes {
+  margin-bottom: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.flash {
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: var(--font-size-body);
+  font-weight: 500;
+}
+
+.flash--success {
+  background: var(--label-interested-bg);
+  color: var(--label-interested-text);
+}
+
+.flash--error {
+  background: var(--label-unsubscribed-bg);
+  color: var(--label-unsubscribed-text);
+}
+
 .back-link {
   display: inline-flex;
   align-items: center;

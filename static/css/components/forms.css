@@ -109,6 +109,15 @@
   outline-offset: -1px;
 }
 
+.form__hint {
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: var(--color-surface);
+}
+
 .form__actions {
   display: flex;
   gap: var(--space-3);
