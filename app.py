@@ -133,9 +133,26 @@ def _start_generation(campaign):
     thread.start()
 
 
+def get_active_sender_emails():
+    """Real, active sender identities from Brevo — using anything else gets rejected
+    by Brevo with 'Sender is invalid / inactive' when creating/updating a campaign."""
+    try:
+        data = get_brevo_client().get_senders()
+    except BrevoAPIError:
+        app.logger.exception("Failed to fetch Brevo senders")
+        flash("Could not load sender identities from Brevo. Manage senders in your Brevo account.", "error")
+        return []
+    return [s["email"] for s in data.get("senders", []) if s.get("active") and s.get("email")]
+
+
 def sync_contact_lists():
     """Upsert local ContactList rows from Brevo so EmailCampaign has real FKs to point at."""
-    data = get_brevo_client().get_contact_lists(limit=50)
+    try:
+        data = get_brevo_client().get_contact_lists(limit=50)
+    except BrevoAPIError as e:
+        app.logger.exception("Failed to fetch Brevo contact lists")
+        flash(_brevo_error_message(e, "Could not load contact lists from Brevo. Check the BREVO_API_KEY and try again."), "error")
+        return []
     lists = []
     for item in data.get("lists", []):
         brevo_list_id = item.get("id")
@@ -696,6 +713,11 @@ def campaign_wizard(mode):
         campaign.content_file_name = secure_filename(content_file.filename)
         campaign.extracted_text = extracted_text
         campaign.cta_links = cta_links
+        # Reset any previously generated (or failed) content so the Template step
+        # regenerates fresh from the new upload instead of reusing stale content —
+        # including a stale error message from a prior failed AI generation attempt.
+        campaign.email_content = None
+        campaign.is_generating = False
 
         if logo_file and logo_file.filename != "":
             if not _allowed_file(logo_file.filename, ALLOWED_LOGO_EXTENSIONS):
@@ -743,7 +765,7 @@ def wizard_template(mode):
         mode=mode,
         campaign=campaign,
         is_generating=campaign.is_generating,
-        sender_emails=["info@larhdellaw.com"],
+        sender_emails=get_active_sender_emails(),
         sender_name=campaign.sender_name or "Larhdel Law",
         email_subject=campaign.subject or "US Immigration Update for 2026 - Larhdel Law",
         email_lists=contact_lists,
@@ -867,9 +889,14 @@ def wizard_test_send_action(mode):
 @login_required
 def test_emails_page():
     contact_lists = sync_contact_lists()
-    selected_list = next(
-        (cl for cl in contact_lists if "test" in cl.name.strip().lower()),
-        (contact_lists[0] if contact_lists else None),
+    requested_list_id = request.args.get("list_id")
+    selected_list = (
+        db.session.get(ContactList, requested_list_id)
+        if requested_list_id
+        else next(
+            (cl for cl in contact_lists if "test" in cl.name.strip().lower()),
+            (contact_lists[0] if contact_lists else None),
+        )
     )
 
     brevo_contacts = []
@@ -897,6 +924,7 @@ def test_emails_page():
 
     return render_template(
         "test_emails.html",
+        contact_lists=contact_lists,
         selected_list=selected_list,
         brevo_contacts=brevo_contacts,
         error=error,
@@ -921,7 +949,7 @@ def test_emails_page_save():
     db.session.commit()
 
     flash(f"Added {added} test email(s)." if added else "No new test emails to add.", "success")
-    return redirect(url_for("test_emails_page"))
+    return redirect(url_for("test_emails_page", list_id=request.form.get("list_id")))
 
 
 @app.post("/test-emails/<test_email_id>/remove")
@@ -949,7 +977,7 @@ def wizard_schedule(mode):
         "wizard_schedule.html",
         mode=mode,
         campaign=campaign,
-        sender_emails=["info@larhdellaw.com"],
+        sender_emails=[campaign.sender_email] if campaign.sender_email else get_active_sender_emails(),
         sender_name=campaign.sender_name,
         email_subject=campaign.subject,
         email_lists=[campaign.contact_list] if campaign.contact_list else [],
@@ -986,7 +1014,10 @@ def wizard_schedule_action(mode):
                 return jsonify({"error": "A schedule date/time is required."}), 400
             # The <input type="datetime-local"> value is naive (no tz) — treat it as
             # the server's local time, since Brevo requires a tz-aware ISO timestamp.
-            naive_dt = datetime.fromisoformat(scheduled_at)
+            try:
+                naive_dt = datetime.fromisoformat(scheduled_at)
+            except ValueError:
+                return jsonify({"error": "Invalid schedule date/time."}), 400
             local_tz = datetime.now().astimezone().tzinfo
             aware_dt = naive_dt.replace(tzinfo=local_tz)
             brevo.update_email_campaign(campaign.brevo_campaign_id, scheduled_at=aware_dt.isoformat())
@@ -1098,7 +1129,7 @@ def campaign_preview(campaign_id):
         campaign=campaign,
         email_content=campaign.email_content,
         logo_url=campaign.logo_url,
-        sender_emails=[campaign.sender_email] if campaign.sender_email else ["info@larhdellaw.com"],
+        sender_emails=[campaign.sender_email] if campaign.sender_email else get_active_sender_emails(),
         sender_name=campaign.sender_name,
         email_subject=campaign.subject,
         email_lists=[campaign.contact_list] if campaign.contact_list else [],

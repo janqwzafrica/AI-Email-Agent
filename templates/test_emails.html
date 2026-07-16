@@ -13,7 +13,19 @@
 <div class="flashes"><p class="flash flash--error">{{ error }}</p></div>
 {% endif %}
 
+<div class="form__field">
+  <label class="form__label" for="test-emails-list">Brevo List</label>
+  <select class="form__select" id="test-emails-list" onchange="window.location.search = '?list_id=' + this.value">
+    {% for list in contact_lists %}
+    <option value="{{ list.id }}" {% if selected_list and list.id == selected_list.id %}selected{% endif %}>
+      {{ list.name }}{% if "test" in list.name.strip().lower() %} (likely your test list){% endif %}
+    </option>
+    {% endfor %}
+  </select>
+</div>
+
 <form method="post" action="{{ url_for('test_emails_page_save') }}" id="testEmailsSaveForm">
+  <input type="hidden" name="list_id" value="{{ selected_list.id if selected_list else '' }}">
   <div class="table-wrap">
     <table class="table">
       <thead>

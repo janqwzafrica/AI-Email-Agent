@@ -388,6 +388,11 @@ class BrevoClient:
     # ------------------------------------------------------------------ #
     # Contact lists
     # ------------------------------------------------------------------ #
+    def get_senders(self) -> Dict[str, Any]:
+        """GET /v3/senders - Retrieve all verified sender identities on the account."""
+        cache_key = ("get_senders",)
+        return self._cached_request(cache_key, "GET", "/senders")
+
     def create_contact_list(self, list_name: str, folder_id: int) -> Dict[str, Any]:
         """POST /v3/contacts/lists - Create a new contact list."""
         result = self._request("POST", "/contacts/lists", json={"name": list_name, "folderId": folder_id})

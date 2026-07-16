@@ -32,8 +32,6 @@ class AIGenerationError(Exception):
 
 
 def generate_email_content(extracted_text, cta_links, sender_name):
-    client = _get_client()
-
     user_prompt = f"""Sender / firm name: {sender_name}
 
 CTA links to incorporate:
@@ -46,6 +44,7 @@ Source document text:
 """
 
     try:
+        client = _get_client()
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -54,10 +53,12 @@ Source document text:
             ],
             temperature=0.7,
         )
+        content = response.choices[0].message.content if response.choices else None
+    except AIGenerationError:
+        raise
     except Exception as e:
         raise AIGenerationError(f"AI generation failed: {e}")
 
-    content = response.choices[0].message.content
     if not content or not content.strip():
         raise AIGenerationError("AI returned empty content.")
 
