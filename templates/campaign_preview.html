@@ -19,7 +19,9 @@
 
 <div class="preview-layout">
   <div>
+    {% with editable = false %}
     {% include 'partials/content_preview.html' %}
+    {% endwith %}
   </div>
 
   <div class="preview-settings">

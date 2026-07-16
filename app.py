@@ -781,6 +781,9 @@ def wizard_template_save(mode):
         db.session.commit()
         return jsonify({"success": True})
 
+    if campaign.is_generating:
+        return jsonify({"error": "Content is still generating — please wait for it to finish."}), 409
+
     campaign.sender_email = payload.get("sender_email") or campaign.sender_email
     campaign.sender_name = payload.get("sender_name") or campaign.sender_name
     campaign.subject = payload.get("email_subject") or campaign.subject

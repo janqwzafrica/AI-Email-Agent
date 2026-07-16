@@ -6,8 +6,15 @@ document.addEventListener("DOMContentLoaded", function () {
   var saveUrl = form ? form.dataset.saveUrl : null;
   var statusUrl = form ? form.dataset.statusUrl : null;
 
+  var nextStepBtn = document.getElementById("nextStepBtn");
   var isEditable = false;
   var pollTimer = null;
+
+  function setNextStepEnabled(enabled) {
+    if (!nextStepBtn) return;
+    nextStepBtn.disabled = !enabled;
+    nextStepBtn.title = enabled ? "" : "Please wait for content generation to finish";
+  }
 
   function applyEditState() {
     if (!contentBody) return;
@@ -53,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
           pill.textContent = "Generation timed out — please try again";
           pill.classList.add("status-pill--error");
         }
+        setNextStepEnabled(true);
         return;
       }
 
@@ -75,16 +83,19 @@ document.addEventListener("DOMContentLoaded", function () {
             if (contentBody && data.email_content) {
               contentBody.innerHTML = data.email_content;
             }
+            setNextStepEnabled(true);
           }
         })
         .catch(function () {
           clearInterval(pollTimer);
           pollTimer = null;
+          setNextStepEnabled(true);
         });
     }, intervalMs);
   }
 
   if (pill && !pill.hidden) {
+    setNextStepEnabled(false);
     startPolling();
   }
 

@@ -20,7 +20,9 @@
 
 <div class="preview-layout">
   <div>
+    {% with editable = false %}
     {% include 'partials/content_preview.html' %}
+    {% endwith %}
   </div>
 
   <div class="test-rail" id="testRail" data-send-url="{{ url_for('wizard_test_send_action', mode=mode) }}">

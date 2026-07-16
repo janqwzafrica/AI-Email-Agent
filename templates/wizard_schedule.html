@@ -20,7 +20,9 @@
 
 <div class="preview-layout">
   <div>
+    {% with editable = false %}
     {% include 'partials/content_preview.html' %}
+    {% endwith %}
   </div>
 
   <div class="schedule-rail" id="scheduleRail" data-action-url="{{ url_for('wizard_schedule_action', mode=mode) }}">
