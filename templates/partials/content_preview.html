@@ -10,6 +10,10 @@
   Expects (pass via render_template from each parent route):
     email_content : rendered HTML string of the generated email body
     logo_url      : url to the sender's logo image
+    editable      : whether to show the Edit toggle (default true). Only the
+                     Template step actually wires up the toggle's JS handler —
+                     pass editable=False on any page that doesn't include
+                     wizard_template.js, or the button will render but do nothing.
 #}
 <div class="content-panel">
   <div class="content-panel__header">
@@ -22,7 +26,9 @@
           <circle cx="8" cy="13.5" r="1.5" fill="currentColor"/>
         </svg>
       </button>
+      {% if editable | default(true) %}
       <button type="button" class="btn btn--ghost content-panel__edit" data-panel-edit-toggle>Edit</button>
+      {% endif %}
     </div>
   </div>
 

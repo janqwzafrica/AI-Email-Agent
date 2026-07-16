@@ -42,12 +42,25 @@ Usage
 
 from __future__ import annotations
 
+import logging
 import os
+import time
+from threading import Lock
 from typing import Any, Dict, List, Optional
 
 import requests
 
 BREVO_BASE_URL = "https://api.brevo.com/v3"
+
+# Free/General Brevo plans cap most read endpoints at 100 requests/hour, so
+# repeated dashboard loads (lists, campaigns, reports) are cached briefly to
+# avoid burning that budget on identical reads within a few minutes.
+READ_CACHE_TTL_SECONDS = 300
+# Warn once remaining budget gets this low, so exhaustion shows up in logs
+# before users start seeing 429s.
+LOW_REMAINING_THRESHOLD = 10
+
+logger = logging.getLogger(__name__)
 
 
 class BrevoAPIError(Exception):
@@ -79,6 +92,39 @@ class BrevoClient:
                 "Accept": "application/json",
             }
         )
+        self._cache: Dict[tuple, tuple] = {}
+        self._cache_lock = Lock()
+
+    # ------------------------------------------------------------------ #
+    # Read cache (protects the 100 req/hour free-plan budget)
+    # ------------------------------------------------------------------ #
+    def _cache_get(self, cache_key: tuple) -> Any:
+        with self._cache_lock:
+            entry = self._cache.get(cache_key)
+            if entry is None:
+                return None
+            value, expires_at = entry
+            if time.monotonic() >= expires_at:
+                self._cache.pop(cache_key, None)
+                return None
+            return value
+
+    def _cache_set(self, cache_key: tuple, value: Any) -> None:
+        with self._cache_lock:
+            self._cache[cache_key] = (value, time.monotonic() + READ_CACHE_TTL_SECONDS)
+
+    def _cache_clear(self) -> None:
+        """Invalidate all cached reads. Called after any mutating request."""
+        with self._cache_lock:
+            self._cache.clear()
+
+    def _cached_request(self, cache_key: tuple, method: str, path: str, **kwargs) -> Any:
+        cached = self._cache_get(cache_key)
+        if cached is not None:
+            return cached
+        result = self._request(method, path, **kwargs)
+        self._cache_set(cache_key, result)
+        return result
 
     # ------------------------------------------------------------------ #
     # Internal request helper
@@ -92,6 +138,7 @@ class BrevoClient:
     ) -> Any:
         url = f"{self.base_url}{path}"
         response = self.session.request(method, url, json=json, params=params, timeout=self.timeout)
+        self._log_rate_limit(response)
 
         if not response.ok:
             try:
@@ -105,6 +152,22 @@ class BrevoClient:
         if response.status_code == 204 or not response.content:
             return None
         return response.json()
+
+    @staticmethod
+    def _log_rate_limit(response: requests.Response) -> None:
+        remaining = response.headers.get("x-sib-ratelimit-remaining")
+        limit = response.headers.get("x-sib-ratelimit-limit")
+        reset = response.headers.get("x-sib-ratelimit-reset")
+        if remaining is None:
+            return
+        logger.debug("Brevo rate limit: %s/%s remaining, resets in %ss", remaining, limit, reset)
+        if remaining.isdigit() and int(remaining) <= LOW_REMAINING_THRESHOLD:
+            logger.warning(
+                "Brevo rate limit nearly exhausted: %s/%s remaining, resets in %ss",
+                remaining,
+                limit,
+                reset,
+            )
 
     # ------------------------------------------------------------------ #
     # Email templates
@@ -200,8 +263,10 @@ class BrevoClient:
         if scheduled_at is not None:
             body["scheduledAt"] = scheduled_at
 
-        return self._request("POST", "/emailCampaigns", json=body)
-    
+        result = self._request("POST", "/emailCampaigns", json=body)
+        self._cache_clear()
+        return result
+
     def update_email_campaign(
         self,
         campaign_id: int,
@@ -213,8 +278,7 @@ class BrevoClient:
         list_ids: Optional[List[int]] = None,
         scheduled_at: Optional[str] = None,
     ) -> None:
-        """PUT /v3/emailCampaigns/{campaignId} - Update an existing campaign's
-        subject/sender/content/recipients/scheduledAt."""
+        """PUT /v3/emailCampaigns/{campaignId} - Update an existing (unsent) campaign."""
         body: Dict[str, Any] = {}
         if name is not None:
             body["name"] = name
@@ -233,7 +297,9 @@ class BrevoClient:
         if scheduled_at is not None:
             body["scheduledAt"] = scheduled_at
 
-        return self._request("PUT", f"/emailCampaigns/{campaign_id}", json=body)
+        result = self._request("PUT", f"/emailCampaigns/{campaign_id}", json=body)
+        self._cache_clear()
+        return result
 
     def get_email_campaigns(
         self,
@@ -245,15 +311,20 @@ class BrevoClient:
         params: Dict[str, Any] = {"limit": limit, "offset": offset, "statistics": "globalStats"}
         if status is not None:
             params["status"] = status
-        return self._request("GET", "/emailCampaigns", params=params)
+        cache_key = ("get_email_campaigns", limit, offset, status)
+        return self._cached_request(cache_key, "GET", "/emailCampaigns", params=params)
 
     def delete_email_campaign(self, campaign_id: int) -> None:
         """DELETE /v3/emailCampaigns/{campaignId} - Delete an email campaign."""
-        return self._request("DELETE", f"/emailCampaigns/{campaign_id}")
+        result = self._request("DELETE", f"/emailCampaigns/{campaign_id}")
+        self._cache_clear()
+        return result
 
     def send_campaign_now(self, campaign_id: int) -> None:
         """POST /v3/emailCampaigns/{campaignId}/sendNow - Send campaign immediately."""
-        return self._request("POST", f"/emailCampaigns/{campaign_id}/sendNow")
+        result = self._request("POST", f"/emailCampaigns/{campaign_id}/sendNow")
+        self._cache_clear()
+        return result
 
     def send_test_email(self, campaign_id: int, emails: List[str]) -> None:
         """POST /v3/emailCampaigns/{campaignId}/sendTest - Send a test email."""
@@ -261,7 +332,8 @@ class BrevoClient:
 
     def get_campaign_report(self, campaign_id: int) -> Dict[str, Any]:
         """GET /v3/emailCampaigns/{campaignId} - Get campaign stats / report."""
-        return self._request("GET", f"/emailCampaigns/{campaign_id}")
+        cache_key = ("get_campaign_report", campaign_id)
+        return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
 
     def send_campaign_report(
         self,
@@ -318,19 +390,25 @@ class BrevoClient:
     # ------------------------------------------------------------------ #
     def create_contact_list(self, list_name: str, folder_id: int) -> Dict[str, Any]:
         """POST /v3/contacts/lists - Create a new contact list."""
-        return self._request("POST", "/contacts/lists", json={"name": list_name, "folderId": folder_id})
+        result = self._request("POST", "/contacts/lists", json={"name": list_name, "folderId": folder_id})
+        self._cache_clear()
+        return result
 
     def get_contact_lists(self, limit: int = 50, offset: int = 0) -> Dict[str, Any]:
         """GET /v3/contacts/lists - Retrieve all contact lists."""
-        return self._request("GET", "/contacts/lists", params={"limit": limit, "offset": offset})
+        cache_key = ("get_contact_lists", limit, offset)
+        return self._cached_request(cache_key, "GET", "/contacts/lists", params={"limit": limit, "offset": offset})
 
     def get_contact_list(self, list_id: int) -> Dict[str, Any]:
         """GET /v3/contacts/lists/{listId} - Retrieve details of a single list."""
-        return self._request("GET", f"/contacts/lists/{list_id}")
+        cache_key = ("get_contact_list", list_id)
+        return self._cached_request(cache_key, "GET", f"/contacts/lists/{list_id}")
 
     def delete_contact_list(self, list_id: int) -> None:
         """DELETE /v3/contacts/lists/{listId} - Delete a contact list."""
-        return self._request("DELETE", f"/contacts/lists/{list_id}")
+        result = self._request("DELETE", f"/contacts/lists/{list_id}")
+        self._cache_clear()
+        return result
 
     def get_contacts_from_list(
         self,
@@ -340,7 +418,9 @@ class BrevoClient:
         sort: str = "desc",
     ) -> Dict[str, Any]:
         """GET /v3/contacts/lists/{listId}/contacts - Contacts belonging to a list."""
-        return self._request(
+        cache_key = ("get_contacts_from_list", list_id, limit, offset, sort)
+        return self._cached_request(
+            cache_key,
             "GET",
             f"/contacts/lists/{list_id}/contacts",
             params={"limit": limit, "offset": offset, "sort": sort},
@@ -348,11 +428,13 @@ class BrevoClient:
 
     def remove_contacts_from_list(self, list_id: int, emails: List[str]) -> Dict[str, Any]:
         """POST /v3/contacts/lists/{listId}/contacts/remove - Remove contacts from a list."""
-        return self._request(
+        result = self._request(
             "POST",
             f"/contacts/lists/{list_id}/contacts/remove",
             json={"emails": emails},
         )
+        self._cache_clear()
+        return result
 
     def import_contacts(
         self,
@@ -377,11 +459,24 @@ class BrevoClient:
             body["fileUrl"] = file_url
         if file_body is not None:
             body["fileBody"] = file_body
-        return self._request("POST", "/contacts/import", json=body)
+        result = self._request("POST", "/contacts/import", json=body)
+        self._cache_clear()
+        return result
 
     def unsubscribe_contact(self, email: str) -> None:
         """PUT /v3/contacts/{email} - Unsubscribe a contact (sets emailBlacklisted: true)."""
-        return self._request("PUT", f"/contacts/{email}", json={"emailBlacklisted": True})
+        return self.update_contact_attributes(email, {"emailBlacklisted": True})
+
+    def update_contact_attributes(self, email: str, attributes: Dict[str, Any]) -> None:
+        """PUT /v3/contacts/{email} - Merge fields (e.g. custom attributes) onto a contact.
+
+        `attributes` is merged directly into the request body, so pass either
+        top-level fields like {"emailBlacklisted": True} or custom contact
+        attributes nested under "attributes", e.g. {"attributes": {"CLASSIFICATION": "Interested"}}.
+        """
+        result = self._request("PUT", f"/contacts/{email}", json=attributes)
+        self._cache_clear()
+        return result
 
 
 if __name__ == "__main__":

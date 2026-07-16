@@ -11,65 +11,46 @@
 {% block content %}
 <h1 class="page-heading">{{ wizard_label }} Email Workflow Setup Wizard</h1>
 
-<div class="wizard-form">
+<form class="wizard-form" id="wizardSetupForm" data-next-url="{{ url_for('wizard_template', mode=mode) }}" novalidate>
   <div class="form__field">
     <span class="form__label">Upload your content (Word / PDF Supported)</span>
-    <label class="dropzone">
+    <label class="dropzone" data-dropzone data-target="wizardContentUpload">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 16V4M12 4 8 8M12 4l4 4"/>
         <path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/>
       </svg>
-      <span>Drop here to attach or <span class="dropzone__link">upload</span></span>
+      <span>Drop here to attach or <button type="button" class="dropzone__link" data-browse-trigger data-target="wizardContentUpload">upload</button></span>
       <span class="dropzone__hint">Max size: 5MB</span>
-      <input type="file" accept=".doc,.docx,.pdf" hidden>
+      <span class="dropzone__filename" data-filename hidden></span>
+      <input type="file" id="wizardContentUpload" name="content_file" accept=".doc,.docx,.pdf" hidden>
     </label>
   </div>
 
   <div class="form__field">
     <span class="form__label">Upload your Logo</span>
-    <label class="dropzone">
+    <label class="dropzone" data-dropzone data-target="wizardLogoUpload">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 16V4M12 4 8 8M12 4l4 4"/>
         <path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/>
       </svg>
-      <span>Drop here to attach or <span class="dropzone__link">upload</span></span>
+      <span>Drop here to attach or <button type="button" class="dropzone__link" data-browse-trigger data-target="wizardLogoUpload">upload</button></span>
       <span class="dropzone__hint">Max size: 5MB</span>
-      <input type="file" accept="image/*" hidden>
+      <span class="dropzone__filename" data-filename hidden></span>
+      <input type="file" id="wizardLogoUpload" name="logo_file" accept="image/*" hidden>
     </label>
-  </div>
-
-  <div class="form__field">
-    <label class="form__label" for="wizard-subject">Email Subject</label>
-    <input class="form__input" id="wizard-subject" type="text" value="US Immigration Update for 2026 - Larhdel Law">
-  </div>
-
-  <div class="form__field">
-    <label class="form__label" for="wizard-list">Email List</label>
-    <select class="form__select" id="wizard-list">
-      <option>Email List 1</option>
-      <option>Email List 2</option>
-    </select>
-  </div>
-
-  <div class="form__field">
-    <label class="form__label" for="wizard-sender-name">Sender Name</label>
-    <input class="form__input" id="wizard-sender-name" type="text" value="Larhdel Law">
-  </div>
-
-  <div class="form__field">
-    <label class="form__label" for="wizard-sender-email">Sender Email</label>
-    <select class="form__select" id="wizard-sender-email">
-      <option>info@larhdellaw.com</option>
-    </select>
   </div>
 
   <div class="form__field wizard-form__full">
     <label class="form__label" for="wizard-cta">Add CTA Links for the Email Content</label>
-    <textarea class="form__input" id="wizard-cta" rows="5" placeholder="www.example.com"></textarea>
+    <textarea class="form__input" id="wizard-cta" name="cta_links" rows="5" placeholder="www.example.com"></textarea>
   </div>
-</div>
 
-<div class="wizard-actions">
-  <a href="{{ url_for('wizard_template', mode=mode) }}" class="btn btn--primary">Next Step</a>
-</div>
+  <div class="wizard-actions">
+    <button type="submit" class="btn btn--primary" id="wizardNextStepBtn">Next Step</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/wizard_setup.js') }}"></script>
 {% endblock %}

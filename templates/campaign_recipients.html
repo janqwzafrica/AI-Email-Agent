@@ -13,6 +13,10 @@
   Back to Campaign Manager
 </a>
 
+{% if error %}
+<div class="flashes"><p class="flash flash--error">{{ error }}</p></div>
+{% endif %}
+
 <div class="toolbar">
   <label class="search">
     {{ search_icon() }}
@@ -39,27 +43,37 @@
       </tr>
     </thead>
     <tbody>
-      {% for row in [
-        {'name': 'Rumesh Hopkins', 'email': 'rumeshhopkins@gmail.com', 'created': '6/19/2026', 'changed': '6/19/2026', 'label': 'Interested', 'label_class': 'interested', 'blacklisted': False},
-        {'name': 'John Doe', 'email': 'johndoe@gmail.com', 'created': '6/19/2026', 'changed': '6/19/2026', 'label': 'Pending', 'label_class': 'pending', 'blacklisted': False},
-        {'name': 'Sofia Andrew', 'email': 'sofiaandrew@gmail.com', 'created': '6/19/2026', 'changed': '6/19/2026', 'label': 'No Response', 'label_class': 'no-response', 'blacklisted': True},
-        {'name': 'Sofia Andrew', 'email': 'sofiaandrew@gmail.com', 'created': '6/19/2026', 'changed': '6/19/2026', 'label': 'Unsubscribed', 'label_class': 'unsubscribed', 'blacklisted': True},
-      ] %}
+      {% for row in contacts %}
       <tr>
-        <td><a href="#" class="table__link">{{ row.name }}</a></td>
+        <td>{{ row.name }}</td>
         <td>{{ row.email }}</td>
         <td>{{ row.created }}</td>
         <td>{{ row.changed }}</td>
-        <td><span class="label label--{{ row.label_class }}">{{ row.label }}</span></td>
+        <td>
+          <select class="form__select classification-select" data-email="{{ row.email }}">
+            <option value="" {% if not row.classification %}selected{% endif %}>Unclassified</option>
+            {% for choice in classifications %}
+            <option value="{{ choice }}" {% if row.classification == choice %}selected{% endif %}>{{ choice }}</option>
+            {% endfor %}
+          </select>
+        </td>
         <td>{% if row.blacklisted %}<span class="table__blacklisted">Blacklisted</span>{% endif %}</td>
         <td>
-          <a href="{{ url_for('campaign_preview', campaign_id=campaign_id) }}" class="table__icon-btn" title="View questionnaire">
+          <a href="{{ url_for('campaign_preview', campaign_id=campaign_id) }}" class="table__icon-btn" title="Preview campaign email">
             {{ eye_icon() }}
           </a>
         </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7">No recipients to show yet.</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/campaign_recipients.js') }}"></script>
 {% endblock %}

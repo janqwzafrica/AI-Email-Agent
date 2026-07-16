@@ -133,9 +133,26 @@ def _start_generation(campaign):
     thread.start()
 
 
+def get_active_sender_emails():
+    """Real, active sender identities from Brevo — using anything else gets rejected
+    by Brevo with 'Sender is invalid / inactive' when creating/updating a campaign."""
+    try:
+        data = get_brevo_client().get_senders()
+    except BrevoAPIError:
+        app.logger.exception("Failed to fetch Brevo senders")
+        flash("Could not load sender identities from Brevo. Manage senders in your Brevo account.", "error")
+        return []
+    return [s["email"] for s in data.get("senders", []) if s.get("active") and s.get("email")]
+
+
 def sync_contact_lists():
     """Upsert local ContactList rows from Brevo so EmailCampaign has real FKs to point at."""
-    data = get_brevo_client().get_contact_lists(limit=50)
+    try:
+        data = get_brevo_client().get_contact_lists(limit=50)
+    except BrevoAPIError as e:
+        app.logger.exception("Failed to fetch Brevo contact lists")
+        flash(_brevo_error_message(e, "Could not load contact lists from Brevo. Check the BREVO_API_KEY and try again."), "error")
+        return []
     lists = []
     for item in data.get("lists", []):
         brevo_list_id = item.get("id")
@@ -696,6 +713,11 @@ def campaign_wizard(mode):
         campaign.content_file_name = secure_filename(content_file.filename)
         campaign.extracted_text = extracted_text
         campaign.cta_links = cta_links
+        # Reset any previously generated (or failed) content so the Template step
+        # regenerates fresh from the new upload instead of reusing stale content —
+        # including a stale error message from a prior failed AI generation attempt.
+        campaign.email_content = None
+        campaign.is_generating = False
 
         if logo_file and logo_file.filename != "":
             if not _allowed_file(logo_file.filename, ALLOWED_LOGO_EXTENSIONS):
@@ -743,7 +765,7 @@ def wizard_template(mode):
         mode=mode,
         campaign=campaign,
         is_generating=campaign.is_generating,
-        sender_emails=["info@larhdellaw.com"],
+        sender_emails=get_active_sender_emails(),
         sender_name=campaign.sender_name or "Larhdel Law",
         email_subject=campaign.subject or "US Immigration Update for 2026 - Larhdel Law",
         email_lists=contact_lists,
@@ -780,6 +802,9 @@ def wizard_template_save(mode):
         campaign.email_content = payload["email_content"]
         db.session.commit()
         return jsonify({"success": True})
+
+    if campaign.is_generating:
+        return jsonify({"error": "Content is still generating — please wait for it to finish."}), 409
 
     campaign.sender_email = payload.get("sender_email") or campaign.sender_email
     campaign.sender_name = payload.get("sender_name") or campaign.sender_name
@@ -864,9 +889,14 @@ def wizard_test_send_action(mode):
 @login_required
 def test_emails_page():
     contact_lists = sync_contact_lists()
-    selected_list = next(
-        (cl for cl in contact_lists if "test" in cl.name.strip().lower()),
-        (contact_lists[0] if contact_lists else None),
+    requested_list_id = request.args.get("list_id")
+    selected_list = (
+        db.session.get(ContactList, requested_list_id)
+        if requested_list_id
+        else next(
+            (cl for cl in contact_lists if "test" in cl.name.strip().lower()),
+            (contact_lists[0] if contact_lists else None),
+        )
     )
 
     brevo_contacts = []
@@ -894,6 +924,7 @@ def test_emails_page():
 
     return render_template(
         "test_emails.html",
+        contact_lists=contact_lists,
         selected_list=selected_list,
         brevo_contacts=brevo_contacts,
         error=error,
@@ -918,7 +949,7 @@ def test_emails_page_save():
     db.session.commit()
 
     flash(f"Added {added} test email(s)." if added else "No new test emails to add.", "success")
-    return redirect(url_for("test_emails_page"))
+    return redirect(url_for("test_emails_page", list_id=request.form.get("list_id")))
 
 
 @app.post("/test-emails/<test_email_id>/remove")
@@ -946,7 +977,7 @@ def wizard_schedule(mode):
         "wizard_schedule.html",
         mode=mode,
         campaign=campaign,
-        sender_emails=["info@larhdellaw.com"],
+        sender_emails=[campaign.sender_email] if campaign.sender_email else get_active_sender_emails(),
         sender_name=campaign.sender_name,
         email_subject=campaign.subject,
         email_lists=[campaign.contact_list] if campaign.contact_list else [],
@@ -983,7 +1014,10 @@ def wizard_schedule_action(mode):
                 return jsonify({"error": "A schedule date/time is required."}), 400
             # The <input type="datetime-local"> value is naive (no tz) — treat it as
             # the server's local time, since Brevo requires a tz-aware ISO timestamp.
-            naive_dt = datetime.fromisoformat(scheduled_at)
+            try:
+                naive_dt = datetime.fromisoformat(scheduled_at)
+            except ValueError:
+                return jsonify({"error": "Invalid schedule date/time."}), 400
             local_tz = datetime.now().astimezone().tzinfo
             aware_dt = naive_dt.replace(tzinfo=local_tz)
             brevo.update_email_campaign(campaign.brevo_campaign_id, scheduled_at=aware_dt.isoformat())
@@ -1095,7 +1129,7 @@ def campaign_preview(campaign_id):
         campaign=campaign,
         email_content=campaign.email_content,
         logo_url=campaign.logo_url,
-        sender_emails=[campaign.sender_email] if campaign.sender_email else ["info@larhdellaw.com"],
+        sender_emails=[campaign.sender_email] if campaign.sender_email else get_active_sender_emails(),
         sender_name=campaign.sender_name,
         email_subject=campaign.subject,
         email_lists=[campaign.contact_list] if campaign.contact_list else [],
@@ -1326,217 +1360,6 @@ def setup_password(user_id):
 
     return render_template("setup_password.html", user=user, token=token)
 
-
-@app.route("/campaigns/ai-wizard/upload", methods=["GET", "POST"])
-@login_required
-def ai_wizard_upload():
-    if request.method == "POST":
-        content_file = request.files.get("content_file")
-        logo_file = request.files.get("logo_file")
-        cta_links = request.form.get("cta_links", "")
-
-        if not content_file or content_file.filename == "":
-            return jsonify({"error": "Content file is required."}), 400
-
-        if not _allowed_file(content_file.filename, ALLOWED_CONTENT_EXTENSIONS):
-            return jsonify({"error": "Unsupported content file type."}), 400
-
-        content_bytes = content_file.read()
-        if len(content_bytes) > MAX_UPLOAD_SIZE:
-            return jsonify({"error": "Content file exceeds 5MB limit."}), 400
-
-        try:
-            extracted_text = extract_text(content_bytes, content_file.filename)
-        except ExtractionError as e:
-            return jsonify({"error": str(e)}), 400
-
-        draft_id = _get_or_create_draft_id()
-        update_fields = {
-            "content_file_bytes": content_bytes,
-            "content_file_name": secure_filename(content_file.filename),
-            "extracted_text": extracted_text,
-            "cta_links": cta_links,
-        }
-
-        if logo_file and logo_file.filename != "":
-            if not _allowed_file(logo_file.filename, ALLOWED_LOGO_EXTENSIONS):
-                return jsonify({"error": "Unsupported logo file type."}), 400
-
-            logo_bytes = logo_file.read()
-            if len(logo_bytes) > MAX_UPLOAD_SIZE:
-                return jsonify({"error": "Logo file exceeds 5MB limit."}), 400
-
-            os.makedirs(LOGO_UPLOAD_DIR, exist_ok=True)
-            ext = logo_file.filename.rsplit(".", 1)[1].lower()
-            logo_filename = f"{draft_id}.{ext}"
-            with open(os.path.join(LOGO_UPLOAD_DIR, logo_filename), "wb") as f:
-                f.write(logo_bytes)
-
-            update_fields["logo_url"] = url_for(
-                "static", filename=f"uploads/logos/{logo_filename}"
-            )
-
-        update_draft(draft_id, **update_fields)
-        _start_generation(draft_id)
-
-        return jsonify({"success": True, "next_url": url_for("ai_wizard_template")})
-
-    return render_template("email_campaign/ai_wizard_upload.html")
-
-
-@app.route("/campaigns/ai-wizard/template")
-@login_required
-def ai_wizard_template():
-    draft_id = session.get("draft_id")
-    draft = get_draft(draft_id)
-
-    if not draft or not draft.get("extracted_text"):
-        return redirect(url_for("ai_wizard_upload"))
-
-    return render_template(
-        "email_campaign/ai_wizard_template.html",
-        is_generating=draft.get("is_generating", False),
-        sender_emails=["info@larhdellaw.com"],
-        sender_name=draft.get("sender_name") or "Larhdel Law",
-        email_subject=draft.get("email_subject") or "US Immigration Update for 2026 - Larhdel Law",
-        email_lists=[{"id": "1", "name": "Email List 1"}],
-        email_content=draft.get("email_content"),
-        logo_url=draft.get("logo_url"),
-    )
-
-@app.route("/campaigns/ai-wizard/status")
-@login_required
-def ai_wizard_status():
-    draft_id = session.get("draft_id")
-    draft = get_draft(draft_id)
-    if not draft:
-        return jsonify({"error": "No draft found"}), 404
-
-    return jsonify({
-        "is_generating": draft.get("is_generating", False),
-        "email_content": draft.get("email_content"),
-    })
-    
-@app.route("/campaigns/ai-wizard/save-content", methods=["POST"])
-@login_required
-def ai_wizard_save_content():
-    draft_id = session.get("draft_id")
-    draft = get_draft(draft_id)
-    if not draft:
-        return jsonify({"error": "No draft found"}), 404
-
-    payload = request.get_json(silent=True) or {}
-    edited_html = payload.get("email_content", "")
-    update_draft(draft_id, email_content=edited_html)
-    return jsonify({"success": True})
-
-@app.route("/campaigns/ai-wizard/replace-content", methods=["POST"])
-@login_required
-def ai_wizard_replace_content():
-    draft_id = session.get("draft_id")
-    draft = get_draft(draft_id)
-    if not draft:
-        return jsonify({"error": "No draft found"}), 404
-
-    content_file = request.files.get("content_file")
-    if not content_file or content_file.filename == "":
-        return jsonify({"error": "Content file is required."}), 400
-
-    if not _allowed_file(content_file.filename, ALLOWED_CONTENT_EXTENSIONS):
-        return jsonify({"error": "Unsupported content file type."}), 400
-
-    content_bytes = content_file.read()
-    if len(content_bytes) > MAX_UPLOAD_SIZE:
-        return jsonify({"error": "Content file exceeds 5MB limit."}), 400
-
-    try:
-        extracted_text = extract_text(content_bytes, content_file.filename)
-    except ExtractionError as e:
-        return jsonify({"error": str(e)}), 400
-
-    update_draft(
-        draft_id,
-        content_file_bytes=content_bytes,
-        content_file_name=secure_filename(content_file.filename),
-        extracted_text=extracted_text,
-    )
-    _start_generation(draft_id)
-
-    return jsonify({"success": True})
-
-@app.route("/campaigns/ai-wizard/send")
-@login_required
-def ai_wizard_test_send():
-    # TODO: replace with the real campaign draft pulled from session/DB
-    # (the same draft the user set up in the previous "Setup Email Template" step)
-    campaign = get_current_campaign_draft()
-    # TODO: replace with the user's actual saved test-email lists
-    test_email_lists = get_test_email_lists()
-    selected_list_id = request.args.get("test_email_list") or (
-        test_email_lists[0]["id"] if test_email_lists else None
-    )
-    # TODO: replace with the emails belonging to the selected test list
-    test_emails = get_test_emails(selected_list_id)
-
-    return render_template(
-        "email_campaign/ai_wizard_send.html",
-        email_content=campaign.get("email_content"),
-        logo_url=campaign.get("logo_url"),
-        test_email_lists=test_email_lists,
-        selected_test_email_list_id=selected_list_id,
-        test_emails=test_emails,
-    )
-
-@app.route("/campaigns/ai-wizard/save-template-fields", methods=["POST"])
-@login_required
-def ai_wizard_save_template_fields():
-    draft_id = session.get("draft_id")
-    draft = get_draft(draft_id)
-    if not draft:
-        return jsonify({"error": "No draft found"}), 404
-
-    payload = request.get_json(silent=True) or {}
-    update_draft(
-        draft_id,
-        sender_email=payload.get("sender_email"),
-        sender_name=payload.get("sender_name"),
-        email_subject=payload.get("email_subject"),
-        email_list=payload.get("email_list"),
-    )
-    return jsonify({"success": True})
-
-@app.route("/campaigns/ai-wizard/test-send/send", methods=["POST"])
-@login_required
-def ai_wizard_test_send_action():
-    payload = request.get_json(silent=True) or {}
-    list_id = payload.get("test_email_list")
-
-    # TODO: replace with real send logic (e.g. dispatch through your ESP/mailer)
-    sent = send_test_emails(list_id)
-
-    return jsonify({"success": sent})
-
-
-@app.route("/campaigns/ai-wizard/schedule")
-@login_required
-def ai_wizard_schedule():
-    draft_id = session.get("draft_id")
-    draft = get_draft(draft_id)
-
-    if not draft or not draft.get("email_content"):
-        return redirect(url_for("ai_wizard_upload"))
-
-    return render_template(
-        "email_campaign/ai_wizard_schedule.html",
-        sender_emails=[draft.get("sender_email") or "info@larhdellaw.com"],
-        sender_name=draft.get("sender_name") or "Larhdel Law",
-        email_subject=draft.get("email_subject") or "US Immigration Update for 2026 - Larhdel Law",
-        email_lists=[{"id": "1", "name": "Email List 1"}],
-        email_content=draft.get("email_content"),
-        logo_url=draft.get("logo_url"),
-        status=draft.get("status", "draft"),
-        scheduled_at=draft.get("scheduled_at"),
-    )
 
 if __name__ == "__main__":
     app.run(debug=True)

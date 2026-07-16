@@ -40,6 +40,14 @@
   color: var(--color-text);
 }
 
+button.quarterly-run {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
 .quarterly-run svg {
   color: #16a34a;
   flex-shrink: 0;

@@ -3,6 +3,7 @@
 {% block title %}Preview Campaign — AI Email Agent{% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/campaign_preview.css') }}">
 {% endblock %}
 
@@ -17,14 +18,14 @@
 </a>
 
 <div class="preview-layout">
-  {% include 'partials/email_preview_card.html' %}
+  <div>
+    {% with editable = false %}
+    {% include 'partials/content_preview.html' %}
+    {% endwith %}
+  </div>
 
   <div class="preview-settings">
     {% include 'partials/campaign_settings_fields.html' %}
-
-    <div class="save-row">
-      <button class="btn btn--primary" data-settings-save>Save</button>
-    </div>
   </div>
 </div>
 {% endblock %}

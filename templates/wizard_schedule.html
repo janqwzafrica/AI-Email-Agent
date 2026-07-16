@@ -3,6 +3,7 @@
 {% block title %}Schedule Campaign — AI Email Agent{% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/campaign_preview.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/wizard.css') }}">
 {% endblock %}
@@ -18,40 +19,44 @@
 </a>
 
 <div class="preview-layout">
-  {% include 'partials/email_preview_card.html' %}
+  <div>
+    {% with editable = false %}
+    {% include 'partials/content_preview.html' %}
+    {% endwith %}
+  </div>
 
-  <div class="schedule-rail">
-    {% include 'partials/campaign_settings_fields.html' %}
+  <div class="schedule-rail" id="scheduleRail" data-action-url="{{ url_for('wizard_schedule_action', mode=mode) }}">
+    <div class="form__field">
+      <label class="form__label" for="senderEmailDisplay">Sender Email</label>
+      <input class="form__input" id="senderEmailDisplay" type="text" value="{{ sender_emails[0] if sender_emails else '' }}" readonly disabled>
+    </div>
+    <div class="form__field">
+      <label class="form__label" for="senderNameDisplay">Sender Name</label>
+      <input class="form__input" id="senderNameDisplay" type="text" value="{{ sender_name or '' }}" readonly disabled>
+    </div>
+    <div class="form__field">
+      <label class="form__label" for="emailSubjectDisplay">Email Subject</label>
+      <input class="form__input" id="emailSubjectDisplay" type="text" value="{{ email_subject or '' }}" readonly disabled>
+    </div>
+    <div class="form__field">
+      <label class="form__label" for="emailListDisplay">Email List</label>
+      <input class="form__input" id="emailListDisplay" type="text" value="{{ email_lists[0].name if email_lists else '' }}" readonly disabled>
+    </div>
 
-    <div class="wizard-actions" data-dropdown>
-      <button class="btn btn--primary" data-dropdown-toggle aria-expanded="false">Schedule</button>
-      <a href="#" class="btn btn--primary">Run Now</a>
-      <a href="{{ url_for('campaign_manager') }}" class="btn btn--dark">Finish</a>
+    <div class="form__field">
+      <label class="form__label" for="scheduleDateTime">Schedule for</label>
+      <input class="form__input" id="scheduleDateTime" type="datetime-local">
+    </div>
 
-      <div class="calendar-popover" data-dropdown-menu>
-        <div class="calendar" data-calendar>
-          <div class="calendar__header">
-            <span data-calendar-label></span>
-            <div class="calendar__nav">
-              <button type="button" data-calendar-prev aria-label="Previous month">&lsaquo;</button>
-              <button type="button" data-calendar-next aria-label="Next month">&rsaquo;</button>
-            </div>
-          </div>
-          <table class="calendar__grid">
-            <thead>
-              <tr><th>SUN</th><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th></tr>
-            </thead>
-            <tbody data-calendar-grid></tbody>
-          </table>
-          <div class="calendar__time">
-            <span>Time</span>
-            <input class="calendar__time-input" type="text" value="09:32" aria-label="Time">
-            <button type="button" class="calendar__meridiem calendar__meridiem--active" data-meridiem>AM</button>
-            <button type="button" class="calendar__meridiem" data-meridiem>PM</button>
-          </div>
-        </div>
-      </div>
+    <div class="schedule-actions">
+      <button type="button" class="btn btn--primary" id="scheduleBtn">Schedule</button>
+      <button type="button" class="btn btn--primary" id="runNowBtn">Run Now</button>
+      <button type="button" class="btn btn--dark" id="finishBtn">Finish</button>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/wizard_schedule.js') }}"></script>
 {% endblock %}
