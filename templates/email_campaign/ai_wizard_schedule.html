@@ -1,32 +1,43 @@
-{% extends 'base.html' %}
-
-{% block title %}Schedule Campaign — AI Email Agent{% endblock %}
-
-{% block styles %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/ai-wizard-schedule.css') }}">
-{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Schedule Campaign — AI Email Agent{%
+endblock %} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/ai-wizard.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/ai-wizard-schedule.css') }}"
+/>
+{% endblock %} {% block content %}
 <div class="wizard-header">
-  <h1 class="page-heading" style="margin-bottom:0;">Schedule Campaign</h1>
+  <h1 class="page-heading" style="margin-bottom: 0">Schedule Campaign</h1>
+  <span class="status-pill" id="scheduleStatusPill" data-status="{{ status }}">
+    {% if status == 'scheduled' %}Scheduled for {{ scheduled_at }} {% elif
+    status == 'sent' %}Sent {% elif status == 'finished' %}Finished {% else
+    %}Draft{% endif %}
+  </span>
 </div>
 
 <div class="wizard-toolbar">
-  <a href="{{ url_for('ai_wizard_test_send') }}" class="wizard-layout__back">&larr; Go Back</a>
+  <a href="{{ url_for('ai_wizard_test_send') }}" class="wizard-layout__back"
+    >&larr; Go Back</a
+  >
 </div>
 
 <div class="wizard-layout wizard-layout--schedule">
   <!-- Left Column: Content Preview -->
-  <div>
-    {% include 'partials/content_preview.html' %}
-  </div>
+  <div>{% include 'partials/content_preview.html' %}</div>
 
   <!-- Right Column: Read-only Data and Action Buttons -->
   <div class="schedule-form-panel">
     <div class="form-field">
       <label class="form-field__label" for="senderEmail">Sender Email</label>
-      <select id="senderEmail" name="sender_email" class="form-field__select" disabled>
+      <select
+        id="senderEmail"
+        name="sender_email"
+        class="form-field__select"
+        disabled
+      >
         {% for email in sender_emails %}
         <option value="{{ email }}">{{ email }}</option>
         {% endfor %}
@@ -35,17 +46,36 @@
 
     <div class="form-field">
       <label class="form-field__label" for="senderName">Sender Name</label>
-      <input type="text" id="senderName" name="sender_name" class="form-field__input" value="{{ sender_name }}" readonly>
+      <input
+        type="text"
+        id="senderName"
+        name="sender_name"
+        class="form-field__input"
+        value="{{ sender_name }}"
+        readonly
+      />
     </div>
 
     <div class="form-field">
       <label class="form-field__label" for="emailSubject">Email Subject</label>
-      <input type="text" id="emailSubject" name="email_subject" class="form-field__input" value="{{ email_subject }}" readonly>
+      <input
+        type="text"
+        id="emailSubject"
+        name="email_subject"
+        class="form-field__input"
+        value="{{ email_subject }}"
+        readonly
+      />
     </div>
 
     <div class="form-field">
       <label class="form-field__label" for="emailList">Email List</label>
-      <select id="emailList" name="email_list" class="form-field__select" disabled>
+      <select
+        id="emailList"
+        name="email_list"
+        class="form-field__select"
+        disabled
+      >
         {% for list in email_lists %}
         <option value="{{ list.id }}">{{ list.name }}</option>
         {% endfor %}
@@ -54,8 +84,12 @@
 
     <!-- Bottom Action Buttons as seen in image_9965d9.png -->
     <div class="schedule-actions">
-      <button type="button" class="btn btn--primary" id="openCalendarBtn">Schedule</button>
-      <button type="button" class="btn btn--primary" id="runNowBtn">Run Now</button>
+      <button type="button" class="btn btn--primary" id="openCalendarBtn">
+        Schedule
+      </button>
+      <button type="button" class="btn btn--primary" id="runNowBtn">
+        Run Now
+      </button>
       <button type="button" class="btn btn--dark" id="finishBtn">Finish</button>
     </div>
   </div>
@@ -66,14 +100,14 @@
   <div class="calendar-modal__backdrop" id="calendarBackdrop"></div>
   <div class="calendar-card">
     <div class="calendar-header">
-      <span class="calendar-month-year">Jul 2026 <span class="calendar-arrow">&rang;</span></span>
+      <span class="calendar-month-year" id="calendarMonthYear"></span>
       <div class="calendar-nav">
-        <button type="button">&lang;</button>
-        <button type="button">&rang;</button>
+        <button type="button" id="calendarPrevMonth">&lang;</button>
+        <button type="button" id="calendarNextMonth">&rang;</button>
       </div>
     </div>
-    
-    <div class="calendar-grid">
+
+    <div class="calendar-grid" id="calendarGrid">
       <div class="calendar-day-name">SUN</div>
       <div class="calendar-day-name">MON</div>
       <div class="calendar-day-name">TUE</div>
@@ -81,61 +115,23 @@
       <div class="calendar-day-name">THU</div>
       <div class="calendar-day-name">FRI</div>
       <div class="calendar-day-name">SAT</div>
-
-      <!-- July 2026 Dates -->
-      <div class="calendar-date muted">28</div>
-      <div class="calendar-date muted">29</div>
-      <div class="calendar-date muted">30</div>
-      <div class="calendar-date">1</div>
-      <div class="calendar-date">2</div>
-      <div class="calendar-date">3</div>
-      <div class="calendar-date">4</div>
-
-      <div class="calendar-date">5</div>
-      <div class="calendar-date">6</div>
-      <div class="calendar-date">7</div>
-      <div class="calendar-date">8</div>
-      <div class="calendar-date">9</div>
-      <div class="calendar-date">10</div>
-      <div class="calendar-date">11</div>
-
-      <div class="calendar-date">12</div>
-      <div class="calendar-date">13</div>
-      <div class="calendar-date selected">14</div>
-      <div class="calendar-date">15</div>
-      <div class="calendar-date">16</div>
-      <div class="calendar-date">17</div>
-      <div class="calendar-date">18</div>
-
-      <div class="calendar-date">19</div>
-      <div class="calendar-date">20</div>
-      <div class="calendar-date">21</div>
-      <div class="calendar-date">22</div>
-      <div class="calendar-date">23</div>
-      <div class="calendar-date">24</div>
-      <div class="calendar-date">25</div>
-
-      <div class="calendar-date">26</div>
-      <div class="calendar-date">27</div>
-      <div class="calendar-date">28</div>
-      <div class="calendar-date">29</div>
-      <div class="calendar-date">30</div>
-      <div class="calendar-date">31</div>
-      <div class="calendar-date muted">1</div>
     </div>
 
     <div class="calendar-time-row">
       <span class="time-label">Time</span>
       <div class="time-inputs">
-        <input type="text" class="time-box" value="09 : 32" readonly>
+        <input type="text" class="time-box" id="calendarTimeInput" value="09:00" />
         <button type="button" class="ampm-btn active">AM</button>
         <button type="button" class="ampm-btn">PM</button>
       </div>
     </div>
+    <div class="calendar-confirm-row">
+      <button type="button" class="btn btn--primary" id="calendarConfirmBtn">
+        Confirm Schedule
+      </button>
+    </div>
   </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-  <script src="{{ url_for('static', filename='js/ai_wizard_schedule.js') }}"></script>
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='js/ai_wizard_schedule.js') }}"></script>
 {% endblock %}

@@ -735,6 +735,23 @@ def ai_wizard_test_send():
         test_emails=test_emails,
     )
 
+@app.route("/campaigns/ai-wizard/save-template-fields", methods=["POST"])
+@login_required
+def ai_wizard_save_template_fields():
+    draft_id = session.get("draft_id")
+    draft = get_draft(draft_id)
+    if not draft:
+        return jsonify({"error": "No draft found"}), 404
+
+    payload = request.get_json(silent=True) or {}
+    update_draft(
+        draft_id,
+        sender_email=payload.get("sender_email"),
+        sender_name=payload.get("sender_name"),
+        email_subject=payload.get("email_subject"),
+        email_list=payload.get("email_list"),
+    )
+    return jsonify({"success": True})
 
 @app.route("/campaigns/ai-wizard/test-send/send", methods=["POST"])
 @login_required
@@ -751,19 +768,23 @@ def ai_wizard_test_send_action():
 @app.route("/campaigns/ai-wizard/schedule")
 @login_required
 def ai_wizard_schedule():
-    # Pulling the current campaign draft just like in the test-send step
-    campaign = get_current_campaign_draft()
-    
+    draft_id = session.get("draft_id")
+    draft = get_draft(draft_id)
+
+    if not draft or not draft.get("email_content"):
+        return redirect(url_for("ai_wizard_upload"))
+
     return render_template(
         "email_campaign/ai_wizard_schedule.html",
-        sender_emails=["info@larhdellaw.com"],
-        sender_name="Larhdel Law",
-        email_subject="US Immigration Update for 2026 - Larhdel Law",
+        sender_emails=[draft.get("sender_email") or "info@larhdellaw.com"],
+        sender_name=draft.get("sender_name") or "Larhdel Law",
+        email_subject=draft.get("email_subject") or "US Immigration Update for 2026 - Larhdel Law",
         email_lists=[{"id": "1", "name": "Email List 1"}],
-        email_content=campaign.get("email_content") or "<p>Dear {{ contact.FIRSTNAME }},</p>",
-        logo_url=campaign.get("logo_url")
+        email_content=draft.get("email_content"),
+        logo_url=draft.get("logo_url"),
+        status=draft.get("status", "draft"),
+        scheduled_at=draft.get("scheduled_at"),
     )
-
 
 if __name__ == "__main__":
     app.run(debug=True)

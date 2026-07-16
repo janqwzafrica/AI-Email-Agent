@@ -20,6 +20,8 @@ def create_draft():
             "sender_name": None,
             "email_subject": None,
             "email_list": None,
+            "status": "draft",  # draft -> scheduled -> sent
+            "scheduled_at": None,
         }
     return draft_id
 

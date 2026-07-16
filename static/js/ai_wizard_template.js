@@ -105,7 +105,27 @@ document.addEventListener("DOMContentLoaded", function () {
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      window.location.href = form.dataset.nextUrl || "#";
+
+      var payload = {
+        sender_email: document.getElementById("senderEmail").value,
+        sender_name: document.getElementById("senderName").value,
+        email_subject: document.getElementById("emailSubject").value,
+        email_list: document.getElementById("emailList").value,
+      };
+
+      fetch("/campaigns/ai-wizard/save-template-fields", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then(function () {
+          window.location.href = form.dataset.nextUrl || "#";
+        })
+        .catch(function () {
+          // Even if saving fails, don't block navigation — the draft keeps
+          // whatever was last successfully saved.
+          window.location.href = form.dataset.nextUrl || "#";
+        });
     });
   }
 
