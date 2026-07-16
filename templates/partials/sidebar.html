@@ -40,6 +40,7 @@
           Reports
         </a>
       </li>
+      {% if current_user.is_authenticated and current_user.access_level == 'Admin' %}
       <li>
         <a href="{{ url_for('user_accounts') }}"
            class="sidebar__link {{ 'sidebar__link--active' if request.endpoint in ('user_accounts', 'user_form') }}">
@@ -51,6 +52,7 @@
           User Accounts
         </a>
       </li>
+      {% endif %}
     </ul>
   </nav>
 
@@ -62,9 +64,12 @@
       </svg>
     </span>
     <div class="sidebar__profile-info">
-      <span class="sidebar__profile-name">Full Name</span>
-      <span class="sidebar__profile-email">useremail@gmail.com</span>
-      <span class="sidebar__profile-role">Admin</span>
+      {% if current_user.is_authenticated %}
+      {% set full_name = ((current_user.first_name or '') ~ ' ' ~ (current_user.last_name or '')).strip() %}
+      <span class="sidebar__profile-name">{{ full_name or current_user.email.split('@')[0] }}</span>
+      <span class="sidebar__profile-email">{{ current_user.email }}</span>
+      <span class="sidebar__profile-role">{{ current_user.access_level }}</span>
+      {% endif %}
     </div>
   </div>
 </aside>

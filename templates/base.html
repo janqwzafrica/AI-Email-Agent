@@ -22,6 +22,15 @@
     <div class="app__body">
       {% include 'partials/sidebar.html' %}
       <main class="app__main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flashes" role="status" aria-live="polite">
+              {% for category, message in messages %}
+                <p class="flash flash--{{ category }}">{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
       </main>
     </div>
