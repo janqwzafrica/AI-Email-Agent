@@ -6,6 +6,7 @@ import os
 import secrets
 import threading
 from flask import Flask, abort, flash, current_app, redirect, render_template, request, url_for, jsonify, session
+from markupsafe import escape
 from werkzeug.utils import secure_filename
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy.exc import IntegrityError
@@ -99,18 +100,65 @@ def _feedback_footer_html():
     )
 
 
+def _normalize_cta_url(raw):
+    """A single line from the CTA Links textarea -> an http(s) URL, or None if
+    it isn't a usable link (blank, contains whitespace, or an unsafe/unsupported
+    scheme like javascript: or mailto:)."""
+    raw = (raw or "").strip()
+    if not raw or any(c.isspace() for c in raw):
+        return None
+    parsed = urlsplit(raw)
+    if not parsed.scheme:
+        parsed = urlsplit(f"https://{raw}")
+    if parsed.scheme not in ("http", "https"):
+        return None
+    if not parsed.netloc or "." not in parsed.netloc:
+        return None
+    return parsed.geturl()
+
+
+def _parse_cta_links(raw_text):
+    """The CTA Links textarea (one link per line, free text) -> a deduped list
+    of normalized URLs."""
+    seen = set()
+    urls = []
+    for line in (raw_text or "").splitlines():
+        url = _normalize_cta_url(line)
+        if url and url not in seen:
+            seen.add(url)
+            urls.append(url)
+    return urls
+
+
+def _cta_buttons_html(buttons):
+    """Render CTA buttons as email-safe HTML (inline styles — email clients
+    strip <style> blocks and most CSS, so this can't rely on page CSS)."""
+    return "".join(
+        '<div style="margin:20px 0;">'
+        f'<a href="{escape(button["url"])}" '
+        'style="display:inline-block;background-color:#0b5fff;color:#ffffff;'
+        "padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:600;"
+        f'font-family:Arial,Helvetica,sans-serif;font-size:15px;">{escape(button["label"])}</a>'
+        "</div>"
+        for button in buttons
+    )
+
+
 def _run_generation(app_ref, campaign_id):
     with app_ref.app_context():
         campaign = db.session.get(EmailCampaign, campaign_id)
         if not campaign:
             return
         try:
-            content = generate_email_content(
+            cta_links = _parse_cta_links(campaign.cta_links)
+            result = generate_email_content(
                 extracted_text=campaign.extracted_text,
-                cta_links=campaign.cta_links or "",
+                cta_links=cta_links,
                 sender_name=campaign.sender_name or "Larhdel Law",
             )
-            campaign.email_content = content + _feedback_footer_html()
+            campaign.email_content = (
+                result["body_html"] + _cta_buttons_html(result["cta_buttons"]) + _feedback_footer_html()
+            )
         except AIGenerationError as e:
             campaign.email_content = f"<p>We couldn't generate content automatically: {e}</p>"
         except Exception:
@@ -755,7 +803,10 @@ def wizard_template(mode):
     if mode == EmailCampaign.MODE_AI and not campaign.email_content and not campaign.is_generating:
         _start_generation(campaign)
     elif mode == EmailCampaign.MODE_MANUAL and campaign.email_content is None:
-        campaign.email_content = f"<p>{campaign.extracted_text}</p>" + _feedback_footer_html()
+        cta_buttons = [{"url": url, "label": "Learn More"} for url in _parse_cta_links(campaign.cta_links)]
+        campaign.email_content = (
+            f"<p>{campaign.extracted_text}</p>" + _cta_buttons_html(cta_buttons) + _feedback_footer_html()
+        )
         db.session.commit()
 
     contact_lists = sync_contact_lists()
