@@ -1,4 +1,4 @@
-﻿from datetime import timedelta
+﻿from datetime import datetime, timedelta
 from functools import wraps
 from urllib.parse import urlsplit
 
@@ -13,13 +13,12 @@ from sqlalchemy.exc import IntegrityError
 from config import Config
 from extensions import db, login_manager, migrate
 from logging_config import setup_logging
-from models import PasswordResetCode, Role, User, utc_now
+from models import CampaignRun, Contact, ContactList, EmailCampaign, PasswordResetCode, Role, TestEmail, User, utc_now
 from services.email_service import (
     send_password_reset_email,
     send_password_setup_email,
 )
 from utils.security import BCRYPT_MAX_BYTES
-from services.content_draft_store import create_draft, get_draft, update_draft
 from tools.brevo import BrevoAPIError, BrevoClient
 from services.document_extractor import extract_text, ExtractionError
 from services.ai_email_content import generate_email_content, AIGenerationError
@@ -56,69 +55,99 @@ def _allowed_file(filename, allowed_extensions):
         and filename.rsplit(".", 1)[1].lower() in allowed_extensions
     )
 
-def _get_or_create_draft_id():
-    draft_id = session.get("draft_id")
-    if not draft_id or get_draft(draft_id) is None:
-        draft_id = create_draft()
-        session["draft_id"] = draft_id
-    return draft_id
+_ACTIVE_CAMPAIGN_STATUSES = (
+    EmailCampaign.STATUS_DRAFT,
+    EmailCampaign.STATUS_GENERATING,
+    EmailCampaign.STATUS_READY,
+)
 
-def get_current_campaign_draft():
-    draft_id = session.get("draft_id")
-    draft = get_draft(draft_id)
-    if not draft:
-        return {"email_content": None, "logo_url": None}
-    return draft
 
-def _run_generation(app_ref, draft_id):
+def _get_or_create_campaign(mode):
+    campaign_id = session.get("campaign_id")
+    campaign = db.session.get(EmailCampaign, campaign_id) if campaign_id else None
+    if campaign is None or campaign.status not in _ACTIVE_CAMPAIGN_STATUSES:
+        campaign = EmailCampaign(created_by_id=current_user.id, mode=mode, status=EmailCampaign.STATUS_DRAFT)
+        db.session.add(campaign)
+        db.session.flush()
+        session["campaign_id"] = campaign.id
+    campaign.mode = mode
+    return campaign
+
+
+def get_current_campaign():
+    campaign_id = session.get("campaign_id")
+    if not campaign_id:
+        return None
+    return db.session.get(EmailCampaign, campaign_id)
+
+
+FEEDBACK_LINK_CLASSIFICATIONS = {
+    "/feedback/interested": Contact.CLASSIFICATION_INTERESTED,
+    "/feedback/not-interested": Contact.CLASSIFICATION_NOT_INTERESTED,
+}
+
+
+def _feedback_footer_html():
+    base = app.config["PUBLIC_BASE_URL"]
+    return (
+        '<div style="margin-top:24px;padding-top:16px;border-top:1px solid #e5e7eb;">'
+        "<p>Still interested in hearing from us?</p>"
+        f'<a href="{base}/feedback/interested">Yes, I\'m interested</a>'
+        "&nbsp;|&nbsp;"
+        f'<a href="{base}/feedback/not-interested">Not right now</a>'
+        "</div>"
+    )
+
+
+def _run_generation(app_ref, campaign_id):
     with app_ref.app_context():
-        draft = get_draft(draft_id)
-        if not draft:
+        campaign = db.session.get(EmailCampaign, campaign_id)
+        if not campaign:
             return
         try:
             content = generate_email_content(
-                extracted_text=draft["extracted_text"],
-                cta_links=draft.get("cta_links", ""),
-                sender_name=draft.get("sender_name") or "Larhdel Law",
+                extracted_text=campaign.extracted_text,
+                cta_links=campaign.cta_links or "",
+                sender_name=campaign.sender_name or "Larhdel Law",
             )
-            update_draft(draft_id, email_content=content, is_generating=False)
+            campaign.email_content = content + _feedback_footer_html()
         except AIGenerationError as e:
-            update_draft(
-                draft_id,
-                email_content=f"<p>We couldn't generate content automatically: {e}</p>",
-                is_generating=False,
-            )
+            campaign.email_content = f"<p>We couldn't generate content automatically: {e}</p>"
         except Exception:
             # Catch-all so a stuck pill can never happen again — any unexpected
             # error still resolves the generating state instead of hanging forever.
             current_app.logger.exception("Unexpected error during AI generation")
-            update_draft(
-                draft_id,
-                email_content="<p>Something went wrong generating this content. Please try again.</p>",
-                is_generating=False,
-            )
+            campaign.email_content = "<p>Something went wrong generating this content. Please try again.</p>"
+        finally:
+            campaign.is_generating = False
+            db.session.commit()
 
-def _start_generation(draft_id):
-    update_draft(draft_id, is_generating=True, email_content=None)
+
+def _start_generation(campaign):
+    campaign.is_generating = True
+    campaign.email_content = None
+    db.session.commit()
     thread = threading.Thread(
-        target=_run_generation, args=(app, draft_id), daemon=True
+        target=_run_generation, args=(app, campaign.id), daemon=True
     )
     thread.start()
-    
-
-def get_test_email_lists():
-    """Return the user's saved test-email lists as [{'id': ..., 'name': ...}, ...]."""
-    return []
 
 
-def get_test_emails(list_id):
-    """Return the list of email addresses belonging to the given test list id."""
-    return []
-
-
-def send_test_emails(list_id):
-    """Send the current draft to every address in the given test list."""
-    return True
+def sync_contact_lists():
+    """Upsert local ContactList rows from Brevo so EmailCampaign has real FKs to point at."""
+    data = get_brevo_client().get_contact_lists(limit=50)
+    lists = []
+    for item in data.get("lists", []):
+        brevo_list_id = item.get("id")
+        contact_list = ContactList.query.filter_by(brevo_list_id=brevo_list_id).one_or_none()
+        if contact_list is None:
+            contact_list = ContactList(brevo_list_id=brevo_list_id, name=item.get("name", ""))
+            db.session.add(contact_list)
+        else:
+            contact_list.name = item.get("name", contact_list.name)
+        lists.append(contact_list)
+    db.session.commit()
+    return lists
 
 
 _brevo_client = None
@@ -129,6 +158,55 @@ def get_brevo_client():
     if _brevo_client is None:
         _brevo_client = BrevoClient()
     return _brevo_client
+
+
+BREVO_BLACKLISTING_EVENTS = {"unsubscribe", "hardBounce", "blocked", "spam", "complaint"}
+
+
+def get_or_create_local_contact(email):
+    normalized = Contact.normalize_email(email)
+    contact = Contact.query.filter_by(email=normalized).one_or_none()
+    if contact is None:
+        contact = Contact(email=normalized)
+        db.session.add(contact)
+    return contact
+
+
+@app.route("/webhooks/brevo/<secret>", methods=["POST"])
+def brevo_webhook(secret):
+    if not secrets.compare_digest(secret, app.config["BREVO_WEBHOOK_SECRET"] or ""):
+        abort(404)
+
+    payload = request.get_json(silent=True) or {}
+    event = payload.get("event")
+    email = payload.get("email")
+
+    if not email:
+        return "", 204
+
+    contact = get_or_create_local_contact(email)
+    contact.last_webhook_event = event
+    if event in BREVO_BLACKLISTING_EVENTS:
+        contact.is_blacklisted = True
+    elif event == "click":
+        link_path = urlsplit(payload.get("link") or "").path.rstrip("/")
+        classification = FEEDBACK_LINK_CLASSIFICATIONS.get(link_path)
+        if classification:
+            contact.classification = classification
+            contact.classified_at = utc_now()
+    db.session.commit()
+
+    return "", 204
+
+
+@app.route("/feedback/interested")
+def feedback_interested():
+    return render_template("feedback_response.html", message="Thanks, we'll be in touch.")
+
+
+@app.route("/feedback/not-interested")
+def feedback_not_interested():
+    return render_template("feedback_response.html", message="Got it — thanks for letting us know.")
 
 
 def _format_brevo_date(value):
@@ -382,6 +460,12 @@ def logout():
     return redirect(url_for("login"))
 
 
+def _brevo_error_message(exc, default):
+    if isinstance(exc, BrevoAPIError) and exc.status_code == 429:
+        return "Brevo is rate-limiting requests right now. Please wait a minute and try again."
+    return default
+
+
 @app.route("/email-lists")
 @login_required
 def email_lists():
@@ -398,9 +482,11 @@ def email_lists():
                     "date": _format_brevo_date(item.get("createdAt")),
                 }
             )
-    except Exception:
+    except Exception as e:
         app.logger.exception("Failed to fetch Brevo contact lists.")
-        error = "Could not load email lists from Brevo. Check the BREVO_API_KEY and try again."
+        error = _brevo_error_message(
+            e, "Could not load email lists from Brevo. Check the BREVO_API_KEY and try again."
+        )
     return render_template("email_lists.html", lists=lists, error=error)
 
 
@@ -425,9 +511,11 @@ def email_list_detail(list_id):
                     "blacklisted": bool(contact.get("emailBlacklisted")),
                 }
             )
-    except Exception:
+    except Exception as e:
         app.logger.exception("Failed to fetch Brevo list contacts.")
-        error = "Could not load this list from Brevo. Check the BREVO_API_KEY and try again."
+        error = _brevo_error_message(
+            e, "Could not load this list from Brevo. Check the BREVO_API_KEY and try again."
+        )
     return render_template(
         "email_list_detail.html",
         list_id=list_id,
@@ -505,51 +593,513 @@ def email_list_export(list_id):
 @app.route("/campaign-manager")
 @login_required
 def campaign_manager():
-    return render_template("campaign_manager.html")
+    campaigns = (
+        EmailCampaign.query.filter(EmailCampaign.brevo_campaign_id.isnot(None))
+        .order_by(EmailCampaign.created_at.desc())
+        .all()
+    )
+
+    rows = []
+    for campaign in campaigns:
+        opens, clicks, unsubs, date = "N/A", "N/A", 0, "—"
+        try:
+            report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+            stats = _campaign_stats(report)
+            opens, clicks, unsubs, date = stats["opens"], stats["clicks"], stats["unsubs"], stats["date"]
+        except Exception:
+            app.logger.exception("Failed to fetch Brevo stats for campaign %s", campaign.id)
+
+        rows.append({
+            "id": campaign.id,
+            "name": campaign.subject or "Untitled campaign",
+            "list": campaign.contact_list.name if campaign.contact_list else "—",
+            "opens": opens,
+            "clicks": clicks,
+            "unsub": unsubs,
+            "date": date,
+            "scheduled": campaign.status == EmailCampaign.STATUS_SCHEDULED,
+            "status": campaign.status.capitalize(),
+            "quarterly": "Running" if campaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY else "Activate",
+        })
+
+    return render_template("campaign_manager.html", campaigns=rows)
 
 
-@app.route("/campaign-manager/wizard/<mode>")
+@app.post("/campaign-manager/<campaign_id>/quarterly-toggle")
+@login_required
+def campaign_manager_quarterly_toggle(campaign_id):
+    campaign = db.session.get(EmailCampaign, campaign_id)
+    if not campaign:
+        abort(404)
+
+    if campaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY:
+        campaign.recurrence_rule = None
+        campaign.next_run_at = None
+        flash("Quarterly run deactivated.", "success")
+    else:
+        campaign.recurrence_rule = EmailCampaign.RECURRENCE_QUARTERLY
+        campaign.next_run_at = utc_now() + timedelta(days=90)
+        flash("Quarterly run activated.", "success")
+
+    db.session.commit()
+    return redirect(url_for("campaign_manager"))
+
+
+@app.post("/campaign-manager/<campaign_id>/delete")
+@login_required
+def campaign_manager_delete(campaign_id):
+    campaign = db.session.get(EmailCampaign, campaign_id)
+    if not campaign:
+        abort(404)
+
+    if campaign.brevo_campaign_id:
+        try:
+            get_brevo_client().delete_email_campaign(campaign.brevo_campaign_id)
+        except BrevoAPIError:
+            app.logger.exception("Failed to delete Brevo campaign %s", campaign.brevo_campaign_id)
+            flash("Could not delete this campaign on Brevo.", "error")
+            return redirect(url_for("campaign_manager"))
+
+    db.session.delete(campaign)
+    db.session.commit()
+    flash("Campaign deleted.", "success")
+    return redirect(url_for("campaign_manager"))
+
+
+@app.route("/campaign-manager/wizard/<mode>", methods=["GET", "POST"])
 @login_required
 def campaign_wizard(mode):
-    if mode not in ("ai", "manual"):
+    if mode not in EmailCampaign.MODES:
         abort(404)
+
+    if request.method == "POST":
+        content_file = request.files.get("content_file")
+        logo_file = request.files.get("logo_file")
+        cta_links = request.form.get("cta_links", "")
+
+        if not content_file or content_file.filename == "":
+            return jsonify({"error": "Content file is required."}), 400
+
+        if not _allowed_file(content_file.filename, ALLOWED_CONTENT_EXTENSIONS):
+            return jsonify({"error": "Unsupported content file type."}), 400
+
+        content_bytes = content_file.read()
+        if len(content_bytes) > MAX_UPLOAD_SIZE:
+            return jsonify({"error": "Content file exceeds 5MB limit."}), 400
+
+        try:
+            extracted_text = extract_text(content_bytes, content_file.filename)
+        except ExtractionError as e:
+            return jsonify({"error": str(e)}), 400
+
+        campaign = _get_or_create_campaign(mode)
+        campaign.content_file_name = secure_filename(content_file.filename)
+        campaign.extracted_text = extracted_text
+        campaign.cta_links = cta_links
+
+        if logo_file and logo_file.filename != "":
+            if not _allowed_file(logo_file.filename, ALLOWED_LOGO_EXTENSIONS):
+                return jsonify({"error": "Unsupported logo file type."}), 400
+
+            logo_bytes = logo_file.read()
+            if len(logo_bytes) > MAX_UPLOAD_SIZE:
+                return jsonify({"error": "Logo file exceeds 5MB limit."}), 400
+
+            os.makedirs(LOGO_UPLOAD_DIR, exist_ok=True)
+            ext = logo_file.filename.rsplit(".", 1)[1].lower()
+            logo_filename = f"{campaign.id}.{ext}"
+            with open(os.path.join(LOGO_UPLOAD_DIR, logo_filename), "wb") as f:
+                f.write(logo_bytes)
+
+            campaign.logo_url = url_for("static", filename=f"uploads/logos/{logo_filename}")
+
+        db.session.commit()
+
+        return jsonify({"success": True, "next_url": url_for("wizard_template", mode=mode)})
+
     return render_template("wizard_setup.html", mode=mode)
 
 
-@app.route("/campaign-manager/wizard/<mode>/template")
+@app.route("/campaign-manager/wizard/<mode>/template", methods=["GET"])
 @login_required
 def wizard_template(mode):
-    if mode not in ("ai", "manual"):
+    if mode not in EmailCampaign.MODES:
         abort(404)
-    return render_template("wizard_template.html", mode=mode)
+
+    campaign = get_current_campaign()
+    if not campaign or not campaign.extracted_text:
+        return redirect(url_for("campaign_wizard", mode=mode))
+
+    if mode == EmailCampaign.MODE_AI and not campaign.email_content and not campaign.is_generating:
+        _start_generation(campaign)
+    elif mode == EmailCampaign.MODE_MANUAL and campaign.email_content is None:
+        campaign.email_content = f"<p>{campaign.extracted_text}</p>" + _feedback_footer_html()
+        db.session.commit()
+
+    contact_lists = sync_contact_lists()
+
+    return render_template(
+        "wizard_template.html",
+        mode=mode,
+        campaign=campaign,
+        is_generating=campaign.is_generating,
+        sender_emails=["info@larhdellaw.com"],
+        sender_name=campaign.sender_name or "Larhdel Law",
+        email_subject=campaign.subject or "US Immigration Update for 2026 - Larhdel Law",
+        email_lists=contact_lists,
+        selected_email_list_id=campaign.contact_list_id,
+        email_content=campaign.email_content,
+        logo_url=campaign.logo_url,
+    )
+
+
+@app.route("/campaign-manager/wizard/<mode>/template/status")
+@login_required
+def wizard_template_status(mode):
+    campaign = get_current_campaign()
+    if not campaign:
+        return jsonify({"error": "No campaign found"}), 404
+    return jsonify({
+        "is_generating": campaign.is_generating,
+        "email_content": campaign.email_content,
+    })
+
+
+@app.route("/campaign-manager/wizard/<mode>/template/save", methods=["POST"])
+@login_required
+def wizard_template_save(mode):
+    if mode not in EmailCampaign.MODES:
+        abort(404)
+
+    campaign = get_current_campaign()
+    if not campaign:
+        return jsonify({"error": "No campaign found"}), 404
+
+    payload = request.get_json(silent=True) or {}
+    if "email_content" in payload:
+        campaign.email_content = payload["email_content"]
+        db.session.commit()
+        return jsonify({"success": True})
+
+    campaign.sender_email = payload.get("sender_email") or campaign.sender_email
+    campaign.sender_name = payload.get("sender_name") or campaign.sender_name
+    campaign.subject = payload.get("email_subject") or campaign.subject
+
+    contact_list_id = payload.get("email_list")
+    if contact_list_id:
+        campaign.contact_list_id = contact_list_id
+
+    contact_list = db.session.get(ContactList, campaign.contact_list_id) if campaign.contact_list_id else None
+    list_ids = [contact_list.brevo_list_id] if contact_list else None
+
+    campaign_kwargs = dict(
+        name=f"{campaign.subject or 'Untitled campaign'} ({mode})",
+        subject=campaign.subject,
+        sender_name=campaign.sender_name,
+        sender_email=campaign.sender_email,
+        html_content=campaign.email_content,
+        list_ids=list_ids,
+    )
+
+    brevo = get_brevo_client()
+    try:
+        if campaign.brevo_campaign_id:
+            brevo.update_email_campaign(campaign.brevo_campaign_id, **campaign_kwargs)
+        else:
+            result = brevo.create_email_campaign(**campaign_kwargs)
+            campaign.brevo_campaign_id = result.get("id")
+    except BrevoAPIError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 502
+
+    campaign.status = EmailCampaign.STATUS_READY
+    db.session.commit()
+
+    return jsonify({"success": True, "next_url": url_for("wizard_test_send", mode=mode)})
 
 
 @app.route("/campaign-manager/wizard/<mode>/test-send")
 @login_required
 def wizard_test_send(mode):
-    if mode not in ("ai", "manual"):
+    if mode not in EmailCampaign.MODES:
         abort(404)
-    return render_template("wizard_test_send.html", mode=mode)
+
+    campaign = get_current_campaign()
+    if not campaign or not campaign.brevo_campaign_id:
+        return redirect(url_for("wizard_template", mode=mode))
+
+    test_emails = TestEmail.query.order_by(TestEmail.created_at.asc()).all()
+
+    return render_template(
+        "wizard_test_send.html",
+        mode=mode,
+        campaign=campaign,
+        email_content=campaign.email_content,
+        logo_url=campaign.logo_url,
+        test_emails=test_emails,
+    )
 
 
-@app.route("/campaign-manager/wizard/<mode>/schedule")
+@app.route("/campaign-manager/wizard/<mode>/test-send/send", methods=["POST"])
+@login_required
+def wizard_test_send_action(mode):
+    campaign = get_current_campaign()
+    if not campaign or not campaign.brevo_campaign_id:
+        return jsonify({"error": "No campaign found"}), 404
+
+    payload = request.get_json(silent=True) or {}
+    emails = [e for e in (payload.get("emails") or []) if e]
+    if not emails:
+        return jsonify({"error": "Select at least one test email."}), 400
+
+    try:
+        get_brevo_client().send_test_email(campaign.brevo_campaign_id, emails)
+    except BrevoAPIError as e:
+        return jsonify({"error": str(e)}), 502
+
+    return jsonify({"success": True})
+
+
+@app.route("/test-emails")
+@login_required
+def test_emails_page():
+    contact_lists = sync_contact_lists()
+    selected_list = next(
+        (cl for cl in contact_lists if "test" in cl.name.strip().lower()),
+        (contact_lists[0] if contact_lists else None),
+    )
+
+    brevo_contacts = []
+    error = None
+    if selected_list:
+        try:
+            existing_emails = {te.email for te in TestEmail.query.all()}
+            data = get_brevo_client().get_contacts_from_list(selected_list.brevo_list_id, limit=500)
+            for brevo_contact in data.get("contacts", []):
+                email = brevo_contact.get("email")
+                if not email:
+                    continue
+                brevo_contacts.append({
+                    "name": _contact_display_name(brevo_contact),
+                    "email": email,
+                    "already_added": TestEmail.normalize_email(email) in existing_emails,
+                })
+        except Exception as e:
+            app.logger.exception("Failed to fetch contacts for test-email picker.")
+            error = _brevo_error_message(
+                e, "Could not load contacts from Brevo. Check the BREVO_API_KEY and try again."
+            )
+    else:
+        error = "No Brevo contact lists found."
+
+    return render_template(
+        "test_emails.html",
+        selected_list=selected_list,
+        brevo_contacts=brevo_contacts,
+        error=error,
+    )
+
+
+@app.post("/test-emails/save")
+@login_required
+def test_emails_page_save():
+    selected = request.form.getlist("emails")
+    name_by_email = {}
+    for entry in selected:
+        email, _, name = entry.partition("|")
+        name_by_email[TestEmail.normalize_email(email)] = name or None
+
+    added = 0
+    for email, name in name_by_email.items():
+        if not email or TestEmail.query.filter_by(email=email).first():
+            continue
+        db.session.add(TestEmail(email=email, name=name, added_by_id=current_user.id))
+        added += 1
+    db.session.commit()
+
+    flash(f"Added {added} test email(s)." if added else "No new test emails to add.", "success")
+    return redirect(url_for("test_emails_page"))
+
+
+@app.post("/test-emails/<test_email_id>/remove")
+@login_required
+def test_emails_page_remove(test_email_id):
+    test_email = db.session.get(TestEmail, test_email_id)
+    if test_email:
+        db.session.delete(test_email)
+        db.session.commit()
+        flash("Test email removed.", "success")
+    return redirect(url_for("test_emails_page"))
+
+
+@app.route("/campaign-manager/wizard/<mode>/schedule", methods=["GET"])
 @login_required
 def wizard_schedule(mode):
-    if mode not in ("ai", "manual"):
+    if mode not in EmailCampaign.MODES:
         abort(404)
-    return render_template("wizard_schedule.html", mode=mode)
+
+    campaign = get_current_campaign()
+    if not campaign or not campaign.brevo_campaign_id:
+        return redirect(url_for("wizard_template", mode=mode))
+
+    return render_template(
+        "wizard_schedule.html",
+        mode=mode,
+        campaign=campaign,
+        sender_emails=["info@larhdellaw.com"],
+        sender_name=campaign.sender_name,
+        email_subject=campaign.subject,
+        email_lists=[campaign.contact_list] if campaign.contact_list else [],
+        email_content=campaign.email_content,
+        logo_url=campaign.logo_url,
+    )
+
+
+@app.route("/campaign-manager/wizard/<mode>/schedule/action", methods=["POST"])
+@login_required
+def wizard_schedule_action(mode):
+    campaign = get_current_campaign()
+    if not campaign or not campaign.brevo_campaign_id:
+        return jsonify({"error": "No campaign found"}), 404
+
+    payload = request.get_json(silent=True) or {}
+    action = payload.get("action")
+    brevo = get_brevo_client()
+
+    try:
+        if action == "run_now":
+            brevo.update_email_campaign(campaign.brevo_campaign_id, html_content=campaign.email_content)
+            brevo.send_campaign_now(campaign.brevo_campaign_id)
+            campaign.status = EmailCampaign.STATUS_SENT
+            db.session.add(CampaignRun(
+                campaign_id=campaign.id,
+                brevo_campaign_id=campaign.brevo_campaign_id,
+                run_at=utc_now(),
+                status=CampaignRun.STATUS_SENT,
+            ))
+        elif action == "schedule":
+            scheduled_at = payload.get("scheduled_at")
+            if not scheduled_at:
+                return jsonify({"error": "A schedule date/time is required."}), 400
+            # The <input type="datetime-local"> value is naive (no tz) — treat it as
+            # the server's local time, since Brevo requires a tz-aware ISO timestamp.
+            naive_dt = datetime.fromisoformat(scheduled_at)
+            local_tz = datetime.now().astimezone().tzinfo
+            aware_dt = naive_dt.replace(tzinfo=local_tz)
+            brevo.update_email_campaign(campaign.brevo_campaign_id, scheduled_at=aware_dt.isoformat())
+            campaign.scheduled_at = naive_dt
+            campaign.status = EmailCampaign.STATUS_SCHEDULED
+            db.session.add(CampaignRun(
+                campaign_id=campaign.id,
+                brevo_campaign_id=campaign.brevo_campaign_id,
+                run_at=campaign.scheduled_at,
+                status=CampaignRun.STATUS_SCHEDULED,
+            ))
+        elif action == "finish":
+            pass
+        else:
+            return jsonify({"error": "Unknown action."}), 400
+    except BrevoAPIError as e:
+        return jsonify({"error": str(e)}), 502
+
+    db.session.commit()
+    session.pop("campaign_id", None)
+
+    return jsonify({"success": True, "next_url": url_for("campaign_manager")})
 
 
 @app.route("/campaign-manager/<campaign_id>")
 @login_required
 def campaign_recipients(campaign_id):
-    return render_template("campaign_recipients.html", campaign_id=campaign_id)
+    campaign = db.session.get(EmailCampaign, campaign_id)
+    if not campaign:
+        abort(404)
+
+    contacts = []
+    error = None
+    if campaign.contact_list:
+        try:
+            data = get_brevo_client().get_contacts_from_list(campaign.contact_list.brevo_list_id, limit=500)
+            for brevo_contact in data.get("contacts", []):
+                email = brevo_contact.get("email", "")
+                normalized_email = Contact.normalize_email(email)
+                local_contact = Contact.query.filter_by(email=normalized_email).one_or_none()
+                if local_contact is None:
+                    local_contact = Contact(
+                        email=normalized_email,
+                        is_blacklisted=bool(brevo_contact.get("emailBlacklisted")),
+                    )
+                    db.session.add(local_contact)
+                contacts.append({
+                    "name": _contact_display_name(brevo_contact),
+                    "email": email,
+                    "created": _format_brevo_date(brevo_contact.get("createdAt")),
+                    "changed": _format_brevo_date(brevo_contact.get("modifiedAt")),
+                    "classification": local_contact.classification,
+                    "blacklisted": local_contact.is_blacklisted,
+                })
+            db.session.commit()
+        except Exception as e:
+            app.logger.exception("Failed to fetch recipients for campaign %s", campaign_id)
+            error = _brevo_error_message(
+                e, "Could not load recipients from Brevo. Check the BREVO_API_KEY and try again."
+            )
+
+    return render_template(
+        "campaign_recipients.html",
+        campaign_id=campaign_id,
+        contacts=contacts,
+        error=error,
+        classifications=Contact.CLASSIFICATIONS,
+    )
+
+
+@app.post("/campaign-manager/contacts/classification")
+@login_required
+def set_contact_classification():
+    payload = request.get_json(silent=True) or {}
+    email = payload.get("email")
+    classification = payload.get("classification") or None
+
+    if not email:
+        return jsonify({"error": "Email is required."}), 400
+    if classification and classification not in Contact.CLASSIFICATIONS:
+        return jsonify({"error": "Invalid classification."}), 400
+
+    contact = get_or_create_local_contact(email)
+    contact.classification = classification
+    contact.classified_by_id = current_user.id
+    contact.classified_at = utc_now()
+    db.session.commit()
+
+    try:
+        get_brevo_client().update_contact_attributes(
+            contact.email, {"attributes": {"CLASSIFICATION": classification}}
+        )
+    except BrevoAPIError:
+        app.logger.exception("Failed to push classification to Brevo for %s", contact.email)
+
+    return jsonify({"success": True})
 
 
 @app.route("/campaign-manager/<campaign_id>/preview")
 @login_required
 def campaign_preview(campaign_id):
-    return render_template("campaign_preview.html", campaign_id=campaign_id)
+    campaign = db.session.get(EmailCampaign, campaign_id)
+    if not campaign:
+        abort(404)
+
+    return render_template(
+        "campaign_preview.html",
+        campaign_id=campaign_id,
+        campaign=campaign,
+        email_content=campaign.email_content,
+        logo_url=campaign.logo_url,
+        sender_emails=[campaign.sender_email] if campaign.sender_email else ["info@larhdellaw.com"],
+        sender_name=campaign.sender_name,
+        email_subject=campaign.subject,
+        email_lists=[campaign.contact_list] if campaign.contact_list else [],
+    )
 
 
 def _campaign_stats(campaign):
@@ -572,9 +1122,11 @@ def reports():
     try:
         data = get_brevo_client().get_email_campaigns(limit=50)
         campaigns = [_campaign_stats(c) for c in data.get("campaigns", [])]
-    except Exception:
+    except Exception as e:
         app.logger.exception("Failed to fetch Brevo campaigns.")
-        error = "Could not load reports from Brevo. Check the BREVO_API_KEY and try again."
+        error = _brevo_error_message(
+            e, "Could not load reports from Brevo. Check the BREVO_API_KEY and try again."
+        )
     return render_template("reports.html", campaigns=campaigns, error=error)
 
 
