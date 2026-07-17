@@ -2,7 +2,7 @@
 .wizard-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-4) var(--space-5);
+  gap: 1.5rem 2rem;
   max-width: 900px;
 }
 
@@ -18,10 +18,10 @@
 
 /* ---- Upload dropzones ---- */
 .dropzone {
-  border: 2px dashed var(--color-border);
+  border: 1.5px dashed #d1d5db;
   border-radius: var(--radius);
-  background: var(--color-surface);
-  padding: var(--space-4);
+  background: #fafafa; 
+  padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,21 +29,36 @@
   text-align: center;
   color: var(--color-text-muted);
   cursor: pointer;
-  min-height: 120px;
+  min-height: 100px;
   justify-content: center;
 }
 
 .dropzone:hover {
-  border-color: var(--color-brand);
+  border-color: #22b8e8;
 }
 
 .dropzone__link {
-  color: var(--color-brand);
+  background: none;
+  border: none;
+  padding: 0;
+  color: #0d9fd8;
+  font-weight: 600;
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .dropzone__hint {
   font-size: 10px;
   color: #9ca3af;
+}
+
+.dropzone__filename {
+  font-size: 12px;
+  font-weight: 500;
+  color: #111827;
+  word-break: break-all;
+  margin-top: 2px;
 }
 
 /* ---- Bottom action row ---- */
@@ -53,11 +68,20 @@
   gap: var(--space-3);
   margin-top: var(--space-4);
   max-width: 900px;
+  grid-column: 1 / -1;
 }
 
 .preview-layout .wizard-actions {
   grid-column: 2;
   max-width: none;
+}
+
+/* ---- Schedule: action row (Schedule / Run Now / Finish) ---- */
+.schedule-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
 }
 
 /* ---- Test send: right rail ---- */
