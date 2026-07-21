@@ -16,9 +16,15 @@ copy .env.example .env        # Windows (cp on macOS/Linux)
 Create MySQL databases for the app and tests, then update `.env`:
 
 ```
-DATABASE_URL=mysql+pymysql://user:password@127.0.0.1:3306/ai_email_agent
+DB_HOST=localhost
+DB_NAME=managewhat
+DB_USER=root
+DB_PASSWORD=
 TEST_DATABASE_URL=mysql+pymysql://user:password@127.0.0.1:3306/ai_email_agent_test
 ```
+
+The app builds its MySQL SQLAlchemy URL internally from the `DB_*` values.
+`TEST_DATABASE_URL` is only for local/CI tests because tests reset their schema.
 
 Apply migrations:
 
