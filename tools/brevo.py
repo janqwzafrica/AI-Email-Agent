@@ -52,6 +52,7 @@ import requests
 
 BREVO_BASE_URL = "https://api.brevo.com/v3"
 
+
 # Free/General Brevo plans cap most read endpoints at 100 requests/hour, so
 # repeated dashboard loads (lists, campaigns, reports) are cached briefly to
 # avoid burning that budget on identical reads within a few minutes.

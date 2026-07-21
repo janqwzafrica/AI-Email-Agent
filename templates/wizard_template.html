@@ -26,13 +26,19 @@
 
   <form class="wizard-form" id="templateForm" data-status-url="{{ url_for('wizard_template_status', mode=mode) }}" data-save-url="{{ url_for('wizard_template_save', mode=mode) }}">
     <div class="form-field">
-      <label class="form-field__label" for="senderEmail">Sender Email</label>
-      <select id="senderEmail" name="sender_email" class="form-field__select">
-        {% for email in sender_emails %}
-        <option value="{{ email }}" {% if email == campaign.sender_email %}selected{% endif %}>{{ email }}</option>
-        {% endfor %}
-      </select>
-    </div>
+  <label class="form-field__label" for="senderEmail">Sender Email</label>
+  {% if sender_emails %}
+  <select id="senderEmail" name="sender_email" class="form-field__select">
+    {% for email in sender_emails %}
+    <option value="{{ email }}" {% if email == campaign.sender_email %}selected{% endif %}>{{ email }}</option>
+    {% endfor %}
+  </select>
+  {% else %}
+  <input type="email" id="senderEmail" name="sender_email" class="form-field__input"
+         value="{{ campaign.sender_email or '' }}" placeholder="you@example.com">
+  <small>Brevo sender list unavailable — enter the sender email manually for now.</small>
+  {% endif %}
+</div>
 
     <div class="form-field">
       <label class="form-field__label" for="senderName">Sender Name</label>

@@ -20,7 +20,7 @@ class EmailCampaign(BaseEntity):
     created_by_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False, index=True)
     mode = db.Column(db.String(10), nullable=False)
     status = db.Column(db.String(20), nullable=False, default=STATUS_DRAFT)
-    brevo_campaign_id = db.Column(db.Integer, unique=True, index=True)
+    brevo_campaign_id = db.Column(db.String(64), unique=True, index=True)
     contact_list_id = db.Column(db.String(36), db.ForeignKey("contact_lists.id"), index=True)
 
     subject = db.Column(db.String(255))
