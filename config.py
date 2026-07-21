@@ -1,32 +1,39 @@
 import os
-from urllib.parse import urlsplit
+from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-def mysql_database_url(env_var):
-    database_url = (os.getenv(env_var) or "").strip()
-
-    if not database_url:
+def require_env(env_var):
+    value = (os.getenv(env_var) or "").strip()
+    if not value:
         raise RuntimeError(
-            f"{env_var} is required. Set it to a MySQL SQLAlchemy URL, "
-            "for example mysql+pymysql://user:password@host:3306/database."
+            f"{env_var} is required. Set DB_HOST, DB_NAME, DB_USER, "
+            "and DB_PASSWORD in .env."
         )
+    return value
 
-    scheme = urlsplit(database_url).scheme
-    if not scheme.startswith(("mysql", "mariadb")):
-        raise RuntimeError(
-            f"{env_var} must point to MySQL. Received URL scheme '{scheme or '<missing>'}'."
-        )
 
-    return database_url
+def mysql_database_url():
+    """Build the app's MySQL URL from simple DB_* pieces.
+
+    Keeping deploy-time config as DB_HOST/DB_NAME/DB_USER/DB_PASSWORD matches
+    the team's other Flask services and avoids asking non-dev deployers to
+    edit a long SQLAlchemy connection string by hand.
+    """
+    host = (os.getenv("DB_HOST") or "localhost").strip()
+    name = quote_plus(require_env("DB_NAME"))
+    user = quote_plus(require_env("DB_USER"))
+    password = quote_plus(os.getenv("DB_PASSWORD") or "")
+
+    return f"mysql+pymysql://{user}:{password}@{host}/{name}?charset=utf8mb4"
 
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me")
-    SQLALCHEMY_DATABASE_URI = mysql_database_url("DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = mysql_database_url()
     SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_COOKIE_HTTPONLY = True

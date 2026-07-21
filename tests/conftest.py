@@ -48,12 +48,20 @@ def verify_mysql_test_database_connection(database_url):
         engine.dispose()
 
 
+def configure_runtime_db_env_from_test_url(database_url):
+    parsed_url = make_url(database_url)
+    os.environ["DB_HOST"] = parsed_url.host or "localhost"
+    os.environ["DB_NAME"] = parsed_url.database or ""
+    os.environ["DB_USER"] = parsed_url.username or ""
+    os.environ["DB_PASSWORD"] = parsed_url.password or ""
+
+
 def pytest_configure(config):
     global TEST_DATABASE_URL
 
     TEST_DATABASE_URL = require_mysql_test_database_url()
     verify_mysql_test_database_connection(TEST_DATABASE_URL)
-    os.environ["DATABASE_URL"] = TEST_DATABASE_URL
+    configure_runtime_db_env_from_test_url(TEST_DATABASE_URL)
 
 
 @pytest.fixture(scope="session")

@@ -6,5 +6,6 @@ Flask-SQLAlchemy
 PyMySQL
 python-dotenv
 requests
+openai
 pypdf
 python-docx
