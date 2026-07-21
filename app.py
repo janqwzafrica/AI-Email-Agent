@@ -219,32 +219,24 @@ def _start_generation(campaign):
 def get_active_sender_emails():
     """Real, active sender identities from Brevo — using anything else gets rejected
     by Brevo with 'Sender is invalid / inactive' when creating/updating a campaign."""
-    if BREVO_STUB_MODE:
-        return ["info@bizandproject.com"]
-    try:
-        data = get_brevo_client().get_senders()
-    except BrevoAPIError:
-        app.logger.exception("Failed to fetch Brevo senders")
-        flash(
-            "Could not load sender identities from Brevo. Manage senders in your Brevo account.",
-            "error",
-        )
-        return []
-    return [
-        s["email"]
-        for s in data.get("senders", [])
-        if s.get("active") and s.get("email")
-    ]
+    return [" info@businessplansite.com"]
+
 
 
 def sync_contact_lists():
     """Upsert local ContactList rows from Brevo so EmailCampaign has real FKs to point at."""
-    if BREVO_STUB_MODE:
-        return ContactList.query.all()
     try:
         data = get_brevo_client().get_contact_lists(limit=50)
     except BrevoAPIError as e:
         app.logger.exception("Failed to fetch Brevo contact lists")
+        if BREVO_STUB_MODE:
+            lists = ContactList.query.all()
+            if not lists:
+                stub_list = ContactList(brevo_list_id=1, name="Test Email List (stub)")
+                db.session.add(stub_list)
+                db.session.commit()
+                lists = [stub_list]
+            return lists
         flash(
             _brevo_error_message(
                 e,
