@@ -2,6 +2,7 @@
 from functools import wraps
 from urllib.parse import urlsplit
 
+import calendar
 import os
 import re
 import secrets
@@ -331,6 +332,127 @@ def _schedule_smtp_campaign(campaign, aware_dt):
     )
     timer.daemon = True
     timer.start()
+
+
+def _add_months(dt, months):
+    month_index = dt.month - 1 + months
+    year = dt.year + month_index // 12
+    month = month_index % 12 + 1
+    day = min(dt.day, calendar.monthrange(year, month)[1])
+    return dt.replace(year=year, month=month, day=day)
+
+
+def _quarter_end(dt):
+    """Last day of dt's calendar quarter, same time-of-day as dt."""
+    quarter_end_month = ((dt.month - 1) // 3 + 1) * 3
+    last_day = calendar.monthrange(dt.year, quarter_end_month)[1]
+    return dt.replace(month=quarter_end_month, day=last_day)
+
+
+def _first_quarterly_run_at(activated_at):
+    """First automatic run: the end of the calendar quarter Activate was
+    clicked in (any day in Jan/Feb/Mar -> March 31), not a fixed 90-day
+    count from the activation date."""
+    return _quarter_end(activated_at)
+
+
+def _next_quarterly_run_at(previous_run_at):
+    """previous_run_at is always a quarter-end; stepping one month past it
+    always lands in the next quarter, whose end is the next run."""
+    return _quarter_end(_add_months(previous_run_at, 1))
+
+
+_quarterly_timers = {}
+_quarterly_timers_lock = threading.Lock()
+
+
+def _schedule_quarterly_timer(campaign_id, run_at):
+    """Arm (or re-arm) the in-process timer for a campaign's next quarterly
+    run. run_at is naive UTC, matching EmailCampaign.next_run_at."""
+    delay_seconds = max((run_at - utc_now()).total_seconds(), 0)
+    timer = threading.Timer(
+        delay_seconds, _dispatch_quarterly_campaign, args=(app, campaign_id)
+    )
+    timer.daemon = True
+    with _quarterly_timers_lock:
+        existing = _quarterly_timers.pop(campaign_id, None)
+        _quarterly_timers[campaign_id] = timer
+    if existing:
+        existing.cancel()
+    timer.start()
+
+
+def _cancel_quarterly_timer(campaign_id):
+    with _quarterly_timers_lock:
+        existing = _quarterly_timers.pop(campaign_id, None)
+    if existing:
+        existing.cancel()
+
+
+def _dispatch_quarterly_campaign(app_ref, campaign_id):
+    with app_ref.app_context():
+        campaign = db.session.get(EmailCampaign, campaign_id)
+        if not campaign or campaign.recurrence_rule != EmailCampaign.RECURRENCE_QUARTERLY:
+            # Deactivated or deleted since this timer was armed.
+            return
+
+        if app.config["CAMPAIGN_DELIVERY_PROVIDER"] == "smtp":
+            sent, failed = send_campaign_via_smtp(campaign)
+            run_status = (
+                CampaignRun.STATUS_SENT if failed == 0 else CampaignRun.STATUS_FAILED
+            )
+        else:
+            # Note: Brevo generally refuses to re-send a campaign object
+            # that's already been sent once — same restriction we hit
+            # deleting sent campaigns. This mirrors the manual "Run Now"
+            # Brevo call for consistency; it's a known limitation of
+            # reusing one brevo_campaign_id across quarterly runs.
+            try:
+                brevo = get_brevo_client()
+                brevo.update_email_campaign(
+                    campaign.brevo_campaign_id, html_content=_compose_send_html(campaign)
+                )
+                brevo.send_campaign_now(campaign.brevo_campaign_id)
+                run_status = CampaignRun.STATUS_SENT
+            except BrevoAPIError:
+                app.logger.exception(
+                    "Quarterly Brevo send failed for campaign %s", campaign.id
+                )
+                run_status = CampaignRun.STATUS_FAILED
+
+        db.session.add(
+            CampaignRun(
+                campaign_id=campaign.id,
+                brevo_campaign_id=campaign.brevo_campaign_id,
+                run_at=utc_now(),
+                status=run_status,
+            )
+        )
+        campaign.next_run_at = _next_quarterly_run_at(campaign.next_run_at)
+        db.session.commit()
+
+        app.logger.info(
+            "Quarterly campaign %s dispatched (%s); next run %s",
+            campaign.id,
+            run_status,
+            campaign.next_run_at,
+        )
+        _schedule_quarterly_timer(campaign.id, campaign.next_run_at)
+
+
+def _rearm_quarterly_campaigns():
+    """Re-schedule timers for all active quarterly campaigns on startup —
+    the in-process timers above don't survive a restart on their own."""
+    with app.app_context():
+        campaigns = EmailCampaign.query.filter(
+            EmailCampaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY
+        ).all()
+        for campaign in campaigns:
+            run_at = campaign.next_run_at or _first_quarterly_run_at(utc_now())
+            _schedule_quarterly_timer(campaign.id, run_at)
+            app.logger.info(
+                "Re-armed quarterly campaign %s for %s", campaign.id, run_at
+            )
 
 
 def _run_generation(app_ref, campaign_id):
@@ -988,11 +1110,16 @@ def campaign_manager_quarterly_toggle(campaign_id):
     if campaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY:
         campaign.recurrence_rule = None
         campaign.next_run_at = None
-        flash("Quarterly run deactivated.", "success")
+        _cancel_quarterly_timer(campaign.id)
+        flash("Quarterly run stopped.", "success")
     else:
         campaign.recurrence_rule = EmailCampaign.RECURRENCE_QUARTERLY
-        campaign.next_run_at = utc_now() + timedelta(days=90)
-        flash("Quarterly run activated.", "success")
+        campaign.next_run_at = _first_quarterly_run_at(utc_now())
+        _schedule_quarterly_timer(campaign.id, campaign.next_run_at)
+        flash(
+            f"Quarterly run activated — next send {campaign.next_run_at:%b %d, %Y}.",
+            "success",
+        )
 
     db.session.commit()
     return redirect(url_for("campaign_manager"))
@@ -1827,4 +1954,10 @@ def setup_password(user_id):
 
 
 if __name__ == "__main__":
+    # Werkzeug's reloader (debug=True, on by default) re-execs this module
+    # in a child process with WERKZEUG_RUN_MAIN=true; the parent watcher
+    # process never actually serves requests, so only arm timers in the
+    # child — otherwise every reload would double-schedule them.
+    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        _rearm_quarterly_campaigns()
     app.run(debug=True)
