@@ -1,8 +1,9 @@
-﻿from datetime import datetime, timedelta
+﻿from datetime import datetime, timedelta, timezone
 from functools import wraps
 from urllib.parse import urlsplit
 
 import os
+import re
 import secrets
 import threading
 from flask import (
@@ -37,6 +38,7 @@ from models import (
     utc_now,
 )
 from services.email_service import (
+    send_campaign_email,
     send_password_reset_email,
     send_password_setup_email,
 )
@@ -81,6 +83,16 @@ print(f"BREVO_STUB_MODE = {BREVO_STUB_MODE}")
 
 def _allowed_file(filename, allowed_extensions):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in allowed_extensions
+
+
+def _default_subject_from_filename(filename):
+    """A readable default subject derived from the uploaded document's name,
+    for manual mode where there's no AI call to generate a real subject."""
+    if not filename:
+        return ""
+    name = filename.rsplit(".", 1)[0]
+    name = re.sub(r"[_-]+", " ", name).strip()
+    return name.title() if name else ""
 
 
 _ACTIVE_CAMPAIGN_STATUSES = (
@@ -173,6 +185,154 @@ def _cta_buttons_html(buttons):
     )
 
 
+def _add_inline_spacing(html):
+    """Inline margin/line-height on bare <p>/<ul>/<li> tags from the AI body.
+
+    Email clients (Outlook's Word engine especially) don't reliably apply
+    default block-level margins, so paragraphs render with no spacing unless
+    it's inline on the tag itself.
+    """
+    html = re.sub(r"<p>", '<p style="margin:0 0 16px 0;line-height:1.6;">', html)
+    html = re.sub(
+        r"<ul>",
+        '<ul style="margin:0 0 16px 0;padding-left:20px;line-height:1.6;">',
+        html,
+    )
+    html = re.sub(r"<li>", '<li style="margin:0 0 8px 0;">', html)
+    return html
+
+
+def _logo_header_html(campaign):
+    """Absolute-URL <img> for the campaign logo, meant only for the HTML
+    actually sent to Brevo. Recipients' inboxes fetch images over the public
+    internet, so a relative /static/... path (fine for the in-app preview)
+    won't resolve for them."""
+    if not campaign.logo_url:
+        return ""
+    base = app.config.get("PUBLIC_BASE_URL")
+    logo_src = campaign.logo_url
+    if base and logo_src.startswith("/"):
+        logo_src = f"{base}{logo_src}"
+    return (
+        '<div style="margin-bottom:24px;">'
+        f'<img src="{escape(logo_src)}" alt="" style="max-width:200px;height:auto;display:block;">'
+        "</div>"
+    )
+
+
+def _compose_send_html(campaign):
+    """The HTML actually handed to Brevo: logo header + the editable body."""
+    return _logo_header_html(campaign) + (campaign.email_content or "")
+
+
+def _personalize_campaign_html(html, attributes):
+    """Fill in the {{ contact.FIRSTNAME }} / {{ contact.LASTNAME }} merge
+    tags Brevo would normally resolve server-side — needed now that SMTP
+    sends bypass Brevo's campaign engine entirely."""
+    firstname = (attributes or {}).get("FIRSTNAME") or ""
+    lastname = (attributes or {}).get("LASTNAME") or ""
+    for tag, value in (
+        ("{{ contact.FIRSTNAME }}", firstname),
+        ("{{contact.FIRSTNAME}}", firstname),
+        ("{{ contact.LASTNAME }}", lastname),
+        ("{{contact.LASTNAME}}", lastname),
+    ):
+        html = html.replace(tag, value)
+    return html
+
+
+def _smtp_campaign_recipients(campaign):
+    """Recipient contacts for an SMTP-delivered send. Brevo still owns
+    contact list storage either way (see CAMPAIGN_DELIVERY_PROVIDER) — only
+    the outbound send step moves to SMTP — so membership is still read from
+    the campaign's Brevo list, filtered against both Brevo's own blacklist
+    flag and our locally tracked one."""
+    if not campaign.contact_list:
+        return []
+    data = get_brevo_client().get_contacts_from_list(
+        campaign.contact_list.brevo_list_id, limit=500
+    )
+    recipients = []
+    for contact in data.get("contacts", []):
+        email = contact.get("email")
+        if not email or contact.get("emailBlacklisted"):
+            continue
+        local_contact = Contact.query.filter_by(
+            email=Contact.normalize_email(email)
+        ).one_or_none()
+        if local_contact and local_contact.is_blacklisted:
+            continue
+        recipients.append({"email": email, "attributes": contact.get("attributes") or {}})
+    return recipients
+
+
+def send_campaign_via_smtp(campaign):
+    """Send campaign to its full recipient list over the manual SMTP
+    account. Returns (sent_count, failed_count); failures are logged
+    per-recipient rather than aborting the whole run."""
+    base_html = _compose_send_html(campaign)
+    recipients = _smtp_campaign_recipients(campaign)
+    sent = failed = 0
+    for contact in recipients:
+        try:
+            send_campaign_email(
+                contact["email"],
+                campaign.subject or "Untitled campaign",
+                _personalize_campaign_html(base_html, contact["attributes"]),
+                sender_name=campaign.sender_name,
+            )
+            sent += 1
+        except Exception:
+            failed += 1
+            app.logger.exception(
+                "Failed to send campaign %s to %s over SMTP",
+                campaign.id,
+                contact["email"],
+            )
+    return sent, failed
+
+
+def _dispatch_scheduled_smtp_campaign(app_ref, campaign_id):
+    with app_ref.app_context():
+        campaign = db.session.get(EmailCampaign, campaign_id)
+        if not campaign or campaign.status != EmailCampaign.STATUS_SCHEDULED:
+            return
+        sent, failed = send_campaign_via_smtp(campaign)
+        campaign.status = EmailCampaign.STATUS_SENT
+        db.session.add(
+            CampaignRun(
+                campaign_id=campaign.id,
+                brevo_campaign_id=campaign.brevo_campaign_id,
+                run_at=utc_now(),
+                status=CampaignRun.STATUS_SENT if failed == 0 else CampaignRun.STATUS_FAILED,
+            )
+        )
+        db.session.commit()
+        app.logger.info(
+            "Scheduled SMTP campaign %s dispatched: %s sent, %s failed",
+            campaign.id,
+            sent,
+            failed,
+        )
+
+
+def _schedule_smtp_campaign(campaign, aware_dt):
+    """Delay-dispatch a campaign at aware_dt using an in-process timer.
+
+    Note: this only fires while this server process keeps running — a
+    restart between now and the scheduled time loses the pending send
+    (there's no persisted job queue backing SMTP delivery yet).
+    """
+    delay_seconds = max((aware_dt - datetime.now(timezone.utc)).total_seconds(), 0)
+    timer = threading.Timer(
+        delay_seconds,
+        _dispatch_scheduled_smtp_campaign,
+        args=(app, campaign.id),
+    )
+    timer.daemon = True
+    timer.start()
+
+
 def _run_generation(app_ref, campaign_id):
     with app_ref.app_context():
         campaign = db.session.get(EmailCampaign, campaign_id)
@@ -186,10 +346,12 @@ def _run_generation(app_ref, campaign_id):
                 sender_name=campaign.sender_name or "Larhdel Law",
             )
             campaign.email_content = (
-                result["body_html"]
+                _add_inline_spacing(result["body_html"])
                 + _cta_buttons_html(result["cta_buttons"])
                 + _feedback_footer_html()
             )
+            if result["subject"] and not campaign.subject:
+                campaign.subject = result["subject"]
         except AIGenerationError as e:
             campaign.email_content = (
                 f"<p>We couldn't generate content automatically: {e}</p>"
@@ -271,6 +433,54 @@ def get_brevo_client():
     if _brevo_client is None:
         _brevo_client = BrevoClient()
     return _brevo_client
+
+
+def delete_brevo_campaign(brevo_campaign_id):
+    """Delete a campaign on Brevo, working around Brevo's refusal to delete
+    anything that was ever scheduled/sent (403 "Campaign once scheduled can
+    not be deleted"): suspend it first (cancelling any pending send) and
+    retry.
+
+    Returns True if the campaign was actually deleted on Brevo, False if
+    Brevo will never allow that (it already fully sent, so there's no
+    pending send left to suspend either) — the caller should still remove
+    the local record in that case, since nothing further is possible there.
+    A 404 on the initial delete means it's already gone (also True). Any
+    other failure propagates as BrevoAPIError for the caller to report.
+    """
+    brevo = get_brevo_client()
+    try:
+        brevo.delete_email_campaign(brevo_campaign_id)
+        return True
+    except BrevoAPIError as e:
+        if e.status_code == 404:
+            app.logger.info(
+                "Brevo campaign %s already gone (404) — nothing to delete",
+                brevo_campaign_id,
+            )
+            return True
+        if e.status_code != 403:
+            raise
+        app.logger.info(
+            "Brevo campaign %s blocked from deletion (403) — suspending and retrying",
+            brevo_campaign_id,
+        )
+
+    try:
+        brevo.update_campaign_status(brevo_campaign_id, "suspended")
+    except BrevoAPIError:
+        # Brevo also refuses to suspend a campaign that's already fully
+        # sent (nothing pending left to cancel) — it's permanently stuck
+        # there. Nothing more we can do on Brevo's side.
+        app.logger.info(
+            "Brevo campaign %s can't be suspended (already sent) — "
+            "removing the local record only; it stays visible on Brevo.",
+            brevo_campaign_id,
+        )
+        return False
+
+    brevo.delete_email_campaign(brevo_campaign_id)
+    return True
 
 
 BREVO_BLACKLISTING_EVENTS = {
@@ -795,19 +1005,28 @@ def campaign_manager_delete(campaign_id):
     if not campaign:
         abort(404)
 
+    deleted_on_brevo = True
     if campaign.brevo_campaign_id:
         try:
-            get_brevo_client().delete_email_campaign(campaign.brevo_campaign_id)
-        except BrevoAPIError:
+            deleted_on_brevo = delete_brevo_campaign(campaign.brevo_campaign_id)
+        except BrevoAPIError as e:
             app.logger.exception(
                 "Failed to delete Brevo campaign %s", campaign.brevo_campaign_id
             )
-            flash("Could not delete this campaign on Brevo.", "error")
+            flash(f"Could not delete this campaign on Brevo: {e}", "error")
             return redirect(url_for("campaign_manager"))
 
     db.session.delete(campaign)
     db.session.commit()
-    flash("Campaign deleted.", "success")
+    if deleted_on_brevo:
+        flash("Campaign deleted.", "success")
+    else:
+        flash(
+            "Removed from this list. This campaign had already fully sent, so "
+            "Brevo doesn't allow deleting it there — it still exists in your "
+            "Brevo dashboard.",
+            "success",
+        )
     return redirect(url_for("campaign_manager"))
 
 
@@ -896,9 +1115,12 @@ def wizard_template(mode):
             for url in _parse_cta_links(campaign.cta_links)
         ]
         campaign.email_content = (
-            f"<p>{campaign.extracted_text}</p>"
+            _add_inline_spacing(f"<p>{campaign.extracted_text}</p>")
             + _cta_buttons_html(cta_buttons)
             + _feedback_footer_html()
+        )
+        campaign.subject = campaign.subject or _default_subject_from_filename(
+            campaign.content_file_name
         )
         db.session.commit()
 
@@ -911,8 +1133,7 @@ def wizard_template(mode):
         is_generating=campaign.is_generating,
         sender_emails=get_active_sender_emails(),
         sender_name=campaign.sender_name or "Larhdel Law",
-        email_subject=campaign.subject
-        or "US Immigration Update for 2026 - Larhdel Law",
+        email_subject=campaign.subject or "",
         email_lists=contact_lists,
         selected_email_list_id=campaign.contact_list_id,
         email_content=campaign.email_content,
@@ -930,6 +1151,7 @@ def wizard_template_status(mode):
         {
             "is_generating": campaign.is_generating,
             "email_content": campaign.email_content,
+            "email_subject": campaign.subject,
         }
     )
 
@@ -978,7 +1200,7 @@ def wizard_template_save(mode):
         subject=campaign.subject,
         sender_name=campaign.sender_name,
         sender_email=campaign.sender_email,
-        html_content=campaign.email_content,
+        html_content=_compose_send_html(campaign),
         list_ids=list_ids,
     )
 
@@ -1169,13 +1391,31 @@ def wizard_schedule_action(mode):
 
     payload = request.get_json(silent=True) or {}
     action = payload.get("action")
-    brevo = None if BREVO_STUB_MODE else get_brevo_client()
+    use_smtp = app.config["CAMPAIGN_DELIVERY_PROVIDER"] == "smtp"
+    brevo = None if (BREVO_STUB_MODE or use_smtp) else get_brevo_client()
 
     try:
         if action == "run_now":
-            if not BREVO_STUB_MODE:
+            if use_smtp:
+                sent, failed = send_campaign_via_smtp(campaign)
+                if sent == 0 and failed > 0:
+                    return (
+                        jsonify(
+                            {
+                                "error": f"SMTP send failed for all {failed} recipient(s) — check the logs."
+                            }
+                        ),
+                        502,
+                    )
+                app.logger.info(
+                    "Campaign %s sent over SMTP: %s sent, %s failed",
+                    campaign.id,
+                    sent,
+                    failed,
+                )
+            elif not BREVO_STUB_MODE:
                 brevo.update_email_campaign(
-                    campaign.brevo_campaign_id, html_content=campaign.email_content
+                    campaign.brevo_campaign_id, html_content=_compose_send_html(campaign)
                 )
                 brevo.send_campaign_now(campaign.brevo_campaign_id)
             campaign.status = EmailCampaign.STATUS_SENT
@@ -1191,20 +1431,25 @@ def wizard_schedule_action(mode):
             scheduled_at = payload.get("scheduled_at")
             if not scheduled_at:
                 return jsonify({"error": "A schedule date/time is required."}), 400
-            # The <input type="datetime-local"> value is naive (no tz) — treat it as
-            # the server's local time, since Brevo requires a tz-aware ISO timestamp.
+            # The browser sends an absolute UTC instant (see wizard_schedule.js),
+            # so this is tz-aware already — no need (or ability) to guess whose
+            # timezone a naive string would have meant.
             try:
-                naive_dt = datetime.fromisoformat(scheduled_at)
+                aware_dt = datetime.fromisoformat(scheduled_at.replace("Z", "+00:00"))
             except ValueError:
                 return jsonify({"error": "Invalid schedule date/time."}), 400
-            local_tz = datetime.now().astimezone().tzinfo
-            aware_dt = naive_dt.replace(tzinfo=local_tz)
-            if not BREVO_STUB_MODE:
+            if aware_dt.tzinfo is None:
+                aware_dt = aware_dt.replace(tzinfo=timezone.utc)
+            campaign.scheduled_at = aware_dt.astimezone(timezone.utc).replace(tzinfo=None)
+            campaign.status = EmailCampaign.STATUS_SCHEDULED
+            if use_smtp:
+                # Fires in-process at aware_dt — see _schedule_smtp_campaign's
+                # docstring for the "lost on restart" caveat.
+                _schedule_smtp_campaign(campaign, aware_dt)
+            elif not BREVO_STUB_MODE:
                 brevo.update_email_campaign(
                     campaign.brevo_campaign_id, scheduled_at=aware_dt.isoformat()
                 )
-            campaign.scheduled_at = naive_dt
-            campaign.status = EmailCampaign.STATUS_SCHEDULED
             db.session.add(
                 CampaignRun(
                     campaign_id=campaign.id,
@@ -1368,11 +1613,19 @@ def reports():
 @login_required
 def report_delete(campaign_id):
     try:
-        get_brevo_client().delete_email_campaign(campaign_id)
-        flash("Campaign deleted.", "success")
-    except Exception:
-        app.logger.exception("Failed to delete Brevo campaign.")
-        flash("Could not delete this campaign on Brevo.", "error")
+        deleted_on_brevo = delete_brevo_campaign(campaign_id)
+        if deleted_on_brevo:
+            flash("Campaign deleted.", "success")
+        else:
+            flash(
+                "This campaign had already fully sent, so Brevo doesn't allow "
+                "deleting it there — it still exists in your Brevo dashboard.",
+                "success",
+            )
+    except Exception as e:
+        app.logger.exception("Failed to delete Brevo campaign %s", campaign_id)
+        detail = str(e) if isinstance(e, BrevoAPIError) else "Unexpected error — check the logs."
+        flash(f"Could not delete this campaign on Brevo: {detail}", "error")
     return redirect(url_for("reports"))
 
 

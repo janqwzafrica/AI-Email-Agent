@@ -83,6 +83,10 @@ document.addEventListener("DOMContentLoaded", function () {
             if (contentBody && data.email_content) {
               contentBody.innerHTML = data.email_content;
             }
+            var subjectInput = document.getElementById("emailSubject");
+            if (subjectInput && !subjectInput.value && data.email_subject) {
+              subjectInput.value = data.email_subject;
+            }
             setNextStepEnabled(true);
           }
         })

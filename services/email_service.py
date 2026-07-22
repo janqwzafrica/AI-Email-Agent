@@ -1,10 +1,11 @@
 import smtplib
 from email.message import EmailMessage
+from email.utils import formataddr
 
 from flask import current_app
 
 
-def _send_email(subject, to_email, body):
+def _smtp_config():
     host = current_app.config.get("SMTP_HOST")
     port = current_app.config.get("SMTP_PORT")
     username = current_app.config.get("SMTP_USERNAME")
@@ -14,18 +15,26 @@ def _send_email(subject, to_email, body):
 
     if not all((host, port, username, password, sender)):
         raise RuntimeError("SMTP is not fully configured.")
+    return host, port, username, password, use_tls, sender
 
-    message = EmailMessage()
-    message["Subject"] = subject
-    message["From"] = sender
-    message["To"] = to_email
-    message.set_content(body)
 
+def _send_smtp_message(message):
+    host, port, username, password, use_tls, _ = _smtp_config()
     with smtplib.SMTP(host, port, timeout=15) as server:
         if use_tls:
             server.starttls()
         server.login(username, password)
         server.send_message(message)
+
+
+def _send_email(subject, to_email, body):
+    *_, sender = _smtp_config()
+    message = EmailMessage()
+    message["Subject"] = subject
+    message["From"] = sender
+    message["To"] = to_email
+    message.set_content(body)
+    _send_smtp_message(message)
 
 
 def send_password_setup_email(to_email, setup_link):
@@ -48,22 +57,10 @@ def send_password_setup_email(to_email, setup_link):
 
 
 def send_password_reset_email(to_email, code):
-    host = current_app.config.get("SMTP_HOST")
-    port = current_app.config.get("SMTP_PORT")
-    username = current_app.config.get("SMTP_USERNAME")
-    password = current_app.config.get("SMTP_PASSWORD")
-    use_tls = current_app.config.get("SMTP_USE_TLS")
-    sender = current_app.config.get("SMTP_DEFAULT_SENDER") or username
     expiry_minutes = current_app.config.get("PASSWORD_RESET_CODE_MINUTES")
-
-    if not all((host, port, username, password, sender)):
-        raise RuntimeError("SMTP is not fully configured.")
-
-    message = EmailMessage()
-    message["Subject"] = "Your password reset code"
-    message["From"] = sender
-    message["To"] = to_email
-    message.set_content(
+    _send_email(
+        "Your password reset code",
+        to_email,
         "\n".join(
             [
                 "Use this code to reset your AI Email Agent password:",
@@ -72,11 +69,23 @@ def send_password_reset_email(to_email, code):
                 "",
                 f"This code expires in {expiry_minutes} minutes. If you did not request it, you can ignore this email.",
             ]
-        )
+        ),
     )
 
-    with smtplib.SMTP(host, port, timeout=15) as server:
-        if use_tls:
-            server.starttls()
-        server.login(username, password)
-        server.send_message(message)
+
+def send_campaign_email(to_email, subject, html_content, sender_name=None):
+    """Send one personalized campaign email over the manual SMTP account.
+
+    Uses the authenticated SMTP account's address as the actual From address
+    (most SMTP relays reject/flag arbitrary From addresses), with
+    sender_name as the display name if given — e.g. "Larhdel Law <acct@...>".
+    """
+    *_, sender_address = _smtp_config()
+    message = EmailMessage()
+    message["Subject"] = subject
+    message["From"] = (
+        formataddr((sender_name, sender_address)) if sender_name else sender_address
+    )
+    message["To"] = to_email
+    message.set_content(html_content, subtype="html")
+    _send_smtp_message(message)

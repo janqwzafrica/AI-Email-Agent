@@ -1,0 +1,1155 @@
+2026-07-22 11:46:08,083 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:46:08,089 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:46:12,898 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:46:16,755 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:46:16,761 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:46:21,567 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:46:26,328 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:46:26,333 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:46:39,747 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:46:46,410 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:46:46,419 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:46:49,409 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:46:55,653 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:46:55,658 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:49:31,446 ERROR app: Failed to delete Brevo campaign 2
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 841, in campaign_manager_delete
+    get_brevo_client().delete_email_campaign(campaign.brevo_campaign_id)
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 320, in delete_email_campaign
+    result = self._request("DELETE", f"/emailCampaigns/{campaign_id}")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 403: Campaign once scheduled can not be deleted
+2026-07-22 11:49:31,455 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:31] "[32mPOST /campaign-manager/f5a3c27b-6eec-4a30-976f-7b56901e80d2/delete HTTP/1.1[0m" 302 -
+2026-07-22 11:49:32,446 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:32] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 11:49:32,587 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:32] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:32,802 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:32] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:32,806 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:32] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:32,810 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:32] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:32,815 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:32] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:32,815 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:32] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:32,896 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:32] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:33,116 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:33] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:33,116 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:33] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:33,206 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:33] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:33,441 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:33] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:33,443 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:33] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:33,445 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:33] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:33,450 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:33] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:33,451 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:33] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:33,519 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:33] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:33,753 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:33] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 11:49:52,690 ERROR app: Failed to delete Brevo campaign 3
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 841, in campaign_manager_delete
+    get_brevo_client().delete_email_campaign(campaign.brevo_campaign_id)
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 320, in delete_email_campaign
+    result = self._request("DELETE", f"/emailCampaigns/{campaign_id}")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 403: Campaign once scheduled can not be deleted
+2026-07-22 11:49:52,694 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:52] "[32mPOST /campaign-manager/7e1da3b4-7472-42b1-bc3d-088a662020bc/delete HTTP/1.1[0m" 302 -
+2026-07-22 11:49:52,712 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:52] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 11:49:52,764 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:52] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,075 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,076 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,080 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,082 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,082 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,084 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,386 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,387 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,397 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,732 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,733 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,734 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,737 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,741 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:53,747 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:53] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:54,048 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:54] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:56,047 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 11:49:56,087 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:56,284 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:56,429 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:56,429 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:56,438 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:56,442 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:56,442 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:56,592 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 11:49:56,749 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:56,756 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:56] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 11:49:57,068 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:57] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:57,069 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:57] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:57,070 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:57] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:57,070 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:57] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:57,070 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:57] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:57,073 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:57] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 11:49:57,374 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:49:57] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:00,501 ERROR app: Failed to delete Brevo campaign 3
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 841, in campaign_manager_delete
+    get_brevo_client().delete_email_campaign(campaign.brevo_campaign_id)
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 320, in delete_email_campaign
+    result = self._request("DELETE", f"/emailCampaigns/{campaign_id}")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 403: Campaign once scheduled can not be deleted
+2026-07-22 11:50:00,505 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:00] "[32mPOST /campaign-manager/7e1da3b4-7472-42b1-bc3d-088a662020bc/delete HTTP/1.1[0m" 302 -
+2026-07-22 11:50:00,529 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:00] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 11:50:00,575 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:00] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:00,896 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:00] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:00,899 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:00] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:00,899 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:00] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:00,899 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:00] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:00,899 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:00] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:00,900 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:00] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:01,214 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:01] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:01,215 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:01] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:01,229 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:01] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 11:50:01,582 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:01] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:01,586 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:01] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:01,586 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:01] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:01,587 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:01] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:01,589 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:01] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:01,594 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:01] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:01,903 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:01] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:41,002 ERROR app: Failed to delete Brevo campaign 3
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 841, in campaign_manager_delete
+    get_brevo_client().delete_email_campaign(campaign.brevo_campaign_id)
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 320, in delete_email_campaign
+    result = self._request("DELETE", f"/emailCampaigns/{campaign_id}")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 403: Campaign once scheduled can not be deleted
+2026-07-22 11:50:41,004 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[32mPOST /campaign-manager/7e1da3b4-7472-42b1-bc3d-088a662020bc/delete HTTP/1.1[0m" 302 -
+2026-07-22 11:50:41,038 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 11:50:41,093 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:41,433 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:41,434 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:41,438 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:41,439 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:41,440 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:41,442 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:41,772 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 11:50:41,774 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:41,777 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:41] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 11:50:42,112 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:42] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:42,114 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:42] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:42,115 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:42] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:42,117 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:42] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:42,118 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:42] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:42,118 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:42] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 11:50:42,420 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:50:42] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 11:52:39,943 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\tools\\brevo.py', reloading
+2026-07-22 11:52:46,194 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:52:46,203 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:53:19,800 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:53:24,590 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:53:24,598 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:53:35,041 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:53:39,816 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:53:39,824 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:53:41,635 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:53:49,066 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:53:49,081 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:56:29,315 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\services\\ai_email_content.py', reloading
+2026-07-22 11:56:34,750 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:56:34,759 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:56:36,257 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\services\\ai_email_content.py', reloading
+2026-07-22 11:56:40,337 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:56:40,341 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:56:43,202 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\services\\ai_email_content.py', reloading
+2026-07-22 11:56:51,337 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:56:51,347 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:56:56,372 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\services\\ai_email_content.py', reloading
+2026-07-22 11:57:00,918 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:57:00,925 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:57:07,958 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:57:14,334 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:57:14,344 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:57:37,779 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:57:42,123 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:57:42,131 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:57:43,640 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:57:48,044 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:57:48,051 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:57:50,562 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:57:54,824 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:57:54,830 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:58:04,945 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 11:58:13,017 WARNING werkzeug:  * Debugger is active!
+2026-07-22 11:58:13,027 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 11:59:09,887 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:09] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 11:59:10,019 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,020 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,248 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,253 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,256 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,260 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,334 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,335 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,571 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,584 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,902 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,903 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,903 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,904 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,907 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:10,914 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:10] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:11,222 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:11] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,178 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "GET /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-22 11:59:13,399 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,430 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,534 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,537 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,538 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,539 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,713 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,744 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,855 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,855 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 11:59:13,856 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:13] "[36mGET /static/js/wizard_setup.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:14,203 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:14] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:14,210 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:14] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:14,212 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:14] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:14,215 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:14] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:14,217 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:14] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:14,229 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:14] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:14,525 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:14] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:35,594 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:35] "POST /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-22 11:59:36,075 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-22 11:59:36,111 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,425 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,428 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,430 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,430 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,434 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,443 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,802 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,804 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,804 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,820 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "GET /static/js/wizard_template.js HTTP/1.1" 200 -
+2026-07-22 11:59:36,821 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 11:59:36,836 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:36] "GET /static/uploads/logos/2263291e-e4e9-45a9-854e-80fe5ff7197a.png HTTP/1.1" 200 -
+2026-07-22 11:59:37,143 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:37] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:37,145 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:37] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:37,145 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:37] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:37,148 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:37] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:37,167 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:37] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:37,183 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:37] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:37,456 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:37] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 11:59:39,789 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:39] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 11:59:41,487 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:41] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 11:59:41,915 INFO httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-22 11:59:43,786 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:43] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 11:59:59,354 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:59] "POST /campaign-manager/wizard/ai/template/save HTTP/1.1" 200 -
+2026-07-22 11:59:59,723 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:59] "GET /campaign-manager/wizard/ai/test-send HTTP/1.1" 200 -
+2026-07-22 11:59:59,757 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:59] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 11:59:59,953 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 11:59:59] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,068 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,070 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,072 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,080 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,085 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,270 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,404 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,408 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,409 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,411 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,415 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/uploads/logos/2263291e-e4e9-45a9-854e-80fe5ff7197a.png HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,599 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/js/wizard_test_send.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,737 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,739 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,739 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,741 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,745 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:00,924 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:00] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:01,049 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:01] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:05,736 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:05] "GET /campaign-manager/wizard/ai/schedule HTTP/1.1" 200 -
+2026-07-22 12:00:05,949 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:05] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:05,955 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:05] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,100 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,101 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,102 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,103 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,264 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,265 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,426 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,427 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,428 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,429 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/uploads/logos/2263291e-e4e9-45a9-854e-80fe5ff7197a.png HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,578 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,580 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "GET /static/js/wizard_schedule.js HTTP/1.1" 200 -
+2026-07-22 12:00:06,746 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,748 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,750 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,751 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,887 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:06,888 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:06] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:07,059 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:07] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:12,871 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:12] "POST /campaign-manager/wizard/ai/schedule/action HTTP/1.1" 200 -
+2026-07-22 12:00:14,338 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:14] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 12:00:14,364 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:14] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:14,694 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:14] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:14,696 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:14] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:14,697 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:14] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:14,698 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:14] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:14,707 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:14] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:14,716 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:14] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:15,009 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:15] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:15,011 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:15] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:15,021 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:15] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:00:15,344 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:15] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:15,344 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:15] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:15,348 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:15] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:15,352 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:15] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:15,360 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:15] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:15,361 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:15] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:15,655 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:15] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,106 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "GET /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-22 12:00:57,334 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,343 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,471 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,473 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,474 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,476 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,645 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,651 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,786 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,788 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/js/wizard_setup.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:57,790 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:57] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:00:58,106 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:58] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:58,107 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:58] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:58,110 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:58] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:58,111 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:58] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:58,111 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:58] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:58,112 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:58] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:00:58,411 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:00:58] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:18,761 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:18] "POST /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-22 12:01:19,342 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:19] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-22 12:01:19,378 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:19] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:19,706 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:19] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:19,709 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:19] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:19,711 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:19] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:19,711 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:19] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:19,716 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:19] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:19,718 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:19] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,050 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,056 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,056 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,058 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,062 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,074 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "GET /static/uploads/logos/516d738e-59d4-48d0-86ea-6695eddfa022.jpg HTTP/1.1" 200 -
+2026-07-22 12:01:20,402 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,404 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,404 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,408 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,410 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,410 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:20,711 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:20] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:23,043 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:23] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:01:24,152 INFO httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-22 12:01:24,722 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:24] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:01:29,775 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:29] "POST /campaign-manager/wizard/ai/template/save HTTP/1.1" 200 -
+2026-07-22 12:01:29,798 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:29] "GET /campaign-manager/wizard/ai/test-send HTTP/1.1" 200 -
+2026-07-22 12:01:30,101 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,155 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,158 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,158 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,159 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,161 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,423 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,476 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,476 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,478 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,478 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,490 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/js/wizard_test_send.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,738 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,797 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,818 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,819 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,820 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:30,820 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:30] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:31,045 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:31] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:31,106 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:31] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:01:31,137 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:31] "[36mGET /static/uploads/logos/516d738e-59d4-48d0-86ea-6695eddfa022.jpg HTTP/1.1[0m" 304 -
+2026-07-22 12:01:37,822 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:37] "GET /campaign-manager/wizard/ai/schedule HTTP/1.1" 200 -
+2026-07-22 12:01:38,053 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,082 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,186 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,190 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,191 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,193 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,361 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,391 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,502 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,503 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,506 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,511 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,674 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/uploads/logos/516d738e-59d4-48d0-86ea-6695eddfa022.jpg HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,705 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/js/wizard_schedule.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,835 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,836 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,837 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,837 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:38,986 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:38] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:39,017 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:39] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:39,152 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:39] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:51,226 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:51] "POST /campaign-manager/wizard/ai/schedule/action HTTP/1.1" 200 -
+2026-07-22 12:01:52,258 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 12:01:52,287 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:52,615 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:52,618 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:52,618 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:52,619 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:52,622 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:52,625 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:52,926 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 12:01:52,932 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:52,940 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:52] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:01:53,262 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:53] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:53,264 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:53] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:53,264 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:53] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:53,264 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:53] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:53,264 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:53] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:53,268 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:53] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:01:53,569 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:01:53] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:03:32,214 INFO app: Brevo campaign 3 blocked from deletion (403) — suspending and retrying
+2026-07-22 12:03:32,420 ERROR app: Failed to delete Brevo campaign 3
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 881, in campaign_manager_delete
+    delete_brevo_campaign(campaign.brevo_campaign_id)
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 353, in delete_brevo_campaign
+    brevo.update_campaign_status(brevo_campaign_id, "suspended")
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 336, in update_campaign_status
+    result = self._request(
+             ^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 400: suspended is an invalid status for sent campaign
+2026-07-22 12:03:32,426 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:32] "[32mPOST /campaign-manager/7e1da3b4-7472-42b1-bc3d-088a662020bc/delete HTTP/1.1[0m" 302 -
+2026-07-22 12:03:32,439 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:32] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 12:03:32,479 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:32] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:03:32,791 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:32] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:03:32,794 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:32] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:03:32,796 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:32] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:03:32,805 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:32] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:03:32,806 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:32] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:03:32,808 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:32] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:03:33,097 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:33] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 12:03:33,102 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:33] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:03:33,118 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:33] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:03:33,436 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:33] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:03:33,441 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:33] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:03:33,443 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:33] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:03:33,449 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:33] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:03:33,450 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:33] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:03:33,458 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:33] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:03:33,759 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:03:33] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:05:03,139 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 12:05:07,083 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:05:07,088 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:05:20,552 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 12:05:24,524 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:05:24,536 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:05:33,841 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 12:05:37,662 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:05:37,668 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:08:33,287 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "GET /test-emails HTTP/1.1" 200 -
+2026-07-22 12:08:33,436 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:33,437 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:33,629 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:33,629 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:33,631 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:33,640 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:33,745 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:33,745 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:33,943 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:33,944 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:33] "[36mGET /static/js/test_emails.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:34,068 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:34] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:34,273 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:34] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:34,275 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:34] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:34,275 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:34] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:34,276 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:34] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:34,279 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:34] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:34,377 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:34] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:34,579 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:34] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:08:46,401 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:46] "GET /email-lists HTTP/1.1" 200 -
+2026-07-22 12:08:46,609 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:46] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:46,640 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:46] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:46,772 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:46] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:46,772 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:46] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:46,773 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:46] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:46,774 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:46] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:46,919 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:46] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:46,950 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:46] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:47,088 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:47] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:08:47,301 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:47] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:47,301 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:47] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:47,302 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:47] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:47,304 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:47] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:47,306 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:47] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:47,401 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:47] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:47,622 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:47] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:51,506 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:51] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 12:08:51,541 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:51] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:51,542 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:51] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:51,862 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:51] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:51,864 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:51] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:51,864 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:51] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:51,865 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:51] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:51,865 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:51] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:51,872 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:51] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 12:08:52,175 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:52] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:52,176 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:52] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:08:52,504 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:52] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:52,505 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:52] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:52,506 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:52] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:52,511 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:52] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:52,513 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:52] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:52,513 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:52] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:08:52,821 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:08:52] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:15,820 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:15] "GET /test-emails HTTP/1.1" 200 -
+2026-07-22 12:09:16,052 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,067 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,171 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,172 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,176 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,179 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,363 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,379 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,493 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,494 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/js/test_emails.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,495 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,812 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,822 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,823 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,825 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,826 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:16,829 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:16] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:17,124 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:17] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:29,542 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:29] "GET /email-lists HTTP/1.1" 200 -
+2026-07-22 12:09:29,847 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:29] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:29,913 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:29] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:29,917 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:29] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:29,918 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:29] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:29,918 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:29] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:29,921 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:29] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:30,162 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:30] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:30,238 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:30] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:30,240 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:30] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:09:30,582 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:30] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:30,583 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:30] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:30,584 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:30] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:30,584 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:30] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:30,584 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:30] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:30,586 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:30] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:30,906 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:30] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:36,919 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:36] "GET /email-lists/4 HTTP/1.1" 200 -
+2026-07-22 12:09:36,961 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:36] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:36,962 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:36] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,283 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,285 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,288 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,290 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,292 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,295 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,603 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,638 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,639 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,639 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,640 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,641 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,914 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:37,961 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:37] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:43,760 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:43] "GET /email-lists HTTP/1.1" 200 -
+2026-07-22 12:09:43,990 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:43] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:43,997 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:43] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,110 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,113 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,113 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,115 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,299 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,305 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,419 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,651 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,654 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,654 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,657 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,664 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,736 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:44,974 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:44] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:46,416 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:46] "GET /email-lists/6 HTTP/1.1" 200 -
+2026-07-22 12:09:46,460 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:46] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:46,460 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:46] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:46,774 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:46] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:46,774 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:46] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:46,775 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:46] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:46,776 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:46] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:46,776 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:46] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:46,778 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:46] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:47,120 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:47] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:47,120 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:47] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:47,121 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:47] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:47,122 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:47] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:47,123 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:47] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:47,124 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:47] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:47,438 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:47] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:47,439 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:47] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,131 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "GET /test-emails HTTP/1.1" 200 -
+2026-07-22 12:09:51,358 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,386 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,486 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,487 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,487 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,489 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,670 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,701 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,795 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,795 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:09:51,802 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:51] "[36mGET /static/js/test_emails.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:52,139 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:52] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:52,141 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:52] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:52,141 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:52] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:52,142 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:52] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:52,143 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:52] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:52,144 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:52] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:09:52,462 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:09:52] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,058 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "GET /test-emails?list_id=b71f9219-ef10-486b-a8d7-aa21b6f9adbf HTTP/1.1" 200 -
+2026-07-22 12:10:07,112 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,280 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,435 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,436 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,437 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,441 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,450 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,605 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,766 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,767 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/js/test_emails.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:07,918 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:07] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:08,109 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:08] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:08,114 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:08] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:08,114 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:08] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:08,114 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:08] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:08,121 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:08] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:08,233 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:08] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:08,433 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:08] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:10:10,535 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:10] "GET /test-emails?list_id=3fe282d9-07f9-4f37-95fb-520fb74815b5 HTTP/1.1" 200 -
+2026-07-22 12:10:10,572 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:10] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:10,785 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:10] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:10,889 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:10] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:10,890 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:10] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:10,891 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:10] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:10,892 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:10] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:10,893 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:10] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,099 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,211 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,216 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,230 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/js/test_emails.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,669 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,671 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,674 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,675 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,679 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,684 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:11,988 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:11] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,096 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "GET /test-emails?list_id=b71f9219-ef10-486b-a8d7-aa21b6f9adbf HTTP/1.1" 200 -
+2026-07-22 12:10:30,131 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,351 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,459 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,463 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,463 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,464 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,466 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,661 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,776 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,777 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:10:30,787 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:30] "[36mGET /static/js/test_emails.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:31,104 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:31] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:31,107 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:31] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:31,108 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:31] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:31,117 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:31] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:31,117 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:31] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:31,120 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:31] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:31,430 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:31] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:45,828 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:45] "GET /test-emails?list_id=3fe282d9-07f9-4f37-95fb-520fb74815b5 HTTP/1.1" 200 -
+2026-07-22 12:10:45,857 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:45] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,084 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,187 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,187 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,189 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,189 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,190 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,393 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,505 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,506 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/js/test_emails.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,507 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,830 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,833 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,835 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,835 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,836 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:46,845 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:46] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:10:47,144 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:10:47] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:21:25,789 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 12:21:29,515 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:21:29,520 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:24:57,772 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:57] "GET /test-emails?list_id=3fe282d9-07f9-4f37-95fb-520fb74815b5 HTTP/1.1" 200 -
+2026-07-22 12:24:57,911 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:57] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:24:57,912 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:57] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,124 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,124 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,128 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,129 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,235 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,235 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,443 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,446 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/js/test_emails.js HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,560 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,769 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,771 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,772 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,773 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,778 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:24:58,872 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:58] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:24:59,091 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:24:59] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:25:00,799 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:00] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 12:25:00,847 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:00] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:00,847 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:00] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,171 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,176 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,177 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,181 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,183 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,184 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,493 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,494 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,827 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,829 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,830 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,830 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,831 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:01,832 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:01] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:02,150 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:02] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:05,732 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:05] "GET /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-22 12:25:05,954 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:05] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:05,985 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:05] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,083 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,086 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,088 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,091 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,267 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,298 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,410 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,411 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,411 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/js/wizard_setup.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,741 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,741 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,742 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,742 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,743 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:06,743 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:06] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:07,061 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:07] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:35,849 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:35] "POST /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-22 12:25:36,019 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-22 12:25:36,180 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,377 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,377 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,378 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,380 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,381 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,487 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,700 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,701 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,702 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,703 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,704 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:25:36,823 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:36] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:37,053 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:37] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:37,057 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:37] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:37,058 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:37] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:37,058 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:37] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:37,059 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:37] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:37,139 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:37] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:37,431 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:37] "GET /static/uploads/logos/be824100-c2f4-4b1a-b3ec-2e4a685d0ed8.jpg HTTP/1.1" 200 -
+2026-07-22 12:25:39,472 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:39] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:25:41,158 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:41] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:25:43,101 INFO httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-22 12:25:43,471 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:43] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:25:47,119 INFO app: TEMP DEBUG wizard_template_save campaign=be824100-c2f4-4b1a-b3ec-2e4a685d0ed8 payload={'sender_email': ' info@businessplansite.com', 'sender_name': 'Larhdel Law', 'email_subject': 'Overview of Our AI Email Marketing Agent Implementation', 'email_list': '3fe282d9-07f9-4f37-95fb-520fb74815b5'}
+2026-07-22 12:25:47,448 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:47] "POST /campaign-manager/wizard/ai/template/save HTTP/1.1" 200 -
+2026-07-22 12:25:47,799 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:47] "GET /campaign-manager/wizard/ai/test-send HTTP/1.1" 200 -
+2026-07-22 12:25:47,829 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:47] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,044 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,192 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,192 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,193 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,198 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,199 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,364 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,508 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,508 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,514 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,524 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/js/wizard_test_send.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,544 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,678 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,841 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,843 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,844 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,845 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,857 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:48,996 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:48] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:49,147 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:49] "[36mGET /static/uploads/logos/be824100-c2f4-4b1a-b3ec-2e4a685d0ed8.jpg HTTP/1.1[0m" 304 -
+2026-07-22 12:25:54,388 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:54] "GET /campaign-manager/wizard/ai/schedule HTTP/1.1" 200 -
+2026-07-22 12:25:54,591 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:54] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:54,626 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:54] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:54,747 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:54] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:54,750 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:54] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:54,756 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:54] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:54,758 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:54] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:54,902 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:54] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:54,940 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:54] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,061 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,071 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,074 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,084 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/js/wizard_schedule.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,223 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,254 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,425 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,426 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,427 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,427 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,533 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,561 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:25:55,733 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:25:55] "[36mGET /static/uploads/logos/be824100-c2f4-4b1a-b3ec-2e4a685d0ed8.jpg HTTP/1.1[0m" 304 -
+2026-07-22 12:26:01,337 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:01] "POST /campaign-manager/wizard/ai/schedule/action HTTP/1.1" 200 -
+2026-07-22 12:26:03,150 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 12:26:03,182 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:26:03,500 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:26:03,501 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:26:03,501 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:26:03,502 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:26:03,502 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:26:03,503 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:26:03,821 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:26:03,821 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 12:26:03,823 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:03] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:26:04,166 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:04] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:26:04,166 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:04] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:26:04,168 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:04] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:26:04,169 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:04] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:26:04,173 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:04] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:26:04,175 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:04] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:26:04,479 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:26:04] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:27:26,725 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 12:27:30,470 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:27:30,476 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:33:01,863 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:01] "GET /test-emails HTTP/1.1" 200 -
+2026-07-22 12:33:02,010 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,228 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,228 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,232 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,232 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,234 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,324 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,559 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,573 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,574 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/js/test_emails.js HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,577 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,923 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,926 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,928 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,929 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,932 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:33:02,933 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:02] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:33:03,234 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:33:03] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:40:14,475 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\services\\email_service.py', reloading
+2026-07-22 12:40:19,545 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:40:19,554 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:40:32,889 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\services\\email_service.py', reloading
+2026-07-22 12:40:37,492 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:40:37,498 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:40:46,712 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\config.py', reloading
+2026-07-22 12:40:58,001 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:40:58,020 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:42:00,943 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 12:42:07,373 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:42:07,392 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:44:17,562 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 12:44:23,590 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:44:23,598 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:44:33,961 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 12:44:39,883 WARNING werkzeug:  * Debugger is active!
+2026-07-22 12:44:39,893 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 12:50:04,241 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:04] "GET /test-emails HTTP/1.1" 200 -
+2026-07-22 12:50:05,726 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:05] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 12:50:05,855 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:05] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,110 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,113 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,119 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,121 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,128 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,175 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,445 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,455 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,458 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,795 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,798 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,803 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,803 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,807 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:06,808 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:06] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:07,116 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:07] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,017 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 12:50:12,066 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,270 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,366 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,376 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,376 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,384 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,388 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,585 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,680 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,686 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,996 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:12,998 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:12] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:13,000 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:13] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:13,001 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:13] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:13,006 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:13] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:13,007 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:13] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:13,303 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:13] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:15,557 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:15] "GET /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-22 12:50:15,799 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:15] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:15,804 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:15] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:15,933 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:15] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:15,933 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:15] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:15,934 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:15] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:15,935 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:15] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,112 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,113 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,255 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,257 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,258 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/js/wizard_setup.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,588 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,589 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,591 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,596 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,597 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,603 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:50:16,918 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:50:16] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:26,797 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:26] "POST /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-22 12:51:26,888 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:26] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-22 12:51:27,126 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,262 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,264 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,265 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,266 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,269 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,453 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,579 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,579 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,581 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,591 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,899 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,899 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,935 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,935 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,939 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:27,942 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:27] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:28,221 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:28] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:28,226 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:28] "GET /static/uploads/logos/13321581-158a-4e44-bd3f-40d829e8a6c4.png HTTP/1.1" 200 -
+2026-07-22 12:51:28,270 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:28] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:51:30,552 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:30] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:51:32,251 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:32] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:51:34,560 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:34] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:51:35,225 INFO httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-22 12:51:36,245 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:36] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:51:42,841 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:42] "POST /campaign-manager/wizard/ai/template/save HTTP/1.1" 200 -
+2026-07-22 12:51:42,876 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:42] "GET /campaign-manager/wizard/ai/test-send HTTP/1.1" 200 -
+2026-07-22 12:51:43,175 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,255 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,256 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,260 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,261 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,261 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,498 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,585 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,590 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,590 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,591 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,593 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,806 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/uploads/logos/13321581-158a-4e44-bd3f-40d829e8a6c4.png HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,903 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/js/wizard_test_send.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,925 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,927 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,928 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:43,929 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:43] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:44,123 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:44] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:44,218 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:44] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:44,244 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:44] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:48,570 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:48] "GET /campaign-manager/wizard/ai/schedule HTTP/1.1" 200 -
+2026-07-22 12:51:48,796 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:48] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:48,812 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:48] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:48,931 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:48] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:48,931 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:48] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:48,935 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:48] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:48,936 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:48] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,116 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,123 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,250 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,251 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,252 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,253 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,438 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/js/wizard_schedule.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,440 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/uploads/logos/13321581-158a-4e44-bd3f-40d829e8a6c4.png HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,588 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,592 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,594 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,600 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,754 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,755 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:51:49,914 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:51:49] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:52:04,859 INFO app: Campaign 13321581-158a-4e44-bd3f-40d829e8a6c4 sent over SMTP: 3 sent, 0 failed
+2026-07-22 12:52:04,867 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:04] "POST /campaign-manager/wizard/ai/schedule/action HTTP/1.1" 200 -
+2026-07-22 12:52:06,698 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:06] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 12:52:06,737 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:06] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,043 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,043 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,074 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,358 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,359 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,388 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,673 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,674 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,703 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,986 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:52:07,986 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:07] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:52:08,015 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:08] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:52:08,299 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:08] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:52:08,301 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:08] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:52:08,326 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:08] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:52:08,625 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:52:08] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:55:46,369 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:46] "GET /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-22 12:55:46,598 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:46] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:55:46,605 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:46] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:55:46,728 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:46] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:55:46,728 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:46] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:55:46,732 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:46] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:55:46,735 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:46] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:55:46,918 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:46] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:55:46,940 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:46] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:55:47,053 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:47] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:55:47,054 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:47] "[36mGET /static/js/wizard_setup.js HTTP/1.1[0m" 304 -
+2026-07-22 12:55:47,063 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:47] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:55:47,410 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:47] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:55:47,415 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:47] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:55:47,417 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:47] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:55:47,421 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:47] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:55:47,421 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:47] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:55:47,422 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:47] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:55:47,728 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:55:47] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:19,483 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:19] "POST /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-22 12:56:19,912 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:19] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-22 12:56:19,964 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:19] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,277 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,277 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,279 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,281 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,283 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,292 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,594 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,594 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,595 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,598 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,919 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,920 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,955 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,956 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,957 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:20,958 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:20] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:21,231 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:21] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:21,241 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:21] "GET /static/uploads/logos/1ec73ee7-bc9e-44ba-8aba-1c132322c426.jpg HTTP/1.1" 200 -
+2026-07-22 12:56:21,278 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:21] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:56:23,574 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:23] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:56:25,248 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:25] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:56:25,675 INFO httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-22 12:56:27,558 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:27] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-22 12:56:30,232 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:30] "POST /campaign-manager/wizard/ai/template/save HTTP/1.1" 200 -
+2026-07-22 12:56:30,558 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:30] "GET /campaign-manager/wizard/ai/test-send HTTP/1.1" 200 -
+2026-07-22 12:56:30,607 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:30] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:30,819 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:30] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:30,920 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:30] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:30,921 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:30] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:30,922 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:30] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:30,922 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:30] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:30,924 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:30] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,134 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,243 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,244 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,247 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,252 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/js/wizard_test_send.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,586 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,587 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,588 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,588 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,589 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,590 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,904 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,905 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:56:31,908 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:31] "[36mGET /static/uploads/logos/1ec73ee7-bc9e-44ba-8aba-1c132322c426.jpg HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,097 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "GET /campaign-manager/wizard/ai/schedule HTTP/1.1" 200 -
+2026-07-22 12:56:40,321 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,340 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,486 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,488 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,489 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,491 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,640 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,658 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,799 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,800 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,807 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,808 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,953 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/uploads/logos/1ec73ee7-bc9e-44ba-8aba-1c132322c426.jpg HTTP/1.1[0m" 304 -
+2026-07-22 12:56:40,968 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:40] "[36mGET /static/js/wizard_schedule.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:41,142 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:41] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:41,143 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:41] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:41,143 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:41] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:41,143 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:41] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:41,269 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:41] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:41,285 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:41] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:41,458 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:41] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:54,909 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:54] "POST /campaign-manager/wizard/ai/schedule/action HTTP/1.1" 200 -
+2026-07-22 12:56:57,315 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:57] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-22 12:56:57,365 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:57] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:57,690 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:57] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:57,691 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:57] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:57,693 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:57] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:57,693 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:57] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:57,695 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:57] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:57,695 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:57] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:58,016 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:58] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-22 12:56:58,020 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:58] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:58,022 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:58] "[36mGET /static/img/Biz%20and%20Project%20Logo%20Transparent%201.png HTTP/1.1[0m" 304 -
+2026-07-22 12:56:58,387 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:58] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:58,388 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:58] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:58,389 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:58] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:58,390 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:58] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:58,391 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:58] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:58,393 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:58] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-22 12:56:58,703 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 12:56:58] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-22 12:58:13,446 INFO app: Scheduled SMTP campaign 1ec73ee7-bc9e-44ba-8aba-1c132322c426 dispatched: 3 sent, 0 failed
+2026-07-22 13:00:04,867 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 13:00:04] "[35m[1mPOST /campaign-manager/13321581-158a-4e44-bd3f-40d829e8a6c4/delete HTTP/1.1[0m" 500 -
+2026-07-22 13:00:04,924 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 13:00:04] "GET /campaign-manager/13321581-158a-4e44-bd3f-40d829e8a6c4/delete?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2026-07-22 13:00:05,003 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 13:00:05] "GET /campaign-manager/13321581-158a-4e44-bd3f-40d829e8a6c4/delete?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2026-07-22 13:00:05,377 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 13:00:05] "GET /campaign-manager/13321581-158a-4e44-bd3f-40d829e8a6c4/delete?__debugger__=yes&cmd=resource&f=console.png&s=YYBkRo7WBW5UZqFWhfQ4 HTTP/1.1" 200 -
+2026-07-22 13:00:05,619 INFO werkzeug: 127.0.0.1 - - [22/Jul/2026 13:00:05] "GET /campaign-manager/13321581-158a-4e44-bd3f-40d829e8a6c4/delete?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2026-07-22 13:00:57,330 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\models\\campaign_run.py', reloading
+2026-07-22 13:01:03,174 WARNING werkzeug:  * Debugger is active!
+2026-07-22 13:01:03,182 INFO werkzeug:  * Debugger PIN: 322-420-085

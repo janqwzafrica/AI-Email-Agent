@@ -316,8 +316,26 @@ class BrevoClient:
         return self._cached_request(cache_key, "GET", "/emailCampaigns", params=params)
 
     def delete_email_campaign(self, campaign_id: int) -> None:
-        """DELETE /v3/emailCampaigns/{campaignId} - Delete an email campaign."""
+        """DELETE /v3/emailCampaigns/{campaignId} - Delete an email campaign.
+
+        Brevo refuses this (403) for any campaign that has ever been
+        scheduled/sent — see update_campaign_status() to suspend it first.
+        """
         result = self._request("DELETE", f"/emailCampaigns/{campaign_id}")
+        self._cache_clear()
+        return result
+
+    def update_campaign_status(self, campaign_id: int, status: str) -> None:
+        """PUT /v3/emailCampaigns/{campaignId}/status - Update campaign status.
+
+        One of: suspended, archive, darchive, sent, queued, replicate,
+        replicateTemplate, cancel, draft. Use "suspended" to stop a pending
+        scheduled send (e.g. before deleting a campaign Brevo otherwise
+        refuses to delete because it was scheduled).
+        """
+        result = self._request(
+            "PUT", f"/emailCampaigns/{campaign_id}/status", json={"status": status}
+        )
         self._cache_clear()
         return result
 

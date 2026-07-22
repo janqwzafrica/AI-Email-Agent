@@ -30,9 +30,12 @@ Requirements:
   "Read the Full Update". Do not invent a label unrelated to the source content.
 - Keep the body concise — this is an email, not the full source document
 - Do not invent facts not present in the source document
+- Write a specific email subject line (under 70 characters) that reflects
+  what this particular source document is actually about — not a generic
+  title. Do not invent facts not present in the source document.
 
 Respond with ONLY a JSON object of this exact shape:
-{"body_html": "<p>...</p>...", "cta_buttons": [{"url": "<the exact CTA url>", "label": "<button label>"}]}
+{"subject": "<subject line>", "body_html": "<p>...</p>...", "cta_buttons": [{"url": "<the exact CTA url>", "label": "<button label>"}]}
 If no CTA links were provided, "cta_buttons" must be an empty list. Every
 "url" in "cta_buttons" must be copied exactly from the CTA links given to you.
 """
@@ -45,7 +48,7 @@ class AIGenerationError(Exception):
 def generate_email_content(extracted_text, cta_links, sender_name):
     """cta_links: list of normalized URLs (may be empty).
 
-    Returns {"body_html": str, "cta_buttons": [{"url": str, "label": str}, ...]}.
+    Returns {"subject": str, "body_html": str, "cta_buttons": [{"url": str, "label": str}, ...]}.
     Every url in cta_links is guaranteed to appear in cta_buttons — falls back
     to a generic label if the model omits or mislabels one.
     """
@@ -81,6 +84,7 @@ Source document text:
     try:
         parsed = json.loads(raw)
         body_html = (parsed["body_html"] or "").strip()
+        subject = (parsed.get("subject") or "").strip()
     except (ValueError, KeyError, AttributeError, TypeError) as e:
         raise AIGenerationError(f"AI returned malformed content: {e}")
 
@@ -101,4 +105,4 @@ Source document text:
         if url not in covered:
             cta_buttons.append({"url": url, "label": "Learn More"})
 
-    return {"body_html": body_html, "cta_buttons": cta_buttons}
+    return {"subject": subject, "body_html": body_html, "cta_buttons": cta_buttons}

@@ -49,3 +49,7 @@ class Config:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     BREVO_WEBHOOK_SECRET = os.getenv("BREVO_WEBHOOK_SECRET")
     PUBLIC_BASE_URL = (os.getenv("PUBLIC_BASE_URL") or "").rstrip("/")
+    # "smtp" or "brevo" — which channel actually delivers campaign sends.
+    # Brevo still owns contact list storage either way; this only controls
+    # the outbound send step. Switch back to "brevo" once its issues clear.
+    CAMPAIGN_DELIVERY_PROVIDER = os.getenv("CAMPAIGN_DELIVERY_PROVIDER", "smtp")

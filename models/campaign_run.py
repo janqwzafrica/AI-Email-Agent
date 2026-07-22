@@ -17,5 +17,5 @@ class CampaignRun(BaseEntity):
 
     campaign = db.relationship(
         "EmailCampaign",
-        backref=db.backref("runs", lazy=True),
+        backref=db.backref("runs", lazy=True, cascade="all, delete-orphan"),
     )
