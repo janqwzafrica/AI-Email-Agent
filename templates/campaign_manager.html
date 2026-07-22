@@ -53,11 +53,16 @@
         <td class="{{ 'table__date--scheduled' if row.scheduled }}">{{ row.date }}</td>
         <td><span class="status status--{{ row.status | lower }}">{{ row.status }}</span></td>
         <td>
-          <form method="post" action="{{ url_for('campaign_manager_quarterly_toggle', campaign_id=row.id) }}">
-            <button type="submit" class="quarterly-run {{ 'quarterly-run--running' if row.quarterly == 'Running' }}">
-              {{ play_icon() }} {{ row.quarterly }}
-            </button>
-          </form>
+          <div class="quarterly-cell">
+            {% if row.quarterly_active %}
+            <span class="status status--completed" {% if row.quarterly_next_run %}title="Next send: {{ row.quarterly_next_run }}"{% endif %}>Running</span>
+            {% endif %}
+            <form method="post" action="{{ url_for('campaign_manager_quarterly_toggle', campaign_id=row.id) }}">
+              <button type="submit" class="quarterly-run {{ 'quarterly-run--running' if row.quarterly_active }}">
+                {{ play_icon() }} {{ 'Stop' if row.quarterly_active else 'Activate' }}
+              </button>
+            </form>
+          </div>
         </td>
         <td>
           <form method="post" action="{{ url_for('campaign_manager_delete', campaign_id=row.id) }}" onsubmit="return confirm('Delete this campaign?');">

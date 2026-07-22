@@ -317,6 +317,37 @@ def _dispatch_scheduled_smtp_campaign(app_ref, campaign_id):
         )
 
 
+# Windows' threading.Timer (WaitForSingleObjectEx under the hood) overflows
+# past ~49.7 days — a DWORD milliseconds ceiling — so a single Timer can't
+# wait out a whole quarter (up to ~92 days). Chain shorter waits instead.
+_MAX_TIMER_DELAY_SECONDS = 20 * 24 * 60 * 60  # 20 days
+
+
+def _start_delayed(run_at_utc, on_fire, on_new_timer=None):
+    """Fire on_fire() once run_at_utc (tz-aware) is reached, chaining
+    capped-length timers if the wait is longer than _MAX_TIMER_DELAY_SECONDS.
+
+    on_new_timer, if given, is called with each new Timer segment as it's
+    created — callers that need to support cancellation (e.g. a "Stop"
+    button) must use this to keep their stored reference pointing at
+    whichever segment is currently pending, since a Timer object from an
+    already-fired earlier segment can't cancel a later one.
+    """
+    remaining = (run_at_utc - datetime.now(timezone.utc)).total_seconds()
+    if remaining <= _MAX_TIMER_DELAY_SECONDS:
+        timer = threading.Timer(max(remaining, 0), on_fire)
+    else:
+        timer = threading.Timer(
+            _MAX_TIMER_DELAY_SECONDS,
+            lambda: _start_delayed(run_at_utc, on_fire, on_new_timer),
+        )
+    timer.daemon = True
+    if on_new_timer:
+        on_new_timer(timer)
+    timer.start()
+    return timer
+
+
 def _schedule_smtp_campaign(campaign, aware_dt):
     """Delay-dispatch a campaign at aware_dt using an in-process timer.
 
@@ -324,14 +355,10 @@ def _schedule_smtp_campaign(campaign, aware_dt):
     restart between now and the scheduled time loses the pending send
     (there's no persisted job queue backing SMTP delivery yet).
     """
-    delay_seconds = max((aware_dt - datetime.now(timezone.utc)).total_seconds(), 0)
-    timer = threading.Timer(
-        delay_seconds,
-        _dispatch_scheduled_smtp_campaign,
-        args=(app, campaign.id),
+    _start_delayed(
+        aware_dt.astimezone(timezone.utc),
+        lambda: _dispatch_scheduled_smtp_campaign(app, campaign.id),
     )
-    timer.daemon = True
-    timer.start()
 
 
 def _add_months(dt, months):
@@ -368,18 +395,27 @@ _quarterly_timers_lock = threading.Lock()
 
 def _schedule_quarterly_timer(campaign_id, run_at):
     """Arm (or re-arm) the in-process timer for a campaign's next quarterly
-    run. run_at is naive UTC, matching EmailCampaign.next_run_at."""
-    delay_seconds = max((run_at - utc_now()).total_seconds(), 0)
-    timer = threading.Timer(
-        delay_seconds, _dispatch_quarterly_campaign, args=(app, campaign_id)
-    )
-    timer.daemon = True
+    run. run_at is naive UTC, matching EmailCampaign.next_run_at.
+
+    Quarterly gaps (up to ~92 days) can exceed a single Timer's max delay,
+    so _start_delayed may chain several segments before the real dispatch —
+    on_new_timer keeps the registry pointed at whichever segment is
+    currently pending, so _cancel_quarterly_timer can always abort it.
+    """
     with _quarterly_timers_lock:
         existing = _quarterly_timers.pop(campaign_id, None)
-        _quarterly_timers[campaign_id] = timer
     if existing:
         existing.cancel()
-    timer.start()
+
+    def _register(timer):
+        with _quarterly_timers_lock:
+            _quarterly_timers[campaign_id] = timer
+
+    _start_delayed(
+        run_at.replace(tzinfo=timezone.utc),
+        lambda: _dispatch_quarterly_campaign(app, campaign_id),
+        on_new_timer=_register,
+    )
 
 
 def _cancel_quarterly_timer(campaign_id):
@@ -1089,10 +1125,11 @@ def campaign_manager():
                 "date": date,
                 "scheduled": campaign.status == EmailCampaign.STATUS_SCHEDULED,
                 "status": campaign.status.capitalize(),
-                "quarterly": (
-                    "Running"
-                    if campaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY
-                    else "Activate"
+                "quarterly_active": campaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY,
+                "quarterly_next_run": (
+                    campaign.next_run_at.strftime("%b %d, %Y")
+                    if campaign.next_run_at
+                    else None
                 ),
             }
         )

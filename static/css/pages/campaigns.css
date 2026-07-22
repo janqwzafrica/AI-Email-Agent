@@ -31,7 +31,13 @@
   font-weight: 500;
 }
 
-/* ---- Quarterly Run cell: play icon + label ---- */
+/* ---- Quarterly Run cell: status badge + play icon/label ---- */
+.quarterly-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .quarterly-run {
   display: inline-flex;
   align-items: center;

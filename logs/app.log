@@ -1304,3 +1304,78 @@ tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
 2026-07-22 16:31:10,935 WARNING werkzeug:  * Debugger is active!
 2026-07-22 16:31:10,938 INFO werkzeug:  * Debugger PIN: 322-420-085
 2026-07-22 16:31:26,922 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 16:31:27,386 INFO werkzeug:  * Restarting with stat
+2026-07-22 16:31:30,160 WARNING werkzeug:  * Debugger is active!
+2026-07-22 16:31:30,165 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 16:39:11,042 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 16:39:11,717 INFO werkzeug:  * Restarting with stat
+2026-07-22 16:39:16,206 WARNING werkzeug:  * Debugger is active!
+2026-07-22 16:39:16,212 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 16:48:23,062 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 16:48:59,876 INFO werkzeug:  * Restarting with stat
+2026-07-22 16:49:18,015 WARNING werkzeug:  * Debugger is active!
+2026-07-22 16:49:18,032 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 16:59:21,680 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1068, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-22 17:01:27,003 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1068, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-22 17:05:05,779 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1068, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-22 17:06:12,606 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 17:06:13,766 INFO werkzeug:  * Restarting with stat
+2026-07-22 17:06:16,690 WARNING werkzeug:  * Debugger is active!
+2026-07-22 17:06:16,696 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 17:06:28,725 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-22 17:06:29,134 INFO werkzeug:  * Restarting with stat
+2026-07-22 17:06:31,850 WARNING werkzeug:  * Debugger is active!
+2026-07-22 17:06:31,854 INFO werkzeug:  * Debugger PIN: 322-420-085
+2026-07-22 17:08:46,376 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1104, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
