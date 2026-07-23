@@ -712,6 +712,25 @@ def _format_brevo_date(value):
         return value
 
 
+def get_brevo_lists_detailed(client):
+    """Return every contact list enriched with totalSubscribers/createdAt.
+
+    The bulk GET /contacts/lists endpoint doesn't reliably include
+    totalSubscribers and never includes createdAt — those only come back
+    from the single-list endpoint, so each list is fetched individually.
+    Reads are cached client-side, so this stays cheap on repeat page loads.
+    """
+    bulk = client.get_contact_lists(limit=50)
+    detailed = []
+    for item in bulk.get("lists", []):
+        list_id = item.get("id")
+        try:
+            detailed.append(client.get_contact_list(list_id))
+        except Exception:
+            detailed.append(item)
+    return detailed
+
+
 def _contact_display_name(contact):
     attributes = contact.get("attributes") or {}
     name = " ".join(
@@ -768,7 +787,52 @@ def auth():
 @app.route("/dashboard")
 @login_required
 def index():
-    return render_template("index.html")
+    stats = {"campaigns": 0, "contacts": 0, "unsubscribed": 0, "emails_sent": 0}
+    recent_campaigns = []
+    error = None
+    try:
+        client = get_brevo_client()
+
+        campaigns_data = client.get_email_campaigns(limit=50)
+        campaigns = campaigns_data.get("campaigns", [])
+        stats["campaigns"] = campaigns_data.get("count", len(campaigns))
+
+        for campaign in campaigns:
+            g = (campaign.get("statistics") or {}).get("globalStats") or {}
+            stats["unsubscribed"] += g.get("unsubscriptions", 0)
+            stats["emails_sent"] += g.get("delivered", 0) or g.get("sent", 0)
+
+        stats["contacts"] = sum(
+            detail.get("totalSubscribers", 0)
+            for detail in get_brevo_lists_detailed(client)
+        )
+
+        def _sort_key(c):
+            return c.get("sentDate") or c.get("createdAt") or ""
+
+        for campaign in sorted(campaigns, key=_sort_key, reverse=True)[:3]:
+            g = (campaign.get("statistics") or {}).get("globalStats") or {}
+            delivered = g.get("delivered", 0)
+            opens = g.get("uniqueViews", 0)
+            open_rate = round((opens / delivered) * 100) if delivered else 0
+            recent_campaigns.append(
+                {
+                    "name": campaign.get("name"),
+                    "status": (campaign.get("status") or "").capitalize() or "Draft",
+                    "open_rate": f"{open_rate}%",
+                    "subject": campaign.get("subject") or "",
+                }
+            )
+    except Exception as e:
+        app.logger.exception("Failed to fetch Brevo dashboard data.")
+        error = _brevo_error_message(
+            e,
+            "Could not load live stats from Brevo. Check the BREVO_API_KEY and try again.",
+        )
+
+    return render_template(
+        "index.html", stats=stats, recent_campaigns=recent_campaigns, error=error
+    )
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -966,14 +1030,14 @@ def email_lists():
     lists = []
     error = None
     try:
-        data = get_brevo_client().get_contact_lists(limit=50)
-        for item in data.get("lists", []):
+        client = get_brevo_client()
+        for detail in get_brevo_lists_detailed(client):
             lists.append(
                 {
-                    "id": item.get("id"),
-                    "name": item.get("name"),
-                    "contacts": item.get("totalSubscribers", 0),
-                    "date": _format_brevo_date(item.get("createdAt")),
+                    "id": detail.get("id"),
+                    "name": detail.get("name"),
+                    "contacts": detail.get("totalSubscribers", 0),
+                    "date": _format_brevo_date(detail.get("createdAt")),
                 }
             )
     except Exception as e:
