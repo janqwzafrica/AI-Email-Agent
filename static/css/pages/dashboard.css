@@ -78,6 +78,11 @@
   margin-block: var(--space-1);
 }
 
+.campaign-list__empty {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-body);
+}
+
 .campaign-card__desc {
   font-size: var(--font-size-body);
   color: var(--color-text);
