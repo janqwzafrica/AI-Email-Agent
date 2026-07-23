@@ -2539,3 +2539,919 @@ tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
 2026-07-23 17:17:18,638 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:17:18] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
 2026-07-23 17:17:18,640 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:17:18] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
 2026-07-23 17:17:18,948 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:17:18] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:50,030 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1329, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 17:48:50,916 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:50] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 17:48:50,981 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:50] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:50,981 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:50] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,286 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,288 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,292 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,299 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,311 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,314 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,618 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,621 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,648 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,966 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,968 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,970 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,975 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,986 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:51,997 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:51] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:52,282 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:52] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:55,695 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:55] "GET /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-23 17:48:55,911 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:55] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:55,934 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:55] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,061 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,064 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,066 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,082 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,226 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,255 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,403 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,405 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/js/wizard_setup.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,407 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,740 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,744 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,744 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,745 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,751 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:56,763 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:56] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:48:57,059 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:48:57] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:24,161 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:24] "POST /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-23 17:49:24,656 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:24] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-23 17:49:24,703 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:24] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,028 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,028 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,033 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,033 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,039 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,039 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,362 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,362 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,362 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,363 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,680 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,682 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,692 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,693 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,701 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,705 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,993 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:25,996 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:25] "GET /static/uploads/logos/cd0cdba0-a406-4acc-b02e-c66b8c1e3273.png HTTP/1.1" 200 -
+2026-07-23 17:49:26,008 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:26] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:49:28,023 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:28] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-23 17:49:28,382 INFO httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-23 17:49:30,330 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:30] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-23 17:49:34,338 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:34] "POST /campaign-manager/wizard/ai/template/save HTTP/1.1" 200 -
+2026-07-23 17:49:34,693 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:34] "GET /campaign-manager/wizard/ai/test-send HTTP/1.1" 200 -
+2026-07-23 17:49:34,741 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:34] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:34,932 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:34] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,058 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,062 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,064 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,065 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,067 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,243 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,375 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,378 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,385 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,390 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,393 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/uploads/logos/cd0cdba0-a406-4acc-b02e-c66b8c1e3273.png HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,562 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/js/wizard_test_send.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,729 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,734 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,735 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,738 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,740 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:35,870 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:35] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:36,058 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:36] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:41,842 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:41] "GET /campaign-manager/wizard/ai/schedule HTTP/1.1" 200 -
+2026-07-23 17:49:42,066 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,098 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,213 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,216 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,224 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,226 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,378 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,408 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,555 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,556 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,558 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,559 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,693 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/uploads/logos/cd0cdba0-a406-4acc-b02e-c66b8c1e3273.png HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,724 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/js/wizard_schedule.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,907 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,907 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,913 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:42,920 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:42] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:43,006 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:43] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:43,038 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:43] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:43,228 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:43] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:55,100 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:55] "POST /campaign-manager/wizard/ai/schedule/action HTTP/1.1" 200 -
+2026-07-23 17:49:56,979 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1329, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 17:49:58,028 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 17:49:58,093 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:58,422 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:58,429 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:58,433 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:58,440 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:58,443 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:58,448 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:58,742 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 17:49:58,753 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:58,753 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:49:58,763 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:58] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:59,090 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:59] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:59,091 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:59] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:59,095 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:59] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:59,097 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:59] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:59,098 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:59] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:59,103 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:59] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:49:59,398 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:49:59] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:27,927 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:27] "GET /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-23 17:50:28,168 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,176 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,302 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,305 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,307 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,312 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,483 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,490 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,628 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,629 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/js/wizard_setup.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,630 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,971 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,971 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,971 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,975 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,975 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:28,978 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:28] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:29,290 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:29] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:50,800 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:50] "POST /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-23 17:50:51,239 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-23 17:50:51,275 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:51,593 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:51,595 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:51,596 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:51,599 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:51,604 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:51,607 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:51,918 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:51,921 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:51,923 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:51,924 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:51] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:52,242 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:52] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:52,243 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:52] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:52,248 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:52] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:52,261 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:52] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:52,263 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:52] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:52,264 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:52] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:52,579 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:52] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:52,581 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:52] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:50:52,603 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:52] "GET /static/uploads/logos/b4e42db6-6e94-495e-a799-e954c256586e.png HTTP/1.1" 200 -
+2026-07-23 17:50:54,527 INFO httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-23 17:50:54,907 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:54] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-23 17:50:57,289 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:57] "POST /campaign-manager/wizard/ai/template/save HTTP/1.1" 200 -
+2026-07-23 17:50:57,651 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:57] "GET /campaign-manager/wizard/ai/test-send HTTP/1.1" 200 -
+2026-07-23 17:50:57,695 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:57] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:57,884 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:57] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,035 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,037 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,037 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,039 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,042 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,201 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,363 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,375 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,398 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,406 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,411 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/uploads/logos/b4e42db6-6e94-495e-a799-e954c256586e.png HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,523 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/js/wizard_test_send.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,765 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,768 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,770 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,772 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,777 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:58,841 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:58] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:50:59,086 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:50:59] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:19,705 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:19] "GET /campaign-manager/wizard/ai/schedule HTTP/1.1" 200 -
+2026-07-23 17:51:19,923 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:19] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:19,960 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:19] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,086 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,088 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,088 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,092 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,240 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,273 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,461 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,463 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,483 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,508 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/js/wizard_schedule.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,812 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,815 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,858 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,864 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,869 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:20,874 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:20] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:21,140 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:21] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:21,143 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:21] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:51:21,199 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:21] "[36mGET /static/uploads/logos/b4e42db6-6e94-495e-a799-e954c256586e.png HTTP/1.1[0m" 304 -
+2026-07-23 17:51:37,636 INFO app: Campaign b4e42db6-6e94-495e-a799-e954c256586e sent over SMTP: 3 sent, 0 failed
+2026-07-23 17:51:37,646 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:37] "POST /campaign-manager/wizard/ai/schedule/action HTTP/1.1" 200 -
+2026-07-23 17:51:39,204 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1329, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 17:51:40,318 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:40] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 17:51:40,392 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:40] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:40,735 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:40] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:40,741 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:40] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:40,742 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:40] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:40,748 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:40] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:40,748 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:40] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:40,761 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:40] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,064 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,070 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,074 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,392 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,421 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,421 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,422 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,428 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,435 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,708 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:51:41,737 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:51:41] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:52:03,445 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1329, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 17:52:03,500 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:03] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 17:52:03,574 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:03] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:03,576 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:03] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:03,898 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:03] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:03,901 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:03] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:03,902 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:03] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:03,915 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:03] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:03,937 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:03] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:03,943 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:03] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:04,220 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:04] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:04,228 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:04] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:04,263 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:04] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:04,559 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:04] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:04,559 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:04] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:04,560 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:04] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:04,564 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:04] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:04,564 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:04] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:04,581 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:04] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:04,876 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:04] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,110 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1329, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 17:52:08,142 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 17:52:08,192 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,194 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,500 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,506 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,507 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,509 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,518 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,525 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,828 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,829 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:08,846 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:08] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 17:52:09,198 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:09] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:09,201 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:09] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:09,202 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:09] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:09,206 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:09] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:09,210 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:09] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:09,217 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:09] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 17:52:09,530 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 17:52:09] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 17:58:45,088 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-23 17:58:45,830 INFO werkzeug:  * Restarting with stat
+2026-07-23 17:58:48,362 WARNING werkzeug:  * Debugger is active!
+2026-07-23 17:58:48,370 INFO werkzeug:  * Debugger PIN: 617-508-530
+2026-07-23 17:59:03,423 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-23 17:59:04,104 INFO werkzeug:  * Restarting with stat
+2026-07-23 17:59:08,122 WARNING app: Sweep caught missed scheduled campaign cd0cdba0-a406-4acc-b02e-c66b8c1e3273 (was due 2026-07-23 16:51:00) — dispatching now
+2026-07-23 17:59:23,195 INFO app: Scheduled SMTP campaign cd0cdba0-a406-4acc-b02e-c66b8c1e3273 dispatched: 3 sent, 0 failed
+2026-07-23 17:59:23,236 WARNING werkzeug:  * Debugger is active!
+2026-07-23 17:59:23,242 INFO werkzeug:  * Debugger PIN: 617-508-530
+2026-07-23 18:04:26,635 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-23 18:04:27,137 INFO werkzeug:  * Restarting with stat
+2026-07-23 18:04:31,312 WARNING werkzeug:  * Debugger is active!
+2026-07-23 18:04:31,317 INFO werkzeug:  * Debugger PIN: 617-508-530
+2026-07-23 18:04:43,681 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-23 18:04:44,123 INFO werkzeug:  * Restarting with stat
+2026-07-23 18:04:48,142 WARNING werkzeug:  * Debugger is active!
+2026-07-23 18:04:48,150 INFO werkzeug:  * Debugger PIN: 617-508-530
+2026-07-23 18:05:09,377 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-23 18:05:10,018 INFO werkzeug:  * Restarting with stat
+2026-07-23 18:06:55,628 INFO app: Sweep dispatching due scheduled campaign 970430fb-e9c4-48f8-a93e-ad33a6c466a7 (was due 2026-07-23 17:01:51)
+2026-07-23 18:06:55,690 INFO app: Scheduled SMTP campaign 970430fb-e9c4-48f8-a93e-ad33a6c466a7 dispatched: 0 sent, 0 failed
+2026-07-23 18:10:39,475 INFO app: Campaign 1b8c8782-a1cc-4198-8fa9-78683f35e869 sent over SMTP: 0 sent, 0 failed
+2026-07-23 18:12:56,985 INFO werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-23 18:12:56,986 INFO werkzeug: [33mPress CTRL+C to quit[0m
+2026-07-23 18:12:56,988 INFO werkzeug:  * Restarting with stat
+2026-07-23 18:12:59,982 WARNING werkzeug:  * Debugger is active!
+2026-07-23 18:12:59,986 INFO werkzeug:  * Debugger PIN: 617-508-530
+2026-07-23 18:13:22,735 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1297, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 18:13:23,544 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:23] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 18:13:23,679 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:23] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:23,680 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:23] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:23,910 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:23] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:23,914 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:23] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:23,914 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:23] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:23,917 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:23] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:23,989 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:23] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:23,990 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:23] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:24,226 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:24] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:24,227 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:24] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:24,238 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:24] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:13:24,570 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:24] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:24,570 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:24] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:24,572 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:24] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:24,573 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:24] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:24,578 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:24] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:24,580 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:24] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:24,884 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:24] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:25,726 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:25] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-07-23 18:13:26,887 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:26] "GET /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-23 18:13:27,184 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,232 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,232 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,237 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,239 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,242 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,496 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,544 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,546 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,555 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,557 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/js/wizard_setup.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,891 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,893 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,894 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,894 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,896 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:27,896 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:27] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:28,215 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:28] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:13:52,667 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:13:52] "[31m[1mPOST /campaign-manager/wizard/ai HTTP/1.1[0m" 400 -
+2026-07-23 18:14:06,972 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:06] "POST /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-23 18:14:07,650 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:07] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-23 18:14:07,696 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:07] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:07,697 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:07] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,007 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,007 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,008 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,010 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,010 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,018 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,315 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,315 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,329 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,336 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,340 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,628 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,628 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,629 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,637 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,658 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:08,662 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "GET /static/uploads/logos/ccba60c2-4359-441e-a1ad-1b12e79d9679.png HTTP/1.1" 200 -
+2026-07-23 18:14:08,941 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:08] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:14:10,989 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:10] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-23 18:14:12,684 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:12] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-23 18:14:13,972 INFO httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-23 18:14:14,986 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:14] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-23 18:14:17,813 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:17] "POST /campaign-manager/wizard/ai/template/save HTTP/1.1" 200 -
+2026-07-23 18:14:18,169 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "GET /campaign-manager/wizard/ai/test-send HTTP/1.1" 200 -
+2026-07-23 18:14:18,205 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,399 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,531 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,539 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,542 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,556 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,557 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,714 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,860 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,868 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,882 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,889 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/uploads/logos/ccba60c2-4359-441e-a1ad-1b12e79d9679.png HTTP/1.1[0m" 304 -
+2026-07-23 18:14:18,891 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:18] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:14:19,036 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:19] "[36mGET /static/js/wizard_test_send.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:19,234 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:19] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:19,235 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:19] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:19,237 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:19] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:19,242 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:19] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:19,248 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:19] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:19,348 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:19] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:19,553 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:19] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:24,320 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:24] "GET /campaign-manager/wizard/ai/schedule HTTP/1.1" 200 -
+2026-07-23 18:14:24,542 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:24] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:24,571 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:24] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:24,674 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:24] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:24,677 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:24] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:24,677 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:24] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:24,677 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:24] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:24,854 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:24] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:24,886 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:24] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,007 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,011 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,011 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,012 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,169 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/uploads/logos/ccba60c2-4359-441e-a1ad-1b12e79d9679.png HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,199 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/js/wizard_schedule.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,349 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,353 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,354 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,358 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,482 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,514 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:25,671 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:25] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:40,248 INFO app: Campaign ccba60c2-4359-441e-a1ad-1b12e79d9679 sent over SMTP: 3 sent, 0 failed
+2026-07-23 18:14:40,258 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:40] "POST /campaign-manager/wizard/ai/schedule/action HTTP/1.1" 200 -
+2026-07-23 18:14:41,867 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1297, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 18:14:42,633 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:42] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 18:14:42,673 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:42] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:42,993 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:42] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:42,995 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:42] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:42,998 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:42] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,003 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,008 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,012 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,312 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,315 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,317 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,329 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,644 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,645 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,645 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,647 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,648 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,650 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:14:43,969 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:14:43] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,178 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1297, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 18:18:09,203 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 18:18:09,247 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,249 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,562 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,566 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,567 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,570 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,582 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,587 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,882 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,885 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:09,899 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:09] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:10,212 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:10] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:10,215 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:10] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:10,216 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:10] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:10,216 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:10] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:10,216 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:10] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:10,217 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:10] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:10,535 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:10] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:18:13,469 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:13] "GET /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-23 18:18:13,702 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:13] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:13,736 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:13] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:13,817 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:13] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:13,818 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:13] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:13,819 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:13] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:13,821 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:13] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,015 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,049 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,143 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,143 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,144 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/js/wizard_setup.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,477 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,478 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,479 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,481 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,483 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,486 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:14,795 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:14] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:35,920 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:35] "POST /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-23 18:18:36,343 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:36] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-23 18:18:36,389 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:36] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:36,708 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:36] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:36,709 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:36] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:36,710 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:36] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:36,711 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:36] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:36,717 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:36] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:36,717 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:36] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,016 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,016 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,025 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,026 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,341 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,341 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,355 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,356 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,357 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,358 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,651 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:37,667 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "GET /static/uploads/logos/b1965b4e-00b3-4b24-966b-7f4b30e8dbf2.jpg HTTP/1.1" 200 -
+2026-07-23 18:18:37,668 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:37] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:18:39,081 INFO httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-23 18:18:39,980 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:39] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-23 18:18:44,821 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:44] "POST /campaign-manager/wizard/ai/template/save HTTP/1.1" 200 -
+2026-07-23 18:18:45,161 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "GET /campaign-manager/wizard/ai/test-send HTTP/1.1" 200 -
+2026-07-23 18:18:45,196 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,398 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,518 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,518 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,519 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,519 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,522 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,712 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,840 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,843 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,843 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,844 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:45,844 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:45] "[36mGET /static/uploads/logos/b1965b4e-00b3-4b24-966b-7f4b30e8dbf2.jpg HTTP/1.1[0m" 304 -
+2026-07-23 18:18:46,026 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:46] "[36mGET /static/js/wizard_test_send.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:46,195 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:46] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:46,198 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:46] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:46,201 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:46] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:46,203 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:46] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:46,206 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:46] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:46,337 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:46] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:46,512 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:46] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:49,572 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:49] "GET /campaign-manager/wizard/ai/schedule HTTP/1.1" 200 -
+2026-07-23 18:18:49,801 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:49] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:49,832 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:49] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:49,930 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:49] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:49,931 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:49] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:49,932 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:49] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:49,933 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:49] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,113 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,144 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,242 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,242 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,243 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,248 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,423 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/uploads/logos/b1965b4e-00b3-4b24-966b-7f4b30e8dbf2.jpg HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,457 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/js/wizard_schedule.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,571 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,572 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,575 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,576 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,738 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,769 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:18:50,895 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:18:50] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:19:05,392 INFO app: Campaign b1965b4e-00b3-4b24-966b-7f4b30e8dbf2 sent over SMTP: 3 sent, 0 failed
+2026-07-23 18:19:05,399 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:05] "POST /campaign-manager/wizard/ai/schedule/action HTTP/1.1" 200 -
+2026-07-23 18:19:07,885 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1297, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 18:19:08,809 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:08] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 18:19:08,844 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:08] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:19:08,844 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:08] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,158 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,160 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,160 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,160 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,167 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,173 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,464 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,474 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,481 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,778 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,780 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,782 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,798 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,799 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:19:09,799 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:09] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:19:10,099 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:19:10] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:41:50,978 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-23 18:41:51,509 INFO werkzeug:  * Restarting with stat
+2026-07-23 18:41:55,471 WARNING werkzeug:  * Debugger is active!
+2026-07-23 18:41:55,476 INFO werkzeug:  * Debugger PIN: 617-508-530
+2026-07-23 18:44:07,274 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1308, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 18:44:08,317 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:08] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 18:44:08,429 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:08] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:08,430 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:08] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:08,698 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:08] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:08,702 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:08] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:08,705 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:08] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:08,712 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:08] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:08,752 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:08] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:08,754 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:08] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:09,012 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:09] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:09,021 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:09] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:09,073 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:09] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:09,332 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:09] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:09,334 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:09] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:09,335 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:09] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:09,341 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:09] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:09,346 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:09] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:09,386 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:09] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:09,648 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:09] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:44:12,588 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:12] "GET /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-23 18:44:12,813 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:12] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:12,820 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:12] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:12,944 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:12] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:12,945 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:12] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:12,947 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:12] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:12,949 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:12] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,126 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,127 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,268 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,269 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,269 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/js/wizard_setup.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,600 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,603 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,603 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,604 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,605 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,605 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:13,912 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:13] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:36,834 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:36] "POST /campaign-manager/wizard/ai HTTP/1.1" 200 -
+2026-07-23 18:44:37,103 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-23 18:44:37,160 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:37,453 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:37,453 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:37,457 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:37,462 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:37,468 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:37,470 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:37,784 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:37,787 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:37,790 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:37,796 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:37] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:38,101 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:38] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:38,101 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:38] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:38,131 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:38] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:38,134 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:38] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:38,137 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:38] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:38,151 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:38] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:38,411 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:38] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:38,417 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:38] "GET /static/uploads/logos/7fdb6822-333e-4094-b05f-dc3fde9b3277.png HTTP/1.1" 200 -
+2026-07-23 18:44:38,440 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:38] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:44:40,748 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:40] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-23 18:44:42,430 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:42] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-23 18:44:42,892 INFO httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-07-23 18:44:44,760 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:44] "GET /campaign-manager/wizard/ai/template/status HTTP/1.1" 200 -
+2026-07-23 18:44:47,268 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:47] "[35m[1mPOST /campaign-manager/wizard/ai/template/save HTTP/1.1[0m" 502 -
+2026-07-23 18:44:54,983 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:54] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-23 18:44:55,015 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,241 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,325 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,325 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,326 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,328 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,330 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,555 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,640 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,640 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,642 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,955 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,957 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,988 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,989 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,990 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:55,992 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:55] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:56,270 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:56] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:44:56,271 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:56] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:44:56,298 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:56] "[36mGET /static/uploads/logos/7fdb6822-333e-4094-b05f-dc3fde9b3277.png HTTP/1.1[0m" 304 -
+2026-07-23 18:44:59,243 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:44:59] "[35m[1mPOST /campaign-manager/wizard/ai/template/save HTTP/1.1[0m" 502 -
+2026-07-23 18:46:56,293 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-23 18:46:56,792 INFO werkzeug:  * Restarting with stat
+2026-07-23 18:46:59,594 WARNING werkzeug:  * Debugger is active!
+2026-07-23 18:46:59,601 INFO werkzeug:  * Debugger PIN: 617-508-530
+2026-07-23 18:47:18,007 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-23 18:47:18,458 INFO werkzeug:  * Restarting with stat
+2026-07-23 18:47:21,555 WARNING werkzeug:  * Debugger is active!
+2026-07-23 18:47:21,559 INFO werkzeug:  * Debugger PIN: 617-508-530
+2026-07-23 18:48:38,383 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:38] "GET /campaign-manager/wizard/ai/template HTTP/1.1" 200 -
+2026-07-23 18:48:38,507 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:38] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:38,510 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:38] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:38,759 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:38] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:38,767 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:38] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:38,773 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:38] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:38,777 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:38] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:38,831 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:38] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:38,832 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:38] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,078 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,083 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,092 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/js/wizard_template.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,393 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,394 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,411 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,411 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,416 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,417 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,714 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,717 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:48:39,729 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:39] "[36mGET /static/uploads/logos/7fdb6822-333e-4094-b05f-dc3fde9b3277.png HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,064 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "POST /campaign-manager/wizard/ai/template/save HTTP/1.1" 200 -
+2026-07-23 18:48:42,099 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "GET /campaign-manager/wizard/ai/test-send HTTP/1.1" 200 -
+2026-07-23 18:48:42,399 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,448 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,448 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,451 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,455 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,459 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,712 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,762 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,763 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,765 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,772 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:42,772 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:42] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:48:43,018 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:43] "[36mGET /static/uploads/logos/7fdb6822-333e-4094-b05f-dc3fde9b3277.png HTTP/1.1[0m" 304 -
+2026-07-23 18:48:43,084 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:43] "[36mGET /static/js/wizard_test_send.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:43,108 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:43] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:43,108 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:43] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:43,110 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:43] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:43,111 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:43] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:43,340 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:43] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:43,402 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:43] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:43,421 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:43] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:48,662 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:48] "GET /campaign-manager/wizard/ai/schedule HTTP/1.1" 200 -
+2026-07-23 18:48:48,869 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:48] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:48,911 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:48] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,027 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,029 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,031 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,031 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,191 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,223 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/css/pages/ai-wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,349 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/css/pages/campaign_preview.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,354 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/css/pages/wizard.css HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,366 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,367 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,505 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/uploads/logos/7fdb6822-333e-4094-b05f-dc3fde9b3277.png HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,539 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/js/wizard_schedule.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,710 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,723 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,724 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,728 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,821 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:49,853 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:49] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:48:50,037 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:48:50] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:49:08,103 INFO app: Campaign 7fdb6822-333e-4094-b05f-dc3fde9b3277 sent over SMTP: 3 sent, 0 failed
+2026-07-23 18:49:08,114 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:08] "POST /campaign-manager/wizard/ai/schedule/action HTTP/1.1" 200 -
+2026-07-23 18:49:09,963 ERROR app: Failed to fetch Brevo stats for campaign 13321581-158a-4e44-bd3f-40d829e8a6c4
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\app.py", line 1312, in campaign_manager
+    report = get_brevo_client().get_campaign_report(campaign.brevo_campaign_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 355, in get_campaign_report
+    return self._cached_request(cache_key, "GET", f"/emailCampaigns/{campaign_id}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 126, in _cached_request
+    result = self._request(method, path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Desktop\work\lanko\AI-Email-Agent\tools\brevo.py", line 151, in _request
+    raise BrevoAPIError(response.status_code, message, payload)
+tools.brevo.BrevoAPIError: Brevo API error 404: Campaign id not found
+2026-07-23 18:49:10,774 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:10] "GET /campaign-manager HTTP/1.1" 200 -
+2026-07-23 18:49:10,809 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:10] "[36mGET /static/css/base.css HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,133 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/css/components/topbar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,137 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/css/components/tables.css HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,138 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/css/components/buttons.css HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,138 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/css/components/cards.css HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,139 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/css/components/sidebar.css HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,144 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/css/components/forms.css HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,445 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/css/pages/campaigns.css HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,445 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/js/main.js HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,451 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/img/logo.png HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,457 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/js/campaign_manager.js HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,855 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/js/modules/editor.js HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,856 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/js/modules/password-toggle.js HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,859 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/js/modules/dropdown.js HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,859 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/js/modules/calendar.js HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,865 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/js/modules/auth-form.js HTTP/1.1[0m" 304 -
+2026-07-23 18:49:11,873 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:11] "[36mGET /static/js/modules/password-reset.js HTTP/1.1[0m" 304 -
+2026-07-23 18:49:12,161 INFO werkzeug: 127.0.0.1 - - [23/Jul/2026 18:49:12] "[36mGET /static/js/modules/table-tools.js HTTP/1.1[0m" 304 -
+2026-07-23 18:56:00,754 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\config.py', reloading
+2026-07-23 18:56:01,366 INFO werkzeug:  * Restarting with stat
+2026-07-23 18:56:08,276 WARNING werkzeug:  * Debugger is active!
+2026-07-23 18:56:08,283 INFO werkzeug:  * Debugger PIN: 617-508-530
+2026-07-23 18:56:22,581 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-23 18:56:23,314 INFO werkzeug:  * Restarting with stat
+2026-07-23 18:56:27,818 WARNING werkzeug:  * Debugger is active!
+2026-07-23 18:56:27,823 INFO werkzeug:  * Debugger PIN: 617-508-530
+2026-07-23 18:56:32,464 INFO werkzeug:  * Detected change in 'C:\\Users\\USER\\Desktop\\work\\lanko\\AI-Email-Agent\\app.py', reloading
+2026-07-23 18:56:32,876 INFO werkzeug:  * Restarting with stat
+2026-07-23 18:56:37,269 WARNING werkzeug:  * Debugger is active!
+2026-07-23 18:56:37,277 INFO werkzeug:  * Debugger PIN: 617-508-530

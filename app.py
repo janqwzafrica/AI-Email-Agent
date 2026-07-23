@@ -61,6 +61,23 @@ migrate.init_app(app, db)
 login_manager.init_app(app)
 
 
+@login_manager.unauthorized_handler
+def _unauthorized():
+    """The wizard's fetch() calls expect JSON back. Flask-Login's default
+    behavior on an expired/missing session is a 302 redirect to /login,
+    whose body is an HTML page — fetch() follows that redirect silently and
+    hands the login page's HTML to res.json(), which fails with a cryptic
+    "Unexpected token '<'" instead of a useful message. Return real JSON
+    for those routes; keep the normal redirect for everything else (plain
+    page loads, form posts) so browser navigation still works as expected.
+    """
+    if request.path.startswith("/campaign-manager/wizard/") or request.path in (
+        "/campaign-manager/contacts/classification",
+    ):
+        return jsonify({"error": "Your session has expired. Please log in again."}), 401
+    return redirect(url_for("login", next=request.path))
+
+
 def is_safe_redirect_url(target):
     if not target:
         return False
@@ -374,50 +391,6 @@ def _dispatch_scheduled_smtp_campaign(app_ref, campaign_id):
         )
 
 
-# Windows' threading.Timer (WaitForSingleObjectEx under the hood) overflows
-# past ~49.7 days — a DWORD milliseconds ceiling — so a single Timer can't
-# wait out a whole quarter (up to ~92 days). Chain shorter waits instead.
-_MAX_TIMER_DELAY_SECONDS = 20 * 24 * 60 * 60  # 20 days
-
-
-def _start_delayed(run_at_utc, on_fire, on_new_timer=None):
-    """Fire on_fire() once run_at_utc (tz-aware) is reached, chaining
-    capped-length timers if the wait is longer than _MAX_TIMER_DELAY_SECONDS.
-
-    on_new_timer, if given, is called with each new Timer segment as it's
-    created — callers that need to support cancellation (e.g. a "Stop"
-    button) must use this to keep their stored reference pointing at
-    whichever segment is currently pending, since a Timer object from an
-    already-fired earlier segment can't cancel a later one.
-    """
-    remaining = (run_at_utc - datetime.now(timezone.utc)).total_seconds()
-    if remaining <= _MAX_TIMER_DELAY_SECONDS:
-        timer = threading.Timer(max(remaining, 0), on_fire)
-    else:
-        timer = threading.Timer(
-            _MAX_TIMER_DELAY_SECONDS,
-            lambda: _start_delayed(run_at_utc, on_fire, on_new_timer),
-        )
-    timer.daemon = True
-    if on_new_timer:
-        on_new_timer(timer)
-    timer.start()
-    return timer
-
-
-def _schedule_smtp_campaign(campaign, aware_dt):
-    """Delay-dispatch a campaign at aware_dt using an in-process timer.
-
-    Note: this only fires while this server process keeps running — a
-    restart between now and the scheduled time loses the pending send
-    (there's no persisted job queue backing SMTP delivery yet).
-    """
-    _start_delayed(
-        aware_dt.astimezone(timezone.utc),
-        lambda: _dispatch_scheduled_smtp_campaign(app, campaign.id),
-    )
-
-
 def _add_months(dt, months):
     month_index = dt.month - 1 + months
     year = dt.year + month_index // 12
@@ -444,42 +417,6 @@ def _next_quarterly_run_at(previous_run_at):
     """previous_run_at is always a quarter-end; stepping one month past it
     always lands in the next quarter, whose end is the next run."""
     return _quarter_end(_add_months(previous_run_at, 1))
-
-
-_quarterly_timers = {}
-_quarterly_timers_lock = threading.Lock()
-
-
-def _schedule_quarterly_timer(campaign_id, run_at):
-    """Arm (or re-arm) the in-process timer for a campaign's next quarterly
-    run. run_at is naive UTC, matching EmailCampaign.next_run_at.
-
-    Quarterly gaps (up to ~92 days) can exceed a single Timer's max delay,
-    so _start_delayed may chain several segments before the real dispatch —
-    on_new_timer keeps the registry pointed at whichever segment is
-    currently pending, so _cancel_quarterly_timer can always abort it.
-    """
-    with _quarterly_timers_lock:
-        existing = _quarterly_timers.pop(campaign_id, None)
-    if existing:
-        existing.cancel()
-
-    def _register(timer):
-        with _quarterly_timers_lock:
-            _quarterly_timers[campaign_id] = timer
-
-    _start_delayed(
-        run_at.replace(tzinfo=timezone.utc),
-        lambda: _dispatch_quarterly_campaign(app, campaign_id),
-        on_new_timer=_register,
-    )
-
-
-def _cancel_quarterly_timer(campaign_id):
-    with _quarterly_timers_lock:
-        existing = _quarterly_timers.pop(campaign_id, None)
-    if existing:
-        existing.cancel()
 
 
 def _dispatch_quarterly_campaign(app_ref, campaign_id):
@@ -530,22 +467,53 @@ def _dispatch_quarterly_campaign(app_ref, campaign_id):
             run_status,
             campaign.next_run_at,
         )
-        _schedule_quarterly_timer(campaign.id, campaign.next_run_at)
 
 
-def _rearm_quarterly_campaigns():
-    """Re-schedule timers for all active quarterly campaigns on startup —
-    the in-process timers above don't survive a restart on their own."""
-    with app.app_context():
-        campaigns = EmailCampaign.query.filter(
-            EmailCampaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY
+def _sweep_due_campaigns():
+    """Dispatch every scheduled/quarterly campaign that's currently due.
+    Meant to be invoked by an external cron job (see the sweep-campaigns
+    CLI command below), not run in-process — no in-process timer or
+    background thread is involved, so there's nothing to lose on a
+    restart, and no risk of multiple worker processes duplicating work
+    the way in-process timers would under a multi-process host."""
+    now = utc_now()
+
+    if app.config["CAMPAIGN_DELIVERY_PROVIDER"] == "smtp":
+        overdue_scheduled = EmailCampaign.query.filter(
+            EmailCampaign.status == EmailCampaign.STATUS_SCHEDULED,
+            EmailCampaign.scheduled_at.isnot(None),
+            EmailCampaign.scheduled_at <= now,
         ).all()
-        for campaign in campaigns:
-            run_at = campaign.next_run_at or _first_quarterly_run_at(utc_now())
-            _schedule_quarterly_timer(campaign.id, run_at)
+        for campaign in overdue_scheduled:
             app.logger.info(
-                "Re-armed quarterly campaign %s for %s", campaign.id, run_at
+                "Sweep dispatching due scheduled campaign %s (was due %s)",
+                campaign.id,
+                campaign.scheduled_at,
             )
+            _dispatch_scheduled_smtp_campaign(app, campaign.id)
+
+    overdue_quarterly = EmailCampaign.query.filter(
+        EmailCampaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY,
+        EmailCampaign.next_run_at.isnot(None),
+        EmailCampaign.next_run_at <= now,
+    ).all()
+    for campaign in overdue_quarterly:
+        app.logger.info(
+            "Sweep dispatching due quarterly campaign %s (was due %s)",
+            campaign.id,
+            campaign.next_run_at,
+        )
+        _dispatch_quarterly_campaign(app, campaign.id)
+
+
+@app.cli.command("sweep-campaigns")
+def sweep_campaigns_command():
+    """Dispatch due scheduled/quarterly campaigns. Run this from an
+    external cron job (e.g. cPanel Cron Jobs) every minute:
+
+        * * * * * cd /path/to/AI-Email-Agent && /path/to/venv/bin/flask sweep-campaigns >> logs/cron.log 2>&1
+    """
+    _sweep_due_campaigns()
 
 
 def _run_generation(app_ref, campaign_id):
@@ -594,9 +562,17 @@ def _start_generation(campaign):
 
 
 def get_active_sender_emails():
-    """Real, active sender identities from Brevo — using anything else gets rejected
-    by Brevo with 'Sender is invalid / inactive' when creating/updating a campaign."""
-    return [" info@businessplansite.com"]
+    """Sender identity shown in the wizard's "Sender Email" dropdown.
+
+    For SMTP delivery this must be the actual authenticated SMTP account —
+    that's who the email really comes from — otherwise the dropdown shows
+    one address while recipients see a completely different sender, which
+    is exactly the "different webmail" mismatch this was causing.
+    """
+    if app.config["CAMPAIGN_DELIVERY_PROVIDER"] == "smtp":
+        sender = app.config.get("SMTP_DEFAULT_SENDER") or app.config.get("SMTP_USERNAME")
+        return [sender] if sender else []
+    return [app.config["BREVO_VERIFIED_SENDER_EMAIL"]]
 
 
 
@@ -1380,12 +1356,10 @@ def campaign_manager_quarterly_toggle(campaign_id):
     if campaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY:
         campaign.recurrence_rule = None
         campaign.next_run_at = None
-        _cancel_quarterly_timer(campaign.id)
         flash("Quarterly run stopped.", "success")
     else:
         campaign.recurrence_rule = EmailCampaign.RECURRENCE_QUARTERLY
         campaign.next_run_at = _first_quarterly_run_at(utc_now())
-        _schedule_quarterly_timer(campaign.id, campaign.next_run_at)
         flash(
             f"Quarterly run activated — next send {campaign.next_run_at:%b %d, %Y}.",
             "success",
@@ -1596,7 +1570,12 @@ def wizard_template_save(mode):
         name=f"{campaign.subject or 'Untitled campaign'} ({mode})",
         subject=campaign.subject,
         sender_name=campaign.sender_name,
-        sender_email=campaign.sender_email,
+        # Brevo requires one of its own verified sender identities here,
+        # regardless of delivery provider — this call is just bookkeeping
+        # (contact lists, stats, preview), never what recipients actually
+        # see. campaign.sender_email is the real SMTP sender shown in the
+        # wizard and is never sent to Brevo, so the two can't conflict.
+        sender_email=app.config["BREVO_VERIFIED_SENDER_EMAIL"],
         html_content=_compose_send_html(campaign),
         list_ids=list_ids,
     )
@@ -1839,11 +1818,10 @@ def wizard_schedule_action(mode):
                 aware_dt = aware_dt.replace(tzinfo=timezone.utc)
             campaign.scheduled_at = aware_dt.astimezone(timezone.utc).replace(tzinfo=None)
             campaign.status = EmailCampaign.STATUS_SCHEDULED
-            if use_smtp:
-                # Fires in-process at aware_dt — see _schedule_smtp_campaign's
-                # docstring for the "lost on restart" caveat.
-                _schedule_smtp_campaign(campaign, aware_dt)
-            elif not BREVO_STUB_MODE:
+            # For SMTP delivery, dispatch is left entirely to the
+            # sweep-campaigns cron job (see _sweep_due_campaigns) —
+            # nothing to arm here, just the DB row above.
+            if not use_smtp and not BREVO_STUB_MODE:
                 brevo.update_email_campaign(
                     campaign.brevo_campaign_id, scheduled_at=aware_dt.isoformat()
                 )
@@ -2265,10 +2243,4 @@ def setup_password(user_id):
 
 
 if __name__ == "__main__":
-    # Werkzeug's reloader (debug=True, on by default) re-execs this module
-    # in a child process with WERKZEUG_RUN_MAIN=true; the parent watcher
-    # process never actually serves requests, so only arm timers in the
-    # child — otherwise every reload would double-schedule them.
-    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        _rearm_quarterly_campaigns()
     app.run(debug=True)

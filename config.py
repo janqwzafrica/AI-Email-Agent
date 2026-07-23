@@ -48,6 +48,12 @@ class Config:
     PASSWORD_SETUP_LINK_HOURS = int(os.getenv("PASSWORD_SETUP_LINK_HOURS", "48"))
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     BREVO_WEBHOOK_SECRET = os.getenv("BREVO_WEBHOOK_SECRET")
+    # The only sender identity verified/active on the Brevo account —
+    # required by Brevo's create/update-campaign API regardless of
+    # delivery provider (see app.py's use of it for why).
+    BREVO_VERIFIED_SENDER_EMAIL = os.getenv(
+        "BREVO_VERIFIED_SENDER_EMAIL", "info@businessplansite.com"
+    )
     PUBLIC_BASE_URL = (os.getenv("PUBLIC_BASE_URL") or "").rstrip("/")
     # "smtp" or "brevo" — which channel actually delivers campaign sends.
     # Brevo still owns contact list storage either way; this only controls
