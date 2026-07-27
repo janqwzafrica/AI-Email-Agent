@@ -38,7 +38,6 @@ from models import (
     utc_now,
 )
 from services.email_service import (
-    send_campaign_email,
     send_password_reset_email,
     send_password_setup_email,
 )
@@ -72,14 +71,12 @@ def is_safe_redirect_url(target):
 def is_within_bcrypt_limit(value):
     return len((value or "").encode("utf-8")) <= BCRYPT_MAX_BYTES
 
-
 ALLOWED_CONTENT_EXTENSIONS = {"doc", "docx", "pdf"}
 ALLOWED_LOGO_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 MAX_UPLOAD_SIZE = 5 * 1024 * 1024  # Max size: 5MB
 LOGO_UPLOAD_DIR = os.path.join(app.static_folder, "uploads", "logos")
 os.makedirs(LOGO_UPLOAD_DIR, exist_ok=True)
-BREVO_STUB_MODE = os.environ.get("BREVO_STUB_MODE", "false").lower() == "true"
-print(f"BREVO_STUB_MODE = {BREVO_STUB_MODE}")
+
 
 def _allowed_file(filename, allowed_extensions):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in allowed_extensions
@@ -128,7 +125,6 @@ FEEDBACK_LINK_CLASSIFICATIONS = {
     "/feedback/not-interested": Contact.CLASSIFICATION_NOT_INTERESTED,
 }
 
-
 def _feedback_footer_html():
     base = app.config["PUBLIC_BASE_URL"]
     return (
@@ -137,6 +133,9 @@ def _feedback_footer_html():
         f'<a href="{base}/feedback/interested">Yes, I\'m interested</a>'
         "&nbsp;|&nbsp;"
         f'<a href="{base}/feedback/not-interested">Not right now</a>'
+        '<p style="margin-top:12px;font-size:12px;color:#6b7280;">'
+        '<a href="{{ unsubscribe }}" style="color:#6b7280;">Unsubscribe</a>'
+        "</p>"
         "</div>"
     )
 
@@ -225,114 +224,6 @@ def _compose_send_html(campaign):
     return _logo_header_html(campaign) + (campaign.email_content or "")
 
 
-def _personalize_campaign_html(html, attributes):
-    """Fill in the {{ contact.FIRSTNAME }} / {{ contact.LASTNAME }} merge
-    tags Brevo would normally resolve server-side — needed now that SMTP
-    sends bypass Brevo's campaign engine entirely."""
-    firstname = (attributes or {}).get("FIRSTNAME") or ""
-    lastname = (attributes or {}).get("LASTNAME") or ""
-    for tag, value in (
-        ("{{ contact.FIRSTNAME }}", firstname),
-        ("{{contact.FIRSTNAME}}", firstname),
-        ("{{ contact.LASTNAME }}", lastname),
-        ("{{contact.LASTNAME}}", lastname),
-    ):
-        html = html.replace(tag, value)
-    return html
-
-
-def _smtp_campaign_recipients(campaign):
-    """Recipient contacts for an SMTP-delivered send. Brevo still owns
-    contact list storage either way (see CAMPAIGN_DELIVERY_PROVIDER) — only
-    the outbound send step moves to SMTP — so membership is still read from
-    the campaign's Brevo list, filtered against both Brevo's own blacklist
-    flag and our locally tracked one."""
-    if not campaign.contact_list:
-        return []
-    data = get_brevo_client().get_contacts_from_list(
-        campaign.contact_list.brevo_list_id, limit=500
-    )
-    recipients = []
-    for contact in data.get("contacts", []):
-        email = contact.get("email")
-        if not email or contact.get("emailBlacklisted"):
-            continue
-        local_contact = Contact.query.filter_by(
-            email=Contact.normalize_email(email)
-        ).one_or_none()
-        if local_contact and local_contact.is_blacklisted:
-            continue
-        recipients.append({"email": email, "attributes": contact.get("attributes") or {}})
-    return recipients
-
-
-def send_campaign_via_smtp(campaign):
-    """Send campaign to its full recipient list over the manual SMTP
-    account. Returns (sent_count, failed_count); failures are logged
-    per-recipient rather than aborting the whole run."""
-    base_html = _compose_send_html(campaign)
-    recipients = _smtp_campaign_recipients(campaign)
-    sent = failed = 0
-    for contact in recipients:
-        try:
-            send_campaign_email(
-                contact["email"],
-                campaign.subject or "Untitled campaign",
-                _personalize_campaign_html(base_html, contact["attributes"]),
-                sender_name=campaign.sender_name,
-            )
-            sent += 1
-        except Exception:
-            failed += 1
-            app.logger.exception(
-                "Failed to send campaign %s to %s over SMTP",
-                campaign.id,
-                contact["email"],
-            )
-    return sent, failed
-
-
-def _dispatch_scheduled_smtp_campaign(app_ref, campaign_id):
-    with app_ref.app_context():
-        campaign = db.session.get(EmailCampaign, campaign_id)
-        if not campaign or campaign.status != EmailCampaign.STATUS_SCHEDULED:
-            return
-        sent, failed = send_campaign_via_smtp(campaign)
-        campaign.status = EmailCampaign.STATUS_SENT
-        db.session.add(
-            CampaignRun(
-                campaign_id=campaign.id,
-                brevo_campaign_id=campaign.brevo_campaign_id,
-                run_at=utc_now(),
-                status=CampaignRun.STATUS_SENT if failed == 0 else CampaignRun.STATUS_FAILED,
-            )
-        )
-        db.session.commit()
-        app.logger.info(
-            "Scheduled SMTP campaign %s dispatched: %s sent, %s failed",
-            campaign.id,
-            sent,
-            failed,
-        )
-
-
-def _schedule_smtp_campaign(campaign, aware_dt):
-    """Delay-dispatch a campaign at aware_dt using an in-process timer.
-
-    Note: this only fires while this server process keeps running — a
-    restart between now and the scheduled time loses the pending send
-    (there's no persisted job queue backing SMTP delivery yet).
-    """
-    delay_seconds = max((aware_dt - datetime.now(timezone.utc)).total_seconds(), 0)
-    timer = threading.Timer(
-        delay_seconds,
-        _dispatch_scheduled_smtp_campaign,
-        args=(app, campaign.id),
-    )
-    timer.daemon = True
-    timer.start()
-
-
 def _run_generation(app_ref, campaign_id):
     with app_ref.app_context():
         campaign = db.session.get(EmailCampaign, campaign_id)
@@ -381,8 +272,16 @@ def _start_generation(campaign):
 def get_active_sender_emails():
     """Real, active sender identities from Brevo — using anything else gets rejected
     by Brevo with 'Sender is invalid / inactive' when creating/updating a campaign."""
-    return [" info@businessplansite.com"]
-
+    try:
+        data = get_brevo_client().get_senders()
+    except BrevoAPIError:
+        app.logger.exception("Failed to fetch Brevo senders")
+        flash(
+            "Could not load sender identities from Brevo. Manage senders in your Brevo account.",
+            "error",
+        )
+        return []
+    return [s["email"] for s in data.get("senders", []) if s.get("active") and s.get("email")]
 
 
 def sync_contact_lists():
@@ -391,14 +290,6 @@ def sync_contact_lists():
         data = get_brevo_client().get_contact_lists(limit=50)
     except BrevoAPIError as e:
         app.logger.exception("Failed to fetch Brevo contact lists")
-        if BREVO_STUB_MODE:
-            lists = ContactList.query.all()
-            if not lists:
-                stub_list = ContactList(brevo_list_id=1, name="Test Email List (stub)")
-                db.session.add(stub_list)
-                db.session.commit()
-                lists = [stub_list]
-            return lists
         flash(
             _brevo_error_message(
                 e,
@@ -1204,19 +1095,16 @@ def wizard_template_save(mode):
         list_ids=list_ids,
     )
 
-    if BREVO_STUB_MODE:
-        campaign.brevo_campaign_id = campaign.brevo_campaign_id or f"stub-{campaign.id}"
-    else:
-        brevo = get_brevo_client()
-        try:
-            if campaign.brevo_campaign_id:
-                brevo.update_email_campaign(campaign.brevo_campaign_id, **campaign_kwargs)
-            else:
-                result = brevo.create_email_campaign(**campaign_kwargs)
-                campaign.brevo_campaign_id = result.get("id")
-        except BrevoAPIError as e:
-            db.session.rollback()
-            return jsonify({"error": str(e)}), 502
+    brevo = get_brevo_client()
+    try:
+        if campaign.brevo_campaign_id:
+            brevo.update_email_campaign(campaign.brevo_campaign_id, **campaign_kwargs)
+        else:
+            result = brevo.create_email_campaign(**campaign_kwargs)
+            campaign.brevo_campaign_id = result.get("id")
+    except BrevoAPIError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 502
 
     campaign.status = EmailCampaign.STATUS_READY
     db.session.commit()
@@ -1258,8 +1146,6 @@ def wizard_test_send_action(mode):
     if not emails:
         return jsonify({"error": "Select at least one test email."}), 400
 
-    if BREVO_STUB_MODE:
-        return jsonify({"success": True})
     try:
         get_brevo_client().send_test_email(campaign.brevo_campaign_id, emails)
     except BrevoAPIError as e:
@@ -1391,33 +1277,14 @@ def wizard_schedule_action(mode):
 
     payload = request.get_json(silent=True) or {}
     action = payload.get("action")
-    use_smtp = app.config["CAMPAIGN_DELIVERY_PROVIDER"] == "smtp"
-    brevo = None if (BREVO_STUB_MODE or use_smtp) else get_brevo_client()
+    brevo = get_brevo_client()
 
     try:
         if action == "run_now":
-            if use_smtp:
-                sent, failed = send_campaign_via_smtp(campaign)
-                if sent == 0 and failed > 0:
-                    return (
-                        jsonify(
-                            {
-                                "error": f"SMTP send failed for all {failed} recipient(s) — check the logs."
-                            }
-                        ),
-                        502,
-                    )
-                app.logger.info(
-                    "Campaign %s sent over SMTP: %s sent, %s failed",
-                    campaign.id,
-                    sent,
-                    failed,
-                )
-            elif not BREVO_STUB_MODE:
-                brevo.update_email_campaign(
-                    campaign.brevo_campaign_id, html_content=_compose_send_html(campaign)
-                )
-                brevo.send_campaign_now(campaign.brevo_campaign_id)
+            brevo.update_email_campaign(
+                campaign.brevo_campaign_id, html_content=_compose_send_html(campaign)
+            )
+            brevo.send_campaign_now(campaign.brevo_campaign_id)
             campaign.status = EmailCampaign.STATUS_SENT
             db.session.add(
                 CampaignRun(
@@ -1442,14 +1309,9 @@ def wizard_schedule_action(mode):
                 aware_dt = aware_dt.replace(tzinfo=timezone.utc)
             campaign.scheduled_at = aware_dt.astimezone(timezone.utc).replace(tzinfo=None)
             campaign.status = EmailCampaign.STATUS_SCHEDULED
-            if use_smtp:
-                # Fires in-process at aware_dt — see _schedule_smtp_campaign's
-                # docstring for the "lost on restart" caveat.
-                _schedule_smtp_campaign(campaign, aware_dt)
-            elif not BREVO_STUB_MODE:
-                brevo.update_email_campaign(
-                    campaign.brevo_campaign_id, scheduled_at=aware_dt.isoformat()
-                )
+            brevo.update_email_campaign(
+                campaign.brevo_campaign_id, scheduled_at=aware_dt.isoformat()
+            )
             db.session.add(
                 CampaignRun(
                     campaign_id=campaign.id,
