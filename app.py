@@ -1,7 +1,10 @@
 ﻿from datetime import datetime, timedelta, timezone
 from functools import wraps
-from urllib.parse import urlsplit
+from html import unescape as html_unescape
+from urllib.parse import quote, urlsplit
 
+import base64
+import calendar
 import os
 import re
 import secrets
@@ -27,6 +30,7 @@ from config import Config
 from extensions import db, login_manager, migrate
 from logging_config import setup_logging
 from models import (
+    CampaignEngagement,
     CampaignRun,
     Contact,
     ContactList,
@@ -54,6 +58,23 @@ app.config.from_object(Config)
 db.init_app(app)
 migrate.init_app(app, db)
 login_manager.init_app(app)
+
+
+@login_manager.unauthorized_handler
+def _unauthorized():
+    """The wizard's fetch() calls expect JSON back. Flask-Login's default
+    behavior on an expired/missing session is a 302 redirect to /login,
+    whose body is an HTML page — fetch() follows that redirect silently and
+    hands the login page's HTML to res.json(), which fails with a cryptic
+    "Unexpected token '<'" instead of a useful message. Return real JSON
+    for those routes; keep the normal redirect for everything else (plain
+    page loads, form posts) so browser navigation still works as expected.
+    """
+    if request.path.startswith("/campaign-manager/wizard/") or request.path in (
+        "/campaign-manager/contacts/classification",
+    ):
+        return jsonify({"error": "Your session has expired. Please log in again."}), 401
+    return redirect(url_for("login", next=request.path))
 
 
 def is_safe_redirect_url(target):
@@ -127,12 +148,17 @@ FEEDBACK_LINK_CLASSIFICATIONS = {
 
 def _feedback_footer_html():
     base = app.config["PUBLIC_BASE_URL"]
+    # {{ contact.EMAIL }} is filled in per-recipient (personalization for
+    # SMTP sends; Brevo's own merge-tag engine for Brevo sends) so these
+    # links identify who clicked directly — SMTP-delivered mail has no
+    # click-tracking layer, so the /webhooks/brevo click-forwarding path
+    # never fires for it and can't be relied on alone.
     return (
         '<div style="margin-top:24px;padding-top:16px;border-top:1px solid #e5e7eb;">'
         "<p>Still interested in hearing from us?</p>"
-        f'<a href="{base}/feedback/interested">Yes, I\'m interested</a>'
+        f'<a href="{base}/feedback/interested?email={{{{ contact.EMAIL }}}}">Yes, I\'m interested</a>'
         "&nbsp;|&nbsp;"
-        f'<a href="{base}/feedback/not-interested">Not right now</a>'
+        f'<a href="{base}/feedback/not-interested?email={{{{ contact.EMAIL }}}}">Not right now</a>'
         '<p style="margin-top:12px;font-size:12px;color:#6b7280;">'
         '<a href="{{ unsubscribe }}" style="color:#6b7280;">Unsubscribe</a>'
         "</p>"
@@ -222,6 +248,271 @@ def _logo_header_html(campaign):
 def _compose_send_html(campaign):
     """The HTML actually handed to Brevo: logo header + the editable body."""
     return _logo_header_html(campaign) + (campaign.email_content or "")
+
+
+def _personalize_campaign_html(html, attributes, email=None):
+    """Fill in the {{ contact.FIRSTNAME }} / {{ contact.LASTNAME }} /
+    {{ contact.EMAIL }} merge tags Brevo would normally resolve
+    server-side — needed now that SMTP sends bypass Brevo's campaign
+    engine entirely."""
+    firstname = (attributes or {}).get("FIRSTNAME") or ""
+    lastname = (attributes or {}).get("LASTNAME") or ""
+    email_value = quote(email or "")
+    for tag, value in (
+        ("{{ contact.FIRSTNAME }}", firstname),
+        ("{{contact.FIRSTNAME}}", firstname),
+        ("{{ contact.LASTNAME }}", lastname),
+        ("{{contact.LASTNAME}}", lastname),
+        ("{{ contact.EMAIL }}", email_value),
+        ("{{contact.EMAIL}}", email_value),
+    ):
+        html = html.replace(tag, value)
+    return html
+
+
+# Matches the exact <a> markup _cta_buttons_html() generates, so only those
+# CTA buttons get click-tracking — feedback/unsubscribe links have their own
+# dedicated identification and shouldn't be double-wrapped.
+_CTA_LINK_RE = re.compile(r'<a href="([^"]*)" style="display:inline-block;background-color:#0b5fff')
+
+
+def _wrap_cta_links_for_tracking(html, campaign_id):
+    """Route each CTA button through /track/click first (SMTP sends have no
+    click-tracking layer of their own, unlike Brevo). The {{ contact.EMAIL }}
+    placeholder here is resolved later by _personalize_campaign_html."""
+    base = app.config["PUBLIC_BASE_URL"]
+
+    def _replace(match):
+        original_url = html_unescape(match.group(1))
+        tracking_url = (
+            f"{base}/track/click?campaign_id={quote(campaign_id)}"
+            f"&email={{{{ contact.EMAIL }}}}&to={quote(original_url, safe='')}"
+        )
+        return f'<a href="{escape(tracking_url)}" style="display:inline-block;background-color:#0b5fff'
+
+    return _CTA_LINK_RE.sub(_replace, html)
+
+
+def _open_tracking_pixel_html(campaign_id, email):
+    base = app.config["PUBLIC_BASE_URL"]
+    src = f"{base}/track/open?campaign_id={quote(campaign_id)}&email={quote(email)}"
+    return f'<img src="{escape(src)}" width="1" height="1" alt="" style="display:none;border:0;">'
+
+
+def _unsubscribe_footer_html(campaign_id, email):
+    base = app.config["PUBLIC_BASE_URL"]
+    href = f"{base}/unsubscribe?campaign_id={quote(campaign_id)}&email={quote(email)}"
+    return (
+        '<div style="margin-top:16px;padding-top:12px;font-size:12px;color:#9ca3af;">'
+        "If you'd prefer not to receive further emails from us, you can "
+        f'<a href="{escape(href)}" style="color:#9ca3af;">unsubscribe here</a>.'
+        "</div>"
+    )
+
+
+def _smtp_campaign_recipients(campaign):
+    """Recipient contacts for an SMTP-delivered send. Brevo still owns
+    contact list storage either way (see CAMPAIGN_DELIVERY_PROVIDER) — only
+    the outbound send step moves to SMTP — so membership is still read from
+    the campaign's Brevo list, filtered against both Brevo's own blacklist
+    flag and our locally tracked one."""
+    if not campaign.contact_list:
+        return []
+    data = get_brevo_client().get_contacts_from_list(
+        campaign.contact_list.brevo_list_id, limit=500
+    )
+    recipients = []
+    for contact in data.get("contacts", []):
+        email = contact.get("email")
+        if not email or contact.get("emailBlacklisted"):
+            continue
+        local_contact = Contact.query.filter_by(
+            email=Contact.normalize_email(email)
+        ).one_or_none()
+        if local_contact and local_contact.is_blacklisted:
+            continue
+        recipients.append({"email": email, "attributes": contact.get("attributes") or {}})
+    return recipients
+
+
+def send_campaign_via_smtp(campaign):
+    """Send campaign to its full recipient list over the manual SMTP
+    account. Returns (sent_count, failed_count); failures are logged
+    per-recipient rather than aborting the whole run."""
+    trackable_html = _wrap_cta_links_for_tracking(_compose_send_html(campaign), campaign.id)
+    recipients = _smtp_campaign_recipients(campaign)
+    sent = failed = 0
+    for contact in recipients:
+        try:
+            html = _personalize_campaign_html(
+                trackable_html, contact["attributes"], contact["email"]
+            )
+            html += _unsubscribe_footer_html(campaign.id, contact["email"])
+            html += _open_tracking_pixel_html(campaign.id, contact["email"])
+            send_campaign_email(
+                contact["email"],
+                campaign.subject or "Untitled campaign",
+                html,
+                sender_name=campaign.sender_name,
+            )
+            sent += 1
+        except Exception:
+            failed += 1
+            app.logger.exception(
+                "Failed to send campaign %s to %s over SMTP",
+                campaign.id,
+                contact["email"],
+            )
+    return sent, failed
+
+
+def _dispatch_scheduled_smtp_campaign(app_ref, campaign_id):
+    with app_ref.app_context():
+        campaign = db.session.get(EmailCampaign, campaign_id)
+        if not campaign or campaign.status != EmailCampaign.STATUS_SCHEDULED:
+            return
+        sent, failed = send_campaign_via_smtp(campaign)
+        campaign.status = EmailCampaign.STATUS_SENT
+        db.session.add(
+            CampaignRun(
+                campaign_id=campaign.id,
+                brevo_campaign_id=campaign.brevo_campaign_id,
+                run_at=utc_now(),
+                status=CampaignRun.STATUS_SENT if failed == 0 else CampaignRun.STATUS_FAILED,
+            )
+        )
+        db.session.commit()
+        app.logger.info(
+            "Scheduled SMTP campaign %s dispatched: %s sent, %s failed",
+            campaign.id,
+            sent,
+            failed,
+        )
+
+
+def _add_months(dt, months):
+    month_index = dt.month - 1 + months
+    year = dt.year + month_index // 12
+    month = month_index % 12 + 1
+    day = min(dt.day, calendar.monthrange(year, month)[1])
+    return dt.replace(year=year, month=month, day=day)
+
+
+def _quarter_end(dt):
+    """Last day of dt's calendar quarter, same time-of-day as dt."""
+    quarter_end_month = ((dt.month - 1) // 3 + 1) * 3
+    last_day = calendar.monthrange(dt.year, quarter_end_month)[1]
+    return dt.replace(month=quarter_end_month, day=last_day)
+
+
+def _first_quarterly_run_at(activated_at):
+    """First automatic run: the end of the calendar quarter Activate was
+    clicked in (any day in Jan/Feb/Mar -> March 31), not a fixed 90-day
+    count from the activation date."""
+    return _quarter_end(activated_at)
+
+
+def _next_quarterly_run_at(previous_run_at):
+    """previous_run_at is always a quarter-end; stepping one month past it
+    always lands in the next quarter, whose end is the next run."""
+    return _quarter_end(_add_months(previous_run_at, 1))
+
+
+def _dispatch_quarterly_campaign(app_ref, campaign_id):
+    with app_ref.app_context():
+        campaign = db.session.get(EmailCampaign, campaign_id)
+        if not campaign or campaign.recurrence_rule != EmailCampaign.RECURRENCE_QUARTERLY:
+            # Deactivated or deleted since this timer was armed.
+            return
+
+        if app.config["CAMPAIGN_DELIVERY_PROVIDER"] == "smtp":
+            sent, failed = send_campaign_via_smtp(campaign)
+            run_status = (
+                CampaignRun.STATUS_SENT if failed == 0 else CampaignRun.STATUS_FAILED
+            )
+        else:
+            # Note: Brevo generally refuses to re-send a campaign object
+            # that's already been sent once — same restriction we hit
+            # deleting sent campaigns. This mirrors the manual "Run Now"
+            # Brevo call for consistency; it's a known limitation of
+            # reusing one brevo_campaign_id across quarterly runs.
+            try:
+                brevo = get_brevo_client()
+                brevo.update_email_campaign(
+                    campaign.brevo_campaign_id, html_content=_compose_send_html(campaign)
+                )
+                brevo.send_campaign_now(campaign.brevo_campaign_id)
+                run_status = CampaignRun.STATUS_SENT
+            except BrevoAPIError:
+                app.logger.exception(
+                    "Quarterly Brevo send failed for campaign %s", campaign.id
+                )
+                run_status = CampaignRun.STATUS_FAILED
+
+        db.session.add(
+            CampaignRun(
+                campaign_id=campaign.id,
+                brevo_campaign_id=campaign.brevo_campaign_id,
+                run_at=utc_now(),
+                status=run_status,
+            )
+        )
+        campaign.next_run_at = _next_quarterly_run_at(campaign.next_run_at)
+        db.session.commit()
+
+        app.logger.info(
+            "Quarterly campaign %s dispatched (%s); next run %s",
+            campaign.id,
+            run_status,
+            campaign.next_run_at,
+        )
+
+
+def _sweep_due_campaigns():
+    """Dispatch every scheduled/quarterly campaign that's currently due.
+    Meant to be invoked by an external cron job (see the sweep-campaigns
+    CLI command below), not run in-process — no in-process timer or
+    background thread is involved, so there's nothing to lose on a
+    restart, and no risk of multiple worker processes duplicating work
+    the way in-process timers would under a multi-process host."""
+    now = utc_now()
+
+    if app.config["CAMPAIGN_DELIVERY_PROVIDER"] == "smtp":
+        overdue_scheduled = EmailCampaign.query.filter(
+            EmailCampaign.status == EmailCampaign.STATUS_SCHEDULED,
+            EmailCampaign.scheduled_at.isnot(None),
+            EmailCampaign.scheduled_at <= now,
+        ).all()
+        for campaign in overdue_scheduled:
+            app.logger.info(
+                "Sweep dispatching due scheduled campaign %s (was due %s)",
+                campaign.id,
+                campaign.scheduled_at,
+            )
+            _dispatch_scheduled_smtp_campaign(app, campaign.id)
+
+    overdue_quarterly = EmailCampaign.query.filter(
+        EmailCampaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY,
+        EmailCampaign.next_run_at.isnot(None),
+        EmailCampaign.next_run_at <= now,
+    ).all()
+    for campaign in overdue_quarterly:
+        app.logger.info(
+            "Sweep dispatching due quarterly campaign %s (was due %s)",
+            campaign.id,
+            campaign.next_run_at,
+        )
+        _dispatch_quarterly_campaign(app, campaign.id)
+
+
+@app.cli.command("sweep-campaigns")
+def sweep_campaigns_command():
+    """Dispatch due scheduled/quarterly campaigns. Run this from an
+    external cron job (e.g. cPanel Cron Jobs) every minute:
+
+        * * * * * cd /path/to/AI-Email-Agent && /path/to/venv/bin/flask sweep-campaigns >> logs/cron.log 2>&1
+    """
+    _sweep_due_campaigns()
 
 
 def _run_generation(app_ref, campaign_id):
@@ -419,8 +710,22 @@ def brevo_webhook(secret):
     return "", 204
 
 
+def _record_feedback_click(classification):
+    """Classify straight from the link's ?email= param instead of relying
+    solely on Brevo's click-tracking webhook, which never fires for
+    SMTP-delivered campaigns (no tracking layer wraps the link)."""
+    email = request.args.get("email")
+    if not email:
+        return
+    contact = get_or_create_local_contact(email)
+    contact.classification = classification
+    contact.classified_at = utc_now()
+    db.session.commit()
+
+
 @app.route("/feedback/interested")
 def feedback_interested():
+    _record_feedback_click(Contact.CLASSIFICATION_INTERESTED)
     return render_template(
         "feedback_response.html", message="Thanks, we'll be in touch."
     )
@@ -428,8 +733,98 @@ def feedback_interested():
 
 @app.route("/feedback/not-interested")
 def feedback_not_interested():
+    _record_feedback_click(Contact.CLASSIFICATION_NOT_INTERESTED)
     return render_template(
         "feedback_response.html", message="Got it — thanks for letting us know."
+    )
+
+
+# 1x1 transparent GIF, served for every open-tracking pixel request.
+_TRACKING_PIXEL = base64.b64decode("R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==")
+
+
+@app.route("/track/open")
+def track_open():
+    campaign_id = request.args.get("campaign_id")
+    email = request.args.get("email")
+    if campaign_id and email:
+        try:
+            db.session.add(
+                CampaignEngagement(
+                    campaign_id=campaign_id,
+                    contact_email=Contact.normalize_email(email),
+                    event_type=CampaignEngagement.EVENT_OPEN,
+                )
+            )
+            db.session.commit()
+        except Exception:
+            # A tampered/stale campaign_id shouldn't break pixel loading —
+            # the recipient's inbox rendering must never depend on this.
+            db.session.rollback()
+            app.logger.exception("Failed to record open for campaign %s", campaign_id)
+    return app.response_class(_TRACKING_PIXEL, mimetype="image/gif")
+
+
+@app.route("/track/click")
+def track_click():
+    campaign_id = request.args.get("campaign_id")
+    email = request.args.get("email")
+    to = _normalize_cta_url(request.args.get("to") or "")
+    if not to:
+        abort(400)
+    if campaign_id and email:
+        try:
+            db.session.add(
+                CampaignEngagement(
+                    campaign_id=campaign_id,
+                    contact_email=Contact.normalize_email(email),
+                    event_type=CampaignEngagement.EVENT_CLICK,
+                    url=to,
+                )
+            )
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            app.logger.exception("Failed to record click for campaign %s", campaign_id)
+    return redirect(to)
+
+
+@app.route("/unsubscribe")
+def unsubscribe():
+    email = request.args.get("email")
+    campaign_id = request.args.get("campaign_id")
+    if email:
+        contact = get_or_create_local_contact(email)
+        contact.is_blacklisted = True
+        contact.classification = Contact.CLASSIFICATION_UNSUBSCRIBED
+        contact.classified_at = utc_now()
+        if campaign_id:
+            try:
+                db.session.add(
+                    CampaignEngagement(
+                        campaign_id=campaign_id,
+                        contact_email=Contact.normalize_email(email),
+                        event_type=CampaignEngagement.EVENT_UNSUBSCRIBE,
+                    )
+                )
+                db.session.commit()
+            except Exception:
+                # A tampered/stale campaign_id shouldn't block the
+                # unsubscribe itself from taking effect.
+                db.session.rollback()
+                contact = get_or_create_local_contact(email)
+                contact.is_blacklisted = True
+                contact.classification = Contact.CLASSIFICATION_UNSUBSCRIBED
+                contact.classified_at = utc_now()
+                db.session.commit()
+                app.logger.exception(
+                    "Failed to record unsubscribe event for campaign %s", campaign_id
+                )
+        else:
+            db.session.commit()
+    return render_template(
+        "feedback_response.html",
+        message="You've been unsubscribed and won't receive further emails from us.",
     )
 
 
@@ -443,6 +838,25 @@ def _format_brevo_date(value):
         return f"{dt.month}/{dt.day}/{dt.year}"
     except ValueError:
         return value
+
+
+def get_brevo_lists_detailed(client):
+    """Return every contact list enriched with totalSubscribers/createdAt.
+
+    The bulk GET /contacts/lists endpoint doesn't reliably include
+    totalSubscribers and never includes createdAt — those only come back
+    from the single-list endpoint, so each list is fetched individually.
+    Reads are cached client-side, so this stays cheap on repeat page loads.
+    """
+    bulk = client.get_contact_lists(limit=50)
+    detailed = []
+    for item in bulk.get("lists", []):
+        list_id = item.get("id")
+        try:
+            detailed.append(client.get_contact_list(list_id))
+        except Exception:
+            detailed.append(item)
+    return detailed
 
 
 def _contact_display_name(contact):
@@ -501,7 +915,52 @@ def auth():
 @app.route("/dashboard")
 @login_required
 def index():
-    return render_template("index.html")
+    stats = {"campaigns": 0, "contacts": 0, "unsubscribed": 0, "emails_sent": 0}
+    recent_campaigns = []
+    error = None
+    try:
+        client = get_brevo_client()
+
+        campaigns_data = client.get_email_campaigns(limit=50)
+        campaigns = campaigns_data.get("campaigns", [])
+        stats["campaigns"] = campaigns_data.get("count", len(campaigns))
+
+        for campaign in campaigns:
+            g = (campaign.get("statistics") or {}).get("globalStats") or {}
+            stats["unsubscribed"] += g.get("unsubscriptions", 0)
+            stats["emails_sent"] += g.get("delivered", 0) or g.get("sent", 0)
+
+        stats["contacts"] = sum(
+            detail.get("totalSubscribers", 0)
+            for detail in get_brevo_lists_detailed(client)
+        )
+
+        def _sort_key(c):
+            return c.get("sentDate") or c.get("createdAt") or ""
+
+        for campaign in sorted(campaigns, key=_sort_key, reverse=True)[:3]:
+            g = (campaign.get("statistics") or {}).get("globalStats") or {}
+            delivered = g.get("delivered", 0)
+            opens = g.get("uniqueViews", 0)
+            open_rate = round((opens / delivered) * 100) if delivered else 0
+            recent_campaigns.append(
+                {
+                    "name": campaign.get("name"),
+                    "status": (campaign.get("status") or "").capitalize() or "Draft",
+                    "open_rate": f"{open_rate}%",
+                    "subject": campaign.get("subject") or "",
+                }
+            )
+    except Exception as e:
+        app.logger.exception("Failed to fetch Brevo dashboard data.")
+        error = _brevo_error_message(
+            e,
+            "Could not load live stats from Brevo. Check the BREVO_API_KEY and try again.",
+        )
+
+    return render_template(
+        "index.html", stats=stats, recent_campaigns=recent_campaigns, error=error
+    )
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -699,14 +1158,14 @@ def email_lists():
     lists = []
     error = None
     try:
-        data = get_brevo_client().get_contact_lists(limit=50)
-        for item in data.get("lists", []):
+        client = get_brevo_client()
+        for detail in get_brevo_lists_detailed(client):
             lists.append(
                 {
-                    "id": item.get("id"),
-                    "name": item.get("name"),
-                    "contacts": item.get("totalSubscribers", 0),
-                    "date": _format_brevo_date(item.get("createdAt")),
+                    "id": detail.get("id"),
+                    "name": detail.get("name"),
+                    "contacts": detail.get("totalSubscribers", 0),
+                    "date": _format_brevo_date(detail.get("createdAt")),
                 }
             )
     except Exception as e:
@@ -847,6 +1306,14 @@ def campaign_manager():
                 "Failed to fetch Brevo stats for campaign %s", campaign.id
             )
 
+        smtp_stats = _smtp_engagement_stats(campaign.id)
+        if smtp_stats:
+            opens, clicks, unsubs = (
+                smtp_stats["opens"],
+                smtp_stats["clicks"],
+                smtp_stats["unsubs"],
+            )
+
         rows.append(
             {
                 "id": campaign.id,
@@ -858,10 +1325,11 @@ def campaign_manager():
                 "date": date,
                 "scheduled": campaign.status == EmailCampaign.STATUS_SCHEDULED,
                 "status": campaign.status.capitalize(),
-                "quarterly": (
-                    "Running"
-                    if campaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY
-                    else "Activate"
+                "quarterly_active": campaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY,
+                "quarterly_next_run": (
+                    campaign.next_run_at.strftime("%b %d, %Y")
+                    if campaign.next_run_at
+                    else None
                 ),
             }
         )
@@ -879,11 +1347,14 @@ def campaign_manager_quarterly_toggle(campaign_id):
     if campaign.recurrence_rule == EmailCampaign.RECURRENCE_QUARTERLY:
         campaign.recurrence_rule = None
         campaign.next_run_at = None
-        flash("Quarterly run deactivated.", "success")
+        flash("Quarterly run stopped.", "success")
     else:
         campaign.recurrence_rule = EmailCampaign.RECURRENCE_QUARTERLY
-        campaign.next_run_at = utc_now() + timedelta(days=90)
-        flash("Quarterly run activated.", "success")
+        campaign.next_run_at = _first_quarterly_run_at(utc_now())
+        flash(
+            f"Quarterly run activated — next send {campaign.next_run_at:%b %d, %Y}.",
+            "success",
+        )
 
     db.session.commit()
     return redirect(url_for("campaign_manager"))
@@ -1090,7 +1561,12 @@ def wizard_template_save(mode):
         name=f"{campaign.subject or 'Untitled campaign'} ({mode})",
         subject=campaign.subject,
         sender_name=campaign.sender_name,
-        sender_email=campaign.sender_email,
+        # Brevo requires one of its own verified sender identities here,
+        # regardless of delivery provider — this call is just bookkeeping
+        # (contact lists, stats, preview), never what recipients actually
+        # see. campaign.sender_email is the real SMTP sender shown in the
+        # wizard and is never sent to Brevo, so the two can't conflict.
+        sender_email=app.config["BREVO_VERIFIED_SENDER_EMAIL"],
         html_content=_compose_send_html(campaign),
         list_ids=list_ids,
     )
@@ -1454,6 +1930,35 @@ def _campaign_stats(campaign):
     }
 
 
+def _smtp_engagement_stats(campaign_id):
+    """Unique opens/clicks/unsubscribes tracked ourselves for a
+    SMTP-delivered campaign (Brevo's own stats stay at 0 for these, since
+    Brevo never sent them). None, None, None if nothing's been tracked —
+    callers should fall back to Brevo's numbers in that case, since a given
+    campaign_id could in principle have been sent under either provider."""
+    opens = (
+        db.session.query(CampaignEngagement.contact_email)
+        .filter_by(campaign_id=campaign_id, event_type=CampaignEngagement.EVENT_OPEN)
+        .distinct()
+        .count()
+    )
+    clicks = (
+        db.session.query(CampaignEngagement.contact_email)
+        .filter_by(campaign_id=campaign_id, event_type=CampaignEngagement.EVENT_CLICK)
+        .distinct()
+        .count()
+    )
+    unsubs = (
+        db.session.query(CampaignEngagement.contact_email)
+        .filter_by(campaign_id=campaign_id, event_type=CampaignEngagement.EVENT_UNSUBSCRIBE)
+        .distinct()
+        .count()
+    )
+    if not opens and not clicks and not unsubs:
+        return None
+    return {"opens": opens, "clicks": clicks, "unsubs": unsubs}
+
+
 @app.route("/reports")
 @login_required
 def reports():
@@ -1461,7 +1966,19 @@ def reports():
     error = None
     try:
         data = get_brevo_client().get_email_campaigns(limit=50)
-        campaigns = [_campaign_stats(c) for c in data.get("campaigns", [])]
+        for c in data.get("campaigns", []):
+            stats = _campaign_stats(c)
+            local_campaign = EmailCampaign.query.filter_by(
+                brevo_campaign_id=str(c.get("id"))
+            ).one_or_none()
+            smtp_stats = (
+                _smtp_engagement_stats(local_campaign.id) if local_campaign else None
+            )
+            if smtp_stats:
+                stats["opens"] = smtp_stats["opens"]
+                stats["clicks"] = smtp_stats["clicks"]
+                stats["unsubs"] = smtp_stats["unsubs"]
+            campaigns.append(stats)
     except Exception as e:
         app.logger.exception("Failed to fetch Brevo campaigns.")
         error = _brevo_error_message(
