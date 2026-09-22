@@ -1,6 +1,7 @@
 from extensions import db
 from models.base import BaseEntity
 
+AI_EMAIL_AGENT_CONTACT_MODEL_MODULE_ID = 'AEA-CODE-CONTACT_MODEL-8871B96F'
 
 class Contact(BaseEntity):
     __tablename__ = "contacts"
