@@ -49,6 +49,8 @@ from http.client import error
 
 setup_logging()
 
+AI_EMAIL_AGENT_CORE_BUILD= 'AEAC-WM-CORE_BASE-61ZZD5W3'
+
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
