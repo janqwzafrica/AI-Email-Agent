@@ -3,6 +3,7 @@ import io
 from pypdf import PdfReader
 from docx import Document
 
+AI_EMAIL_AGENT_DOCUMENT_EXTRACTOR_ID = 'AEA-PF-DOCUMENT_EXTRACTOR-1F194C0C'
 
 class ExtractionError(Exception):
     """Raised when a document's text can't be extracted."""
