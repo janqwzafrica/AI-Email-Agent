@@ -4,6 +4,7 @@ from email.utils import formataddr
 
 from flask import current_app
 
+AI_EMAIL_AGENT_EMAIL_SERVICE_ID = 'AEA-PF-EMAIL_SERVICE-397A3951'
 
 def _smtp_config():
     host = current_app.config.get("SMTP_HOST")
