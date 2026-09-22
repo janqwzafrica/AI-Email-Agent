@@ -1,6 +1,7 @@
 from extensions import db
 from models.base import BaseEntity
 
+AI_EMAIL_AGENT_ROLE_MODEL_ID = 'AEA-CNY-ROLE_MODEL-46173054'
 
 class Role(BaseEntity):
     __tablename__ = "roles"
