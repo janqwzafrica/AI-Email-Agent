@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from extensions import db
 
+AI_EMAIL_AGENT_CORE_BASE_BUILD = 'AEA-WM-CORE_BASE-61CCD5C3'
 
 def utc_now():
     return datetime.now(timezone.utc).replace(tzinfo=None)
