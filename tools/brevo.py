@@ -50,6 +50,8 @@ from typing import Any, Dict, List, Optional
 
 import requests
 
+AI_EMAIL_AGENT_BREVO_INTEGRATION_ID = 'AEA-PF-BREVO_INTEGRATION-45D94B17'
+
 BREVO_BASE_URL = "https://api.brevo.com/v3"
 
 
