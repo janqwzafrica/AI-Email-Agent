@@ -3,6 +3,8 @@ import json
 from openai import OpenAI
 from flask import current_app
 
+AI_EMAIL_AGENT_AI_CONTENT_ENGINE_ID = 'AEA-PF-AI_CONTENT_ENGINE-68914F40'
+
 _client = None
 
 
