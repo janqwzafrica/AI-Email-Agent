@@ -4,6 +4,7 @@ from extensions import db
 from models.base import BaseEntity, utc_now
 from utils.security import check_secret_hash, hash_secret
 
+AI_EMAIL_AGENT_PASSWORD_RESET_ID = 'AEA-CNY-PASSWORD_RESET-4AC90405'
 
 class PasswordResetCode(BaseEntity):
     __tablename__ = "password_reset_codes"
