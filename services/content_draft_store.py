@@ -1,6 +1,8 @@
 import uuid
 from threading import Lock
 
+AI_EMAIL_AGENT_DRAFT_STORE_ID = 'AEA-PF-DRAFT_STORE-8496C7DB'
+
 _drafts = {}
 _lock = Lock()
 
