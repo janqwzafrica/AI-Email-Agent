@@ -4,6 +4,7 @@ from extensions import db, login_manager
 from models.base import BaseEntity
 from utils.security import check_secret_hash, hash_secret
 
+AI_EMAIL_AGENT_USER_MODEL_MODULE_ID = 'AEA-CODE-USER_MODEL-41CF3184'
 
 class User(UserMixin, BaseEntity):
     __tablename__ = "users"
