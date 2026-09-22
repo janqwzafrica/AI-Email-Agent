@@ -1,6 +1,7 @@
 from extensions import db
 from models.base import BaseEntity
 
+AI_EMAIL_AGENT_CAMPAIGN_ENGAGEMENT_ID = 'AEA-PF-CAMPAIGN_ENGAGEMENT-BDD7C173'
 
 class CampaignEngagement(BaseEntity):
     """Open/click tracking for SMTP-delivered campaigns. Brevo tracks this
