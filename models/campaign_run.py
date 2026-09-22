@@ -1,6 +1,7 @@
 from extensions import db
 from models.base import BaseEntity
 
+AI_EMAIL_AGENT_CAMPAIGN_RUN_ID = 'AEA-PF-CAMPAIGN_RUN-9223030B'
 
 class CampaignRun(BaseEntity):
     __tablename__ = "campaign_runs"
